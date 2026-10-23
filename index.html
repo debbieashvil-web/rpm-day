@@ -72,7 +72,7 @@ function render(){$('t').textContent='☀️ '+P.title;$('g').textContent=P.tag;
   s.items.forEach(([id,tm,tx])=>{const r=document.createElement('div');r.className='it'+(S[id]?' done':'');
    r.innerHTML='<div class="ck">'+(S[id]?'✓':'')+'</div><div class="tm">'+tm+'</div><div class="tx">'+tx+'</div>';
    r.onclick=()=>{S[id]=!S[id];save();r.classList.toggle('done',S[id]);r.querySelector('.ck').textContent=S[id]?'✓':'';
-    progress();if(navigator.vibrate)navigator.vibrate(20);toast(S[id]?'Yes! 🎉 Forgie knows':'Unchecked');ping(id,S[id])};
+    progress();if(navigator.vibrate)navigator.vibrate(20);toast(S[id]?(localStorage.rpmHook?'Yes! 🎉 Forgie knows':'Yes! 🎉 Saved'):'Unchecked');ping(id,S[id])};
    d.appendChild(r)});$('list').appendChild(d)});progress()}
 $('send').onclick=async()=>{const d=all().filter(i=>S[i[0]]).map(i=>'✅ '+i[2]),l=all().filter(i=>!S[i[0]]).map(i=>'⬜ '+i[2]);
  const text='RPM '+P.title+'\n'+d.join('\n')+(l.length?'\n'+l.join('\n'):'');
