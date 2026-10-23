@@ -3,11 +3,11 @@
 "why":"Doing the scary things first means fear doesn't run my day. 💪",
 "sections":[
 {"name":"🦁 Scary Stuff First","color":"#FF2E63","tint":"#FFE9EF","items":[
-["s1","12:00","YouTube stuff 🎥 (35 min)"],["s2","","Follow-up text #1 📱"],["s3","","Follow-up text #2 🎸"],["s4","","Follow-up text #3 🎹"],["s5","","Bank letter + AutoPay decision 💳"]]},
+["s1","12:00","YouTube stuff 🎥 (35 min)"],["s2","","Text D: re-up her 4-pack 📱"],["s3","","WhatsApp guitar lead: follow up 🎸"],["s4","","Text P: lesson follow-up 🎹"],["s5","","Chase letter + decide on AutoPay 💳"]]},
 {"name":"💪 Body & Energy","color":"#FF8A00","tint":"#FFF1DE","items":[
 ["b1","7:30","Walk 🚶‍♀️"],["b2","8:15","Gym 🏋️‍♀️"],["b3","11:00","Breakfast & home 🍳"],["b4","1:00","Lunch 🥗"],["b5","2:00","Mobility flow 🧘‍♀️"]]},
 {"name":"🎶 Music Practice","color":"#8E44EC","tint":"#F2E8FE","items":[
 ["m1","1:30","Piano 10 min 🎹"],["m2","1:40","Guitar 10 min 🎸"],["m3","1:50","Voice 10 min 🎤"]]},
 {"name":"🛠️ My Space","color":"#E0A800","tint":"#FFF8D6","items":[["r1","2:20","Clean my room 🧹"],["r2","","Room repairs 🔧"]]},
-{"name":"💰 Lesson","color":"#12B76A","tint":"#E3FBEF","items":[["l1","3:45","Leave for lesson 🚗"],["l2","4:00","Lesson 🎹"]]},
+{"name":"💰 Lesson","color":"#12B76A","tint":"#E3FBEF","items":[["l1","3:45","Leave for B's lesson 🚗"],["l2","4:00","B's lesson 🎹"]]},
 {"name":"🕯️ Shabbat Ready","color":"#1E90FF","tint":"#E2F1FF","items":[["sh1","4:45","Shabbat chores ✨"],["sh2","5:45","Candle lighting 🕯️"]]}]}
