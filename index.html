@@ -25,11 +25,16 @@ h1{font-family:Fredoka;font-size:28px;text-shadow:0 2px 0 rgba(0,0,0,.15)}
 .toast.on{opacity:1}
 .send{display:block;width:100%;margin-top:14px;padding:16px;border:0;border-radius:18px;font-family:Fredoka;font-size:19px;color:#fff;background:linear-gradient(90deg,#8E44EC,#1E90FF)}
 .boom{text-align:center;font-family:Fredoka;font-size:22px;margin:12px 0;display:none}
+.tabs{display:flex;gap:8px;margin:12px 0 0}.tabs button{flex:1;padding:12px;border:3px solid #8E44EC;border-radius:16px;background:#fff;color:#8E44EC;font-family:Fredoka;font-size:17px}
+.tabs button.on{background:#8E44EC;color:#fff}.ln{padding:10px 14px;font-size:16px;font-weight:800}.ln b{color:var(--c)}
+.sg{font-size:12px;opacity:.7;padding:0 14px 8px}
 </style></head><body>
 <header><h1 id="t"></h1><div class="tag" id="g"></div><div class="bar"><i id="pb"></i></div><div class="count" id="c"></div></header>
-<div class="rp"><b>RESULT</b> <span id="r"></span><br><b>WHY</b> <span id="w"></span></div>
+<div class="tabs"><button id="tbT" class="on">☀️ Today</button><button id="tbC">📚 My Curriculum</button></div>
+<div id="today"><div class="rp"><b>RESULT</b> <span id="r"></span><br><b>WHY</b> <span id="w"></span></div>
 <div id="list"></div><div class="boom" id="boom">🎉 ALL DONE! You showed up! 💫</div>
-<button class="send" id="send">💌 Send to Forgie</button>
+<button class="send" id="send">💌 Send to Forgie</button></div>
+<div id="cur" style="display:none"></div>
 <div class="toast" id="toast"></div>
 <script>
 const FALLBACK={"date":"2026-10-23","title":"Fri Oct 23","tag":"Scary things first 🦁",
@@ -75,4 +80,21 @@ $('send').onclick=async()=>{const d=all().filter(i=>S[i[0]]).map(i=>'✅ '+i[2])
  try{await navigator.clipboard.writeText(text);toast('Copied! Paste it to Forgie 💌')}catch(e){prompt('Copy this:',text)}};
 (async()=>{try{P=await (await fetch('plan.json?'+Date.now())).json()}catch(e){P=FALLBACK}
  S=JSON.parse(localStorage['rpm_'+P.date]||'{}');render()})();
+
+// ---- My Curriculum tab (content from curriculum.json) ----
+let C,CS=JSON.parse(localStorage.rpm_cur||'{}');
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function renderCur(){const w=$('cur');w.innerHTML='';if(!C){w.innerHTML='<div class="rp">Loading… 🎶</div>';return}
+ C.cards.forEach(c=>{const d=document.createElement('div');d.className='sec';d.style.setProperty('--c',c.color);d.style.setProperty('--t',c.tint);
+  const n=c.skills.length,k=c.skills.filter(x=>CS[x[0]]).length;
+  d.innerHTML='<h2>'+esc(c.name)+' <span style="float:right;font-size:15px">'+k+'/'+n+'</span></h2><div class="ln"><b>Now working on:</b> '+esc(c.now)+'</div>';
+  c.skills.forEach(([id,tx])=>{const r=document.createElement('div');r.className='it'+(CS[id]?' done':'');
+   r.innerHTML='<div class="ck">'+(CS[id]?'✓':'')+'</div><div class="tx">'+esc(tx)+'</div>';
+   r.onclick=()=>{CS[id]=!CS[id];localStorage.rpm_cur=JSON.stringify(CS);if(navigator.vibrate)navigator.vibrate(20);toast(CS[id]?'Mastered! 🎉':'Unchecked');renderCur()};d.appendChild(r)});
+  const x=document.createElement('div');x.className='ln';x.style.borderTop='1px solid rgba(0,0,0,.05)';x.innerHTML='<b>Next up:</b> '+esc(c.next);d.appendChild(x);
+  w.appendChild(d)})}
+function tab(c){$('today').style.display=c?'none':'';$('cur').style.display=c?'':'none';$('tbT').classList.toggle('on',!c);$('tbC').classList.toggle('on',c);localStorage.rpm_tab=c?'c':'t';if(c)renderCur()}
+$('tbT').onclick=()=>tab(false);$('tbC').onclick=()=>tab(true);
+(async()=>{try{C=await (await fetch('curriculum.json?'+Date.now())).json()}catch(e){C=null}renderCur()})();
+if(localStorage.rpm_tab=='c')tab(true);
 </script></body></html>

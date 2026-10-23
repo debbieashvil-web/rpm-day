@@ -1,0 +1,24 @@
+{"updated":"2026-10-23",
+"note":"Source: Debbie's Teacher Must-Knows list (curriculum/teacher_skills_*.csv), steps 1-2. Forgie: edit 'now', 'skills', 'next'. Keep skill ids stable so checkoffs stick.",
+"cards":[
+{"id":"piano","name":"🎹 Piano","color":"#8E44EC","tint":"#F2E8FE",
+ "now":"Treble and bass clef notes 🎼",
+ "skills":[
+  ["p1","Musical alphabet A–G, forward and backward fast"],
+  ["p2","Treble clef notes"],
+  ["p3","Bass clef notes"],
+  ["p4","Name 20 clef notes in under 30 seconds ⏱️"],
+  ["p5","Half & whole steps, sharps & flats (find C#, Bb)"],
+  ["p6","Count note values out loud: \"1 & 2 &\""]],
+ "next":"Major scale W W H W W W H: C, G, D, F"},
+{"id":"guitar","name":"🎸 Guitar","color":"#FF8A00","tint":"#FFF1DE",
+ "now":"Fretboard notes on the low E & A strings (starter pick)",
+ "starter":true,
+ "skills":[
+  ["g1","Musical alphabet, find each letter on the low E string"],
+  ["g2","Strings E A D G B E, half step per fret"],
+  ["g3","Name any note on low E, frets 0–12"],
+  ["g4","Name any note on A, frets 0–12"],
+  ["g5","Half & whole steps on one string (C#, Bb)"],
+  ["g6","Count a strum pattern out loud: \"1 & 2 &\""]],
+ "next":"G major scale, one octave (frets 2-2-1-2-2-2-1)"}]}
