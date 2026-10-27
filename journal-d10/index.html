@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 10 Journal: The Power of Relationships (Part 2)</title>
+<style>
+:root{--cream:#FCF8F0;--paper:#FFFDF8;--teal:#4E7B7A;--teald:#3C5E5D;--sage:#9CB3A5;--sagel:#E7EEE9;--gold:#9A7B35;--goldl:#EEE2C6;--ink:#3F3F3D;--muted:#6F6F69;--rule:#C8D1C9}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font:17px/1.55 Georgia,"Times New Roman",serif}
+.wrap{max-width:780px;margin:0 auto;padding:18px 16px 140px}
+.top{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;border-left:4px solid #C2A15E;background:#fff8e8;border-radius:10px;padding:16px 18px;margin-bottom:18px}
+.kicker,.gold{font:700 12.5px/1.3 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+h1{margin:6px 0 2px;font-size:32px;line-height:1.15;color:var(--teald)}
+.subt{font-style:italic;color:var(--teal);margin:0;font-size:19px}
+.state{background:#fff;border:1px solid var(--sage);border-radius:10px;padding:10px 14px;min-width:210px;flex:0 0 auto;font:15px/1.4 -apple-system,Helvetica,Arial,sans-serif}
+.state .r{display:flex;align-items:center;gap:8px;margin:6px 0}
+.state .r b{width:56px;color:var(--teal);font-weight:600}
+.state input{font:17px -apple-system,Helvetica,Arial,sans-serif;border:0;border-bottom:1px solid var(--rule);background:transparent;width:80px;padding:3px 2px;color:var(--ink);border-radius:0}
+.state input.d{width:120px}
+.state em{font-style:normal;color:var(--muted)}
+h3.why{margin:20px 0 4px}
+.why-t{font-style:italic;margin:0 0 12px}
+.chips{margin:8px 0 4px}
+.chip{display:inline-block;background:var(--sagel);color:var(--teald);border-radius:999px;padding:3px 12px;margin:3px 4px 3px 0;font:14.5px -apple-system,Helvetica,Arial,sans-serif}
+.note{font-style:italic;color:var(--muted);font-size:15.5px;margin:10px 0 0}
+.sec{margin:30px 0 8px;break-inside:auto}
+.sh{display:flex;gap:12px;align-items:flex-start}
+.badge{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--sage);color:#fff;display:inline-flex;align-items:center;justify-content:center;font:700 15px -apple-system,Helvetica,Arial,sans-serif;margin-top:1px}
+.badge.sm{width:24px;height:24px;font-size:12.5px;margin:0}
+h2{margin:0;font-size:19px;line-height:1.35;color:var(--teald)}
+.hint{margin:8px 0 10px 42px;font-style:italic;color:var(--muted);font-size:15.5px;line-height:1.5}
+.sub{display:block;margin:14px 0 6px 42px;font-size:12.5px}
+textarea,.scores input[type=text]{font:17px/1.55 Georgia,"Times New Roman",serif;color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:8px;width:calc(100% - 42px);margin:0 0 6px 42px;padding:10px 12px;display:block}
+textarea{resize:none;overflow:hidden;min-height:120px}
+textarea:focus,input:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal)}
+.scores{margin:10px 0 0 42px}
+.srow{display:grid;grid-template-columns:28px 1fr 104px;gap:8px;align-items:center;margin:7px 0}
+.srow.shead{margin-bottom:0}
+.scores input[type=text]{width:100%;margin:0}
+.sc{display:flex;align-items:center;gap:6px}
+.sc input{text-align:center;padding:10px 4px}
+.sc em{font-style:normal;color:var(--muted);font-size:14px;white-space:nowrap}
+.opt{font-style:italic;color:var(--muted);font-size:15px;margin:16px 0 4px}
+.closing{text-align:center;margin:36px 0 10px;color:var(--teal);font-style:italic}
+.closing .a{font-size:20px}.closing .b{color:var(--teald);font-size:17px}
+.leaf{color:var(--sage);font-size:20px}
+.notes-h{margin:26px 0 6px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(252,248,240,.97);border-top:1px solid var(--goldl);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;z-index:5}
+.bar button{font:600 16px -apple-system,Helvetica,Arial,sans-serif;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:12px 16px;cursor:pointer}
+.bar button.alt{background:#fff;color:var(--teald);border:1.5px solid var(--sage)}
+.saved{font:600 15px -apple-system,Helvetica,Arial,sans-serif;color:var(--teal);min-width:80px;text-align:center}
+.saved.dim{color:var(--muted);font-weight:400}
+@media (max-width:520px){h1{font-size:27px}.srow{grid-template-columns:26px 1fr 96px} textarea,.scores{margin-left:0;width:100%} .scores{margin-left:0} .hint,.sub{margin-left:0}}
+@media print{
+ @page{margin:14mm}
+ body{background:#fff;font-size:12pt;line-height:1.45}
+ .bar,.noprint{display:none!important}
+ .wrap{max-width:none;padding:0}
+ .top{background:#fff8e8;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .badge,.chip{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ textarea{overflow:visible;resize:none;border:1px solid #bbb;min-height:0;white-space:pre-wrap;break-inside:auto}
+ .sec{break-inside:auto} h2,.sh{break-after:avoid} .srow{break-inside:avoid}
+ input{border:1px solid #bbb!important}
+}
+</style></head><body>
+<div class="wrap" id="doc">
+<div class="top">
+ <div><div class="kicker">Get the Edge &middot; Day 3 &middot; Journey Day 10</div>
+ <h1>The Power of Relationships</h1><p class="subt">Passion, connection &amp; love (Part 2)</p></div>
+ <div class="state">
+  <div class="r"><b>Date</b><input class="d" type="text" id="date" aria-label="Date" autocomplete="off"></div>
+  <div class="kicker" style="margin-top:8px">My state (1-10)</div>
+  <div class="r"><b>Before</b><input type="text" inputmode="numeric" id="before" maxlength="4" aria-label="State before"><em>/ 10</em></div>
+  <div class="r"><b>After</b><input type="text" inputmode="numeric" id="after" maxlength="4" aria-label="State after"><em>/ 10</em></div>
+ </div>
+</div>
+<div class="kicker">Why this matters</div>
+<p class="why-t">Clarity is power. When you know exactly what you want, and what you will never accept, you start to notice it, and you start to become the person who attracts it. Write fast, be honest, and be passionate, like a kid making a list for Santa.</p>
+<div class="kicker">As you describe your mate from heaven, cover</div>
+<div class="chips"><span class="chip">Emotionally</span><span class="chip">Spiritually</span><span class="chip">Physically</span><span class="chip">Mentally</span><span class="chip">Career &amp; mission</span><span class="chip">How they connect with me</span><span class="chip">How we communicate</span><span class="chip">How they deal with life</span></div>
+<p class="note">Tape homework: do the exercises, not just listen. Stop the audio when Tony says to.</p>
+<section class="sec" data-num="1" data-title="My mate from heaven: the ultimate relationship, not what I would settle for.">
+<div class="sh"><span class="badge">1</span><h2>My mate from heaven: the ultimate relationship, not what I would settle for.</h2></div>
+<p class="hint">&quot;Whether I&#x27;m in a relationship or not, describe the ultimate relationship.&quot; Write as much detail as you can, as fast as you can, for 3 to 5 minutes. Stop the tape and do it now. Passion matters: this is a Santa list, and you know it is going to be delivered.</p>
+<textarea id="s1_1" data-label="My mate from heaven: the ultimate relationship, not what I would settle for." rows="6" spellcheck="true" autocomplete="off" aria-label="My mate from heaven: the ultimate relationship, not what I would settle for."></textarea>
+</section>
+<section class="sec" data-num="2" data-title="My musts: the things I cannot live without.">
+<div class="sh"><span class="badge">2</span><h2>My musts: the things I cannot live without.</h2></div>
+<p class="hint">&quot;Many of these are shoulds. Which are the musts?&quot; Go back to your heaven list and put an asterisk (*) next to every quality you truly cannot live without. Then copy just those here. Musts, not preferences.</p>
+<textarea id="s2_1" data-label="My musts: the things I cannot live without." rows="5" spellcheck="true" autocomplete="off" aria-label="My musts: the things I cannot live without."></textarea>
+</section>
+<section class="sec" data-num="3" data-title="The person I could never be with (the &quot;mate from hell&quot;), then flip it.">
+<div class="sh"><span class="badge">3</span><h2>The person I could never be with (the &quot;mate from hell&quot;), then flip it.</h2></div>
+<p class="hint">&quot;You also have to be absolutely clear about what you don&#x27;t want.&quot; Describe this person in every detail: emotionally, spiritually, physically, how they connect with people, how they communicate, how they deal with life. It is okay to have fun with it. Then star the absolute NEVERs, the few that would destroy a relationship. The opposite of this list is your mate from heaven.</p>
+<textarea id="s3_1" data-label="The person I could never be with (the &quot;mate from hell&quot;), then flip it." rows="6" spellcheck="true" autocomplete="off" aria-label="The person I could never be with (the &quot;mate from hell&quot;), then flip it."></textarea>
+<label class="sub gold" for="s3_2">My absolute NEVERs (starred)</label>
+<textarea id="s3_2" data-label="My absolute NEVERs (starred)" rows="3" spellcheck="true" autocomplete="off" aria-label="My absolute NEVERs (starred)"></textarea>
+<label class="sub gold" for="s3_3">Flip it: the opposite of my NEVERs is...</label>
+<textarea id="s3_3" data-label="Flip it: the opposite of my NEVERs is..." rows="3" spellcheck="true" autocomplete="off" aria-label="Flip it: the opposite of my NEVERs is..."></textarea>
+</section>
+<section class="sec" data-num="4" data-title="Who I must BECOME to attract all of that.">
+<div class="sh"><span class="badge">4</span><h2>Who I must BECOME to attract all of that.</h2></div>
+<p class="hint">&quot;You need to become the kind of person you want to find.&quot; Write a paragraph: what kind of person would it take? Your values, your character traits, how you conduct yourself, and what you do with your body, mind, emotions, and spirit. Tape examples: &quot;I need to come from unconditional love, be playful, take care of myself, keep growing, and live in gratitude.&quot; / &quot;Honest, creative, funny, kind, an open communicator, driven by values.&quot;</p>
+<textarea id="s4_1" data-label="Who I must BECOME to attract all of that." rows="6" spellcheck="true" autocomplete="off" aria-label="Who I must BECOME to attract all of that."></textarea>
+</section>
+<section class="sec" data-num="5" data-title="Where am I really? Score 0 to 10.">
+<div class="sh"><span class="badge">5</span><h2>Where am I really? Score 0 to 10.</h2></div>
+<p class="hint">&quot;To close the gap between where you are and where you want to be, you first have to know where you really are.&quot; Star the musts from your &quot;who I must become&quot; paragraph and list them below. Score YOURSELF as if the person you want were scoring you, not &quot;yeah baby, I&#x27;m the best.&quot; 10 = fully, 0 = not at all. No partner needed: you are scoring yourself alone.</p>
+<div class="scores"><div class="srow shead"><span></span><span class="gold">A MUST I WANT TO BE</span><span class="gold">SCORE 0-10</span></div>
+<div class="srow"><span class="badge sm">1</span><input type="text" id="must_1" aria-label="Must 1" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_1" aria-label="Score 1 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">2</span><input type="text" id="must_2" aria-label="Must 2" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_2" aria-label="Score 2 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">3</span><input type="text" id="must_3" aria-label="Must 3" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_3" aria-label="Score 3 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">4</span><input type="text" id="must_4" aria-label="Must 4" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_4" aria-label="Score 4 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">5</span><input type="text" id="must_5" aria-label="Must 5" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_5" aria-label="Score 5 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">6</span><input type="text" id="must_6" aria-label="Must 6" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_6" aria-label="Score 6 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">7</span><input type="text" id="must_7" aria-label="Must 7" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_7" aria-label="Score 7 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">8</span><input type="text" id="must_8" aria-label="Must 8" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_8" aria-label="Score 8 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">9</span><input type="text" id="must_9" aria-label="Must 9" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_9" aria-label="Score 9 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<div class="srow"><span class="badge sm">10</span><input type="text" id="must_10" aria-label="Must 10" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="score_10" aria-label="Score 10 out of 10" maxlength="4" autocomplete="off"><em>/ 10</em></span></div>
+<p class="opt">Optional, only if there is someone in my life: how are they doing on my musts overall (0-10)?</p>
+<div class="srow"><span></span><input type="text" id="partner_note" aria-label="Partner note" autocomplete="off"><span class="sc"><input type="text" inputmode="numeric" id="partner_score" aria-label="Partner score" maxlength="4" autocomplete="off"><em>/ 10</em></span></div></div>
+</section>
+<section class="sec" data-num="6" data-title="The 4 R&#x27;s that quietly destroy relationships.">
+<div class="sh"><span class="badge">6</span><h2>The 4 R&#x27;s that quietly destroy relationships.</h2></div>
+<p class="hint">From Dr. John Gray and Dr. Barbara De Angelis: Resistance (something bugs you and you say nothing), Resentment (it builds and the tone changes), Rejection (you pick at them or pull away), Repression (you go numb, comfortable but no spark). Stacking is the trap: you end up reacting to everything at once. The fix: communicate honestly, early.</p>
+<label class="sub gold" for="s6_1">Where I have seen this pattern (past relationship, friendship, or family)</label>
+<textarea id="s6_1" data-label="Where I have seen this pattern (past relationship, friendship, or family)" rows="3" spellcheck="true" autocomplete="off" aria-label="Where I have seen this pattern (past relationship, friendship, or family)"></textarea>
+<label class="sub gold" for="s6_2">At which R did it stall? (Resistance, Resentment, Rejection, or Repression)</label>
+<textarea id="s6_2" data-label="At which R did it stall? (Resistance, Resentment, Rejection, or Repression)" rows="3" spellcheck="true" autocomplete="off" aria-label="At which R did it stall? (Resistance, Resentment, Rejection, or Repression)"></textarea>
+<label class="sub gold" for="s6_3">What I will say or do early next time instead (honest, kind, no stacking)</label>
+<textarea id="s6_3" data-label="What I will say or do early next time instead (honest, kind, no stacking)" rows="3" spellcheck="true" autocomplete="off" aria-label="What I will say or do early next time instead (honest, kind, no stacking)"></textarea>
+</section>
+<section class="sec" data-num="7" data-title="Action plan: how am I going to attract this person?">
+<div class="sh"><span class="badge">7</span><h2>Action plan: how am I going to attract this person?</h2></div>
+<p class="hint">&quot;You can&#x27;t just sit around and hope they&#x27;re going to show up. This is marketing.&quot; Proximity is power: put yourself where the kind of person you described spends time, on a regular basis. Be the person on your list, and love yourself first so there is already happiness inside you.</p>
+<label class="sub gold" for="s7_1">Where does the kind of person I described spend time? Where will I go, and how often?</label>
+<textarea id="s7_1" data-label="Where does the kind of person I described spend time? Where will I go, and how often?" rows="5" spellcheck="true" autocomplete="off" aria-label="Where does the kind of person I described spend time? Where will I go, and how often?"></textarea>
+<label class="sub gold" for="s7_2">What I will do tonight, and over the next 30 days</label>
+<textarea id="s7_2" data-label="What I will do tonight, and over the next 30 days" rows="4" spellcheck="true" autocomplete="off" aria-label="What I will do tonight, and over the next 30 days"></textarea>
+<label class="sub gold" for="s7_3">Who do I know who probably knows people like this?</label>
+<textarea id="s7_3" data-label="Who do I know who probably knows people like this?" rows="3" spellcheck="true" autocomplete="off" aria-label="Who do I know who probably knows people like this?"></textarea>
+<label class="sub gold" for="s7_4">Create the vacuum: what do I need to let go of or complete to make room? (&quot;You can&#x27;t get to second base with one foot on first.&quot;)</label>
+<textarea id="s7_4" data-label="Create the vacuum: what do I need to let go of or complete to make room? (&quot;You can&#x27;t get to second base with one foot on first.&quot;)" rows="4" spellcheck="true" autocomplete="off" aria-label="Create the vacuum: what do I need to let go of or complete to make room? (&quot;You can&#x27;t get to second base with one foot on first.&quot;)"></textarea>
+<label class="sub gold" for="s7_5">In my existing relationships (family, friends, students): one thing I can do TODAY to enhance one. A card, a call, 10 seconds of &quot;I love you.&quot;</label>
+<textarea id="s7_5" data-label="In my existing relationships (family, friends, students): one thing I can do TODAY to enhance one. A card, a call, 10 seconds of &quot;I love you.&quot;" rows="4" spellcheck="true" autocomplete="off" aria-label="In my existing relationships (family, friends, students): one thing I can do TODAY to enhance one. A card, a call, 10 seconds of &quot;I love you.&quot;"></textarea>
+</section>
+<section class="sec" data-num="8" data-title="My magic moments.">
+<div class="sh"><span class="badge">8</span><h2>My magic moments.</h2></div>
+<p class="hint">&quot;Make a list of magic moments, little ones and big ones: the laugh, the smile, the first time you met.&quot; What you capture, you anchor. List the magic moments with the people you love, and what you are grateful for in your connections.</p>
+<textarea id="s8_1" data-label="My magic moments." rows="6" spellcheck="true" autocomplete="off" aria-label="My magic moments."></textarea>
+<label class="sub gold" for="s8_2">Daily quality question for my Hour of Power: &quot;How did I get so lucky to have...?&quot; What is magical, special, and unique about the people in my life?</label>
+<textarea id="s8_2" data-label="Daily quality question for my Hour of Power: &quot;How did I get so lucky to have...?&quot; What is magical, special, and unique about the people in my life?" rows="3" spellcheck="true" autocomplete="off" aria-label="Daily quality question for my Hour of Power: &quot;How did I get so lucky to have...?&quot; What is magical, special, and unique about the people in my life?"></textarea>
+</section>
+<section class="sec" data-num="9" data-title="Time together: what special things will I schedule this month?">
+<div class="sh"><span class="badge">9</span><h2>Time together: what special things will I schedule this month?</h2></div>
+<p class="hint">The tape&#x27;s time rules, for any relationship you care about: something special at least every 10 days; at least 3 special moments a month; a getaway every 3 to 6 months; and twice a year, a recap of your magic moments plus the goals for the next stretch, with dates.</p>
+<textarea id="s9_1" data-label="Time together: what special things will I schedule this month?" rows="5" spellcheck="true" autocomplete="off" aria-label="Time together: what special things will I schedule this month?"></textarea>
+</section>
+<section class="sec" data-num="10" data-title="Deepening my relationship with myself and my Creator.">
+<div class="sh"><span class="badge">10</span><h2>Deepening my relationship with myself and my Creator.</h2></div>
+<p class="hint">&quot;With a strong relationship with your Creator and a deep relationship with yourself, you have the foundation for anyone else.&quot; In your own words, in your own way: what do you want to ask for, and what would deepening that connection look like this week?</p>
+<textarea id="s10_1" data-label="Deepening my relationship with myself and my Creator." rows="4" spellcheck="true" autocomplete="off" aria-label="Deepening my relationship with myself and my Creator."></textarea>
+</section>
+<section class="sec" data-num="11" data-title="What stood out to me, and the one thing I will do because of this tape.">
+<div class="sh"><span class="badge">11</span><h2>What stood out to me, and the one thing I will do because of this tape.</h2></div>
+<textarea id="s11_1" data-label="What stood out to me, and the one thing I will do because of this tape." rows="5" spellcheck="true" autocomplete="off" aria-label="What stood out to me, and the one thing I will do because of this tape."></textarea>
+</section>
+<div class="closing"><div class="leaf">&#10047;</div><div class="a">Remember to live with passion.</div><div class="b">I choose love, and I act on it.</div></div>
+<div class="kicker notes-h">Notes &amp; reflections</div>
+<textarea id="notes" data-label="Notes &amp; reflections" rows="5" aria-label="Notes and reflections"></textarea>
+</div>
+<div class="bar noprint">
+ <span class="saved dim" id="saved">Ready</span>
+ <button type="button" id="pdf">Download my answers (PDF)</button>
+ <button type="button" class="alt" id="copy">Copy all my answers as text</button>
+</div>
+<script>
+(function(){
+var KEY='ue_day10_v1';
+var els=Array.prototype.slice.call(document.querySelectorAll('textarea,input[type=text]'));
+var data={};
+try{data=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){data={};}
+var sv=document.getElementById('saved'),tm=null;
+function grow(t){ if(t.tagName!=='TEXTAREA')return; t.style.height='auto'; t.style.height=(t.scrollHeight+2)+'px'; }
+function growAll(){els.forEach(grow);}
+function persist(){
+  try{localStorage.setItem(KEY,JSON.stringify(data));sv.textContent='Saved \u2713';sv.className='saved';
+    clearTimeout(tm);tm=setTimeout(function(){sv.className='saved dim';},2500);}
+  catch(e){sv.textContent='Could not save (copy your text!)';sv.className='saved';}
+}
+els.forEach(function(el){
+  if(data[el.id]!=null)el.value=data[el.id];
+  el.addEventListener('input',function(){data[el.id]=el.value;grow(el);persist();});
+  el.addEventListener('change',function(){data[el.id]=el.value;persist();});
+});
+growAll();
+window.addEventListener('resize',growAll);
+window.addEventListener('load',growAll);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(growAll);
+window.addEventListener('beforeprint',growAll);
+document.getElementById('pdf').addEventListener('click',function(){growAll();window.print();});
+function val(id){var n=document.getElementById(id);return n?n.value.trim():'';}
+function buildText(){
+  var L=[];
+  L.push('GET THE EDGE - DAY 3 - JOURNEY DAY 10');
+  L.push("The Power of Relationships"+' - '+"Passion, connection & love (Part 2)");
+  L.push('Date: '+val('date')+'   State before: '+val('before')+'/10   After: '+val('after')+'/10');
+  L.push('');
+  document.querySelectorAll('.sec').forEach(function(s){
+    L.push(s.getAttribute('data-num')+'. '+s.getAttribute('data-title'));
+    s.querySelectorAll('textarea').forEach(function(t){
+      var lab=t.getAttribute('data-label');
+      if(lab&&lab!==s.getAttribute('data-title'))L.push('['+lab+']');
+      L.push(t.value.trim()||'(blank)');L.push('');
+    });
+    if(s.querySelector('.scores')){
+      for(var i=1;i<=10;i++){var m=val('must_'+i),sc=val('score_'+i);if(m||sc)L.push(i+'. '+m+' - '+sc+'/10');}
+      if(val('partner_note')||val('partner_score'))L.push('Partner: '+val('partner_note')+' - '+val('partner_score')+'/10');
+      L.push('');
+    }
+  });
+  L.push('Notes & reflections');L.push(val('notes')||'(blank)');
+  return L.join('\n');
+}
+document.getElementById('copy').addEventListener('click',function(){
+  var txt=buildText();
+  function ok(){sv.textContent='Copied \u2713';sv.className='saved';clearTimeout(tm);tm=setTimeout(function(){sv.className='saved dim';},2500);}
+  function fb(){var a=document.createElement('textarea');a.value=txt;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.focus();a.select();
+    try{document.execCommand('copy');ok();}catch(e){sv.textContent='Copy failed';}document.body.removeChild(a);}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(ok,fb);else fb();
+});
+})();
+</script></body></html>
