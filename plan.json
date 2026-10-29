@@ -1,132 +1,24 @@
 {
- "date": "2026-10-27",
- "title": "Tue Oct 27",
- "tag": "Keep my word today \ud83d\udc9b",
- "result": "Today I move all five 90-day goals forward and finish feeling loving, vibrant, convicted, and magnetic. \ud83c\udf1f",
- "why": "185 lb, a romantic relationship, $10k a month, reaching millions with my music, and a deep connection with my Creator. Every day I keep my word proves I can. \ud83d\udcaa",
+ "date": "2026-10-28",
+ "title": "Wed Oct 28",
+ "tag": "Tonight \ud83c\udf19",
+ "result": "",
+ "why": "",
  "sections": [
   {
-   "name": "\ud83e\udd81 Scary Stuff First",
-   "color": "#FF2E63",
-   "tint": "#FFE9EF",
-   "items": [
-    [
-     "s1",
-     "4:15",
-     "Revamp YouTube page \u25b6\ufe0f"
-    ],
-    [
-     "s2",
-     "5:05",
-     "Create TikTok \ud83c\udfb5"
-    ],
-    [
-     "s3",
-     "5:30",
-     "Post clip + shorts on Instagram \ud83d\udcf2"
-    ],
-    [
-     "s4",
-     "12:00",
-     "Lesson outreach: Perila + guitar lead \ud83d\udcf1"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83d\udcaa Body & Energy",
-   "color": "#FF8A00",
-   "tint": "#FFF1DE",
-   "items": [
-    [
-     "b1",
-     "",
-     "Walk \ud83d\udeb6\u200d\u2640\ufe0f"
-    ],
-    [
-     "b2",
-     "",
-     "Upper-body gym \ud83c\udfcb\ufe0f\u200d\u2640\ufe0f"
-    ],
-    [
-     "b3",
-     "",
-     "Ultimate Edge Day 8 homework \ud83c\udfa7"
-    ],
-    [
-     "b4",
-     "",
-     "Breakfast: 40\u201350 g protein \ud83c\udf73"
-    ],
-    [
-     "b5",
-     "2:30",
-     "Meal prep, hit macros \ud83e\udd58"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83c\udfb6 My Music",
-   "color": "#12B76A",
-   "tint": "#E3FBEF",
-   "items": [
-    [
-     "m1",
-     "",
-     "Vocal 10 min \ud83c\udfa4"
-    ],
-    [
-     "m2",
-     "11:30",
-     "Piano study 10 min \ud83c\udfb9"
-    ],
-    [
-     "m3",
-     "11:45",
-     "Guitar study 10 min \ud83c\udfb8"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83d\udee0\ufe0f My Space",
-   "color": "#E0A800",
-   "tint": "#FFF8D6",
-   "items": [
-    [
-     "r1",
-     "11:05",
-     "Start laundry \ud83e\uddfa"
-    ],
-    [
-     "r2",
-     "1:20",
-     "Fold laundry \ud83e\uddfa"
-    ],
-    [
-     "r3",
-     "12:30",
-     "Notice of Claim notarized \u2696\ufe0f"
-    ],
-    [
-     "r4",
-     "6:15",
-     "New dating-profile photos \ud83d\udcf8"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83c\udf19 Wind Down",
+   "name": "\ud83c\udf19 Tonight",
    "color": "#1E90FF",
    "tint": "#E2F1FF",
    "items": [
     [
-     "w1",
-     "",
-     "Tzedakah + morning prayer \ud83d\ude4f"
+     "t1",
+     "9:30 PM",
+     "Meal prep + fold laundry \ud83e\udd58\ud83e\uddfa"
     ],
     [
-     "w2",
-     "",
-     "In bed in time for 7.5 h sleep \ud83d\ude34"
+     "t2",
+     "10:30 PM",
+     "Film Video #2 \ud83c\udfac"
     ]
    ]
   }
