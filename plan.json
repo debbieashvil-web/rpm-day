@@ -1,127 +1,120 @@
 {
- "date": "2026-10-29",
- "title": "Thu Oct 29",
- "tag": "Errand power day \ud83d\udc9b",
- "result": "Today I get every errand and mailing done in one strong sweep, teach great lessons, and finish proud. \ud83c\udf1f",
+ "date": "2026-10-30",
+ "title": "Fri Oct 30",
+ "tag": "Rest without guilt \ud83d\udc9b",
+ "result": "Today I do my must-dos, rest without guilt into Shabbos, and keep Pure Energy going. \ud83c\udf1f",
  "why": "185 lb, a romantic relationship, $10k a month, reaching millions with my music, and a deep connection with my Creator. Every day I keep my word proves I can. \ud83d\udcaa",
  "sections": [
   {
-   "name": "\ud83e\udd81 Scary Stuff First",
-   "color": "#FF2E63",
-   "tint": "#FFE9EF",
-   "items": [
-    [
-     "s1",
-     "10:00 AM",
-     "Mail the ticket plea \u2709\ufe0f"
-    ],
-    [
-     "s2",
-     "12:00 PM",
-     "Lesson outreach: ask a family for a referral \ud83d\udcf1"
-    ],
-    [
-     "s3",
-     "2:30 PM",
-     "Certified mail + return receipt \ud83d\udcee"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83d\udcaa Body & Energy",
-   "color": "#FF8A00",
-   "tint": "#FFF1DE",
-   "items": [
-    [
-     "b1",
-     "",
-     "Walk + Hour of Power \ud83d\udeb6\u200d\u2640\ufe0f"
-    ],
-    [
-     "b2",
-     "by 11:00 AM",
-     "Upper-body gym \ud83c\udfcb\ufe0f\u200d\u2640\ufe0f"
-    ],
-    [
-     "b3",
-     "10:30 AM",
-     "Breakfast: 40\u201350 g protein \ud83c\udf73"
-    ],
-    [
-     "b4",
-     "2:00 PM",
-     "Lunch \ud83e\udd57"
-    ],
-    [
-     "b5",
-     "4:00 PM",
-     "Snack before lessons \ud83c\udf4e"
-    ],
-    [
-     "b6",
-     "7:10 PM",
-     "Dinner \ud83c\udf7d"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83d\uded2 Errands",
-   "color": "#E0A800",
-   "tint": "#FFF8D6",
-   "items": [
-    [
-     "e1",
-     "11:00 AM",
-     "Costco: recycling, protein shakes, 85 lean ground beef \ud83d\uded2"
-    ],
-    [
-     "e2",
-     "12:30 PM",
-     "One stop: Staples, Whole Foods + all Amazon returns \ud83d\udce6"
-    ],
-    [
-     "e3",
-     "",
-     "Teller gift card ($5\u2013$10) \ud83c\udf81"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83c\udfb6 Music",
+   "name": "\ud83c\udfb6 Daily: music and health",
    "color": "#12B76A",
    "tint": "#E3FBEF",
    "items": [
     [
      "m1",
-     "",
-     "Vocals first, 10 min \ud83c\udfa4"
+     "4:00 PM",
+     "Vocal exercises (MUST DO) \ud83c\udfa4"
     ],
     [
      "m2",
-     "5:30 PM",
-     "Lessons \ud83c\udfb9"
+     "4:00 PM",
+     "Chin / double-chin exercise (MUST DO) \ud83d\udcaa"
     ],
     [
      "m3",
-     "End of day",
-     "Piano study 10 min \ud83c\udfb9"
+     "4:30 PM",
+     "Piano practice (optional) \ud83c\udfb9"
     ],
     [
      "m4",
-     "End of day",
-     "Guitar study 10 min \ud83c\udfb8"
+     "4:30 PM",
+     "Guitar practice (optional) \ud83c\udfb8"
     ]
    ]
   },
   {
-   "name": "\ud83c\udf19 Wind Down",
+   "name": "\ud83d\udd25 Tony coaching: this week",
+   "color": "#FF8A00",
+   "tint": "#FFF1DE",
+   "items": [
+    [
+     "t1",
+     "Today + Shabbos",
+     "Rest without guilt. Rest is part of the plan \ud83d\udecb\ufe0f"
+    ],
+    [
+     "t2",
+     "Daily",
+     "Pure Energy Day 4: water, breathing, live foods, greens \ud83e\udd6c"
+    ],
+    [
+     "t3",
+     "Sun 11:00 AM",
+     "Text Whitney for coffee, short and warm \u2615"
+    ],
+    [
+     "t4",
+     "Sun 12:00 PM",
+     "Order full-range pH strips \ud83e\uddea"
+    ],
+    [
+     "t5",
+     "Sun\u2013Wed 5:00 PM",
+     "Guitar: Hotel California, I'm Yours, Hey Soul Sister (optional) \ud83c\udfb8"
+    ],
+    [
+     "t6",
+     "Thu 9:00 PM",
+     "Bring guitar and perform at my friend's event \ud83c\udfa4"
+    ],
+    [
+     "t7",
+     "11:00 PM",
+     "Wind down, lights out by 11:30 PM \ud83d\ude34"
+    ]
+   ]
+  },
+  {
+   "name": "\ud83e\udde0 Mindset training",
    "color": "#1E90FF",
    "tint": "#E2F1FF",
    "items": [
     [
+     "k1",
+     "",
+     "Rachel loop: notice it, name it, go get real connection \ud83d\udc9b"
+    ],
+    [
+     "k2",
+     "",
+     "Rest is earned and allowed. No guilt \ud83d\ude4f"
+    ],
+    [
+     "k3",
+     "",
+     "I'm a performer: I play for people every week \ud83c\udf1f"
+    ]
+   ]
+  },
+  {
+   "name": "\ud83c\udfc6 Wins",
+   "color": "#E0A800",
+   "tint": "#FFF8D6",
+   "items": [
+    [
      "w1",
      "",
-     "In bed in time for 7.5 h sleep \ud83d\ude34"
+     "Reel posted and fixed \u2705"
+    ],
+    [
+     "w2",
+     "",
+     "Rebuilding friendships \u2705"
+    ],
+    [
+     "w3",
+     "",
+     "Flirted in real life \u2705"
     ]
    ]
   }
