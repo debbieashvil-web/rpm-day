@@ -1,120 +1,91 @@
 {
- "date": "2026-10-30",
- "title": "Fri Oct 30",
- "tag": "Rest without guilt \ud83d\udc9b",
- "result": "Today I do my must-dos, rest without guilt into Shabbos, and keep Pure Energy going. \ud83c\udf1f",
- "why": "185 lb, a romantic relationship, $10k a month, reaching millions with my music, and a deep connection with my Creator. Every day I keep my word proves I can. \ud83d\udcaa",
+ "date": "2026-11-02",
+ "title": "Mon Nov 2",
+ "tag": "Energized and connected \u26a1",
+ "result": "Today I fuel my body, do my deep work, connect with people I love, and have fun tonight. \ud83c\udf1f",
+ "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Every day I keep my word proves I can. \ud83d\udcaa",
  "sections": [
   {
-   "name": "\ud83c\udfb6 Daily: music and health",
+   "name": "\u2705 Done earlier",
    "color": "#12B76A",
    "tint": "#E3FBEF",
    "items": [
     [
-     "m1",
-     "4:00 PM",
-     "Vocal exercises (MUST DO) \ud83c\udfa4"
+     "d1",
+     "Morning",
+     "Walk + Hour of Power \ud83d\udd25"
     ],
     [
-     "m2",
-     "4:00 PM",
-     "Chin / double-chin exercise (MUST DO) \ud83d\udcaa"
-    ],
-    [
-     "m3",
-     "4:30 PM",
-     "Piano practice (optional) \ud83c\udfb9"
-    ],
-    [
-     "m4",
-     "4:30 PM",
-     "Guitar practice (optional) \ud83c\udfb8"
+     "d2",
+     "Morning",
+     "Lower-body gym \ud83c\udfcb\ufe0f"
     ]
    ]
   },
   {
-   "name": "\ud83d\udd25 Tony coaching: this week",
+   "name": "\ud83d\udcc5 Today's schedule",
    "color": "#FF8A00",
    "tint": "#FFF1DE",
    "items": [
     [
-     "t1",
-     "Today + Shabbos",
-     "Rest without guilt. Rest is part of the plan \ud83d\udecb\ufe0f"
+     "s1",
+     "1:15 PM",
+     "Cleanse-friendly brunch + 5 min laser body \ud83e\udd57"
     ],
     [
-     "t2",
-     "Daily",
-     "Pure Energy Day 4: water, breathing, live foods, greens \ud83e\udd6c"
+     "s2",
+     "1:45 PM",
+     "Message friends \ud83d\udcac"
     ],
     [
-     "t3",
-     "Sun 11:00 AM",
-     "Text Whitney for coffee, short and warm \u2615"
+     "s3",
+     "2:15 PM",
+     "Ultimate Edge + homework \ud83c\udfa7"
     ],
     [
-     "t4",
-     "Sun 12:00 PM",
-     "Order full-range pH strips \ud83e\uddea"
+     "s4",
+     "3:00 PM",
+     "Self Love Money Box work \ud83d\udc9b"
     ],
     [
-     "t5",
-     "Sun\u2013Wed 5:00 PM",
-     "Guitar: Hotel California, I'm Yours, Hey Soul Sister (optional) \ud83c\udfb8"
+     "s5",
+     "4:00 PM",
+     "Errands: mail an important letter, donate clothes, Costco bottles + protein shakes \ud83d\ude97"
     ],
     [
-     "t6",
-     "Thu 9:00 PM",
-     "Bring guitar and perform at my friend's event \ud83c\udfa4"
+     "s6",
+     "5:30 PM",
+     "Money check-in + lesson lead follow-ups \ud83d\udcca"
     ],
     [
-     "t7",
-     "11:00 PM",
-     "Wind down, lights out by 11:30 PM \ud83d\ude34"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83e\udde0 Mindset training",
-   "color": "#1E90FF",
-   "tint": "#E2F1FF",
-   "items": [
-    [
-     "k1",
-     "",
-     "Rachel loop: notice it, name it, go get real connection \ud83d\udc9b"
+     "s7",
+     "6:15 PM",
+     "Post lesson flyer + short reel \ud83d\udcf1"
     ],
     [
-     "k2",
-     "",
-     "Rest is earned and allowed. No guilt \ud83d\ude4f"
+     "s8",
+     "6:45 PM",
+     "Dinner + fold laundry \ud83c\udf7d\ufe0f"
     ],
     [
-     "k3",
-     "",
-     "I'm a performer: I play for people every week \ud83c\udf1f"
-    ]
-   ]
-  },
-  {
-   "name": "\ud83c\udfc6 Wins",
-   "color": "#E0A800",
-   "tint": "#FFF8D6",
-   "items": [
-    [
-     "w1",
-     "",
-     "Reel posted and fixed \u2705"
+     "s9",
+     "7:30 PM",
+     "Guitar + family call \ud83c\udfb8"
     ],
     [
-     "w2",
-     "",
-     "Rebuilding friendships \u2705"
+     "s10",
+     "8:00 PM",
+     "Karaoke night with friends + one random act of kindness \ud83c\udfa4"
     ],
     [
-     "w3",
-     "",
-     "Flirted in real life \u2705"
+     "s11",
+     "10:00 PM",
+     "Mobility flow + journal entry \ud83e\uddd8"
+    ],
+    [
+     "s12",
+     "10:30 PM",
+     "In bed, asleep by 11 PM \ud83d\ude34"
     ]
    ]
   }
