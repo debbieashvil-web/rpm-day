@@ -28,6 +28,11 @@ h1{font-family:Fredoka;font-size:28px;text-shadow:0 2px 0 rgba(0,0,0,.15)}
 .tabs{display:flex;gap:8px;margin:12px 0 0}.tabs button{flex:1;padding:12px;border:3px solid #8E44EC;border-radius:16px;background:#fff;color:#8E44EC;font-family:Fredoka;font-size:17px}
 .tabs button.on{background:#8E44EC;color:#fff}.ln{padding:10px 14px;font-size:16px;font-weight:800}.ln b{color:var(--c)}
 .sg{font-size:12px;opacity:.7;padding:0 14px 8px}
+.st{padding:10px 14px;border-top:1px solid rgba(0,0,0,.05);font-size:15px;line-height:1.4}.st h3{font-family:Fredoka;font-size:17px;color:var(--c)}
+.st a{display:inline-block;margin:6px 6px 0 0;padding:5px 10px;border-radius:12px;background:#fff;border:2px solid var(--c);color:var(--c);font-weight:800;font-size:13px;text-decoration:none}
+.tb{float:right;border:0;border-radius:12px;background:var(--c);color:#fff;font-family:Fredoka;font-size:14px;padding:4px 10px}
+.pk{margin-top:6px;padding:6px 10px;background:#fff;border-radius:12px;font-size:14px}.pk li{margin:4px 0 4px 16px}
+.lg input{width:100%;padding:8px;margin:3px 0;border:2px solid var(--c);border-radius:10px;font:inherit}.lg table{width:100%;font-size:13px;border-collapse:collapse;margin-top:8px}.lg td,.lg th{border:1px solid rgba(0,0,0,.1);padding:3px}
 </style></head><body>
 <header><h1 id="t"></h1><div class="tag" id="g"></div><div class="bar"><i id="pb"></i></div><div class="count" id="c"></div></header>
 <div class="tabs"><button id="tbT" class="on">☀️ Today</button><button id="tbC">📚 My Curriculum</button></div>
@@ -86,13 +91,33 @@ let C,CS=JSON.parse(localStorage.rpm_cur||'{}');
 function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function renderCur(){const w=$('cur');w.innerHTML='';if(!C){w.innerHTML='<div class="rp">Loading… 🎶</div>';return}
  C.cards.forEach(c=>{const d=document.createElement('div');d.className='sec';d.style.setProperty('--c',c.color);d.style.setProperty('--t',c.tint);
-  const n=c.skills.length,k=c.skills.filter(x=>CS[x[0]]).length;
+  c.skills=c.skills||[];const n=c.skills.length,k=c.skills.filter(x=>CS[x[0]]).length;
   d.innerHTML='<h2>'+esc(c.name)+' <span style="float:right;font-size:15px">'+k+'/'+n+'</span></h2><div class="ln"><b>Now working on:</b> '+esc(c.now)+'</div>';
+  if(c.routine)d.appendChild(renderRoutine(c.routine));
   c.skills.forEach(([id,tx])=>{const r=document.createElement('div');r.className='it'+(CS[id]?' done':'');
    r.innerHTML='<div class="ck">'+(CS[id]?'✓':'')+'</div><div class="tx">'+esc(tx)+'</div>';
    r.onclick=()=>{CS[id]=!CS[id];localStorage.rpm_cur=JSON.stringify(CS);if(navigator.vibrate)navigator.vibrate(20);toast(CS[id]?'Mastered! 🎉':'Unchecked');renderCur()};d.appendChild(r)});
   const x=document.createElement('div');x.className='ln';x.style.borderTop='1px solid rgba(0,0,0,.05)';x.innerHTML='<b>Next up:</b> '+esc(c.next);d.appendChild(x);
   w.appendChild(d)})}
+// ---- Routine (steps, links, timers, tired day, weekly test log) ----
+let TM={};function safeU(u){return /^https:\/\//.test(u)?esc(u):'#'}
+function lk(a){return (a||[]).map(l=>'<a href="'+safeU(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>').join('')}
+function timer(b,min){if(TM.id){clearInterval(TM.id);if(TM.b)TM.b.textContent=TM.lbl;if(TM.b===b){TM={};return}}
+ let t=min*60;TM={b,lbl:b.textContent};const f=()=>{b.textContent='⏱ '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' ■'};f();
+ TM.id=setInterval(()=>{t--;f();if(t<=0){clearInterval(TM.id);b.textContent=TM.lbl;TM={};if(navigator.vibrate)navigator.vibrate([200,100,200]);toast('Time! Next step 🎶')}},1000)}
+function renderRoutine(R){const w=document.createElement('div');
+ const box=(h)=>{const e=document.createElement('div');e.className='st';e.innerHTML=h;w.appendChild(e);return e};
+ box('<b>Daily routine · about '+esc(R.total)+' min</b>'+(R.credit?'<div class="sg" style="padding:4px 0 0">'+esc(R.credit)+'</div>':''));
+ (R.steps||[]).forEach(p=>{const e=box('<h3>'+esc(p.n)+'. '+esc(p.title)+' <span style="font-size:14px">· '+esc(p.min)+' min</span><button class="tb">⏱ '+esc(p.min)+':00</button></h3><div>'+esc(p.text)+'</div>'+lk(p.links)+
+  (p.pick?'<div class="pk"><b>'+esc(p.pick.label)+'</b><ul>'+p.pick.items.map(i=>'<li>'+esc(i.t)+(i.u?' <a href="'+safeU(i.u)+'" target="_blank" rel="noopener">▶ reel</a>':'')+'</li>').join('')+'</ul></div>':''));
+  e.querySelector('.tb').onclick=ev=>{ev.stopPropagation();timer(ev.target,p.min)}});
+ if(R.tired)box('<h3>😴 Tired day · '+esc(R.tired.min)+' min</h3><div>'+esc(R.tired.text)+'</div>'+lk(R.tired.links));
+ if(R.watch)box('<h3>👀 Watch once</h3>'+lk(R.watch));
+ const T=R.test;if(T){const e=box('<h3>📊 Weekly test · '+esc(T.min)+' min</h3><div>'+esc(T.when||'')+'</div><div><b>Start:</b> '+esc(T.baseline)+'</div><div><b>Goal:</b> '+esc(T.targets)+'</div><div class="lg">'+
+  T.fields.map(f=>'<input data-f="'+esc(f.id)+'" placeholder="'+esc(f.label)+(f.ph?' ('+esc(f.ph)+')':'')+'">').join('')+'<button class="send" style="margin-top:8px;padding:10px;font-size:16px">Save this week</button><div class="hist"></div></div>');
+  const K='rpm_vlog',H=()=>JSON.parse(localStorage[K]||'[]'),draw=()=>{const h=H();e.querySelector('.hist').innerHTML=h.length?'<table><tr><th>Date</th>'+T.fields.map(f=>'<th>'+esc(f.label)+'</th>').join('')+'</tr>'+h.slice().reverse().map(r=>'<tr><td>'+esc(r.date)+'</td>'+T.fields.map(f=>'<td>'+esc(r[f.id]||'')+'</td>').join('')+'</tr>').join('')+'</table>':''};
+  e.querySelector('button').onclick=()=>{const r={date:new Date().toLocaleDateString()};e.querySelectorAll('input').forEach(i=>{r[i.dataset.f]=i.value;i.value=''});const h=H();h.push(r);localStorage[K]=JSON.stringify(h);toast('Logged! 💪');draw()};draw()}
+ return w}
 function tab(c){$('today').style.display=c?'none':'';$('cur').style.display=c?'':'none';$('tbT').classList.toggle('on',!c);$('tbC').classList.toggle('on',c);localStorage.rpm_tab=c?'c':'t';if(c)renderCur()}
 $('tbT').onclick=()=>tab(false);$('tbC').onclick=()=>tab(true);
 (async()=>{try{C=await (await fetch('curriculum.json?'+Date.now())).json()}catch(e){C=null}renderCur()})();

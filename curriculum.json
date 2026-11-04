@@ -1,24 +1,276 @@
-{"updated":"2026-10-23",
-"note":"Source: Debbie's Teacher Must-Knows list (curriculum/teacher_skills_*.csv), steps 1-2. Forgie: edit 'now', 'skills', 'next'. Keep skill ids stable so checkoffs stick.",
-"cards":[
-{"id":"piano","name":"🎹 Piano","color":"#8E44EC","tint":"#F2E8FE",
- "now":"Treble and bass clef notes 🎼",
- "skills":[
-  ["p1","Musical alphabet A–G, forward and backward fast"],
-  ["p2","Treble clef notes"],
-  ["p3","Bass clef notes"],
-  ["p4","Name 20 clef notes in under 30 seconds ⏱️"],
-  ["p5","Half & whole steps, sharps & flats (find C#, Bb)"],
-  ["p6","Count note values out loud: \"1 & 2 &\""]],
- "next":"Major scale W W H W W W H: C, G, D, F"},
-{"id":"guitar","name":"🎸 Guitar","color":"#FF8A00","tint":"#FFF1DE",
- "now":"Fretboard notes on the low E & A strings (starter pick)",
- "starter":true,
- "skills":[
-  ["g1","Musical alphabet, find each letter on the low E string"],
-  ["g2","Strings E A D G B E, half step per fret"],
-  ["g3","Name any note on low E, frets 0–12"],
-  ["g4","Name any note on A, frets 0–12"],
-  ["g5","Half & whole steps on one string (C#, Bb)"],
-  ["g6","Count a strum pattern out loud: \"1 & 2 &\""]],
- "next":"G major scale, one octave (frets 2-2-1-2-2-2-1)"}]}
+{
+ "updated": "2026-11-04",
+ "note": "Teacher Must-Knows list (curriculum/teacher_skills_*.csv), steps 1-2, plus the daily Voice routine. Edit 'now', 'skills', 'next', 'routine'. Keep skill ids stable so checkoffs stick.",
+ "cards": [
+  {
+   "id": "voice",
+   "name": "🎤 Voice",
+   "color": "#FF2E63",
+   "tint": "#FFE8EE",
+   "now": "Daily voice routine, about 15 min: Regulate → Release → Build",
+   "routine": {
+    "total": 15,
+    "credit": "Release exercises from @thesomaticscientist (instagram.com/thesomaticscientist). Gentle pressure only, never push through pain.",
+    "steps": [
+     {
+      "n": 1,
+      "title": "Regulate",
+      "min": 2,
+      "text": "Stand tall, soft knees. 4 breaths: in through the nose for 4, out on a long 'sss' for 8. Then warm-fog breath ×3: tongue tip on the roof just behind your top teeth, open the jaw at the BACK like a yawn, breathe in through the nose, out slow warm air like fogging a mirror. Feel under the tongue and throat soften.",
+      "links": [
+       {
+        "t": "🌫️ Warm-fog breath (IG)",
+        "u": "https://www.instagram.com/reel/De7pNCjxLGr/"
+       }
+      ]
+     },
+     {
+      "n": 2,
+      "title": "Release",
+      "min": 3,
+      "text": "Under-jaw (inner jaw) release: elbows on a table, thumbs under the chin, trace to the jaw corners, slide just inside the jawbone and let your head rest on your hands. Hold a tender spot ~30 sec a side until it softens (a yawn or saliva means it worked). Then slow jaw glides, then the side-of-neck release. Finish with 5 easy yawn-sighs, high to low.",
+      "links": [
+       {
+        "t": "🦴 Under-jaw release (IG)",
+        "u": "https://www.instagram.com/reel/De5CielRDXY/"
+       },
+       {
+        "t": "😮 Jaw glides (IG)",
+        "u": "https://www.instagram.com/reel/DeSLvfrxz8T/"
+       },
+       {
+        "t": "🧣 Neck release pt 1 (IG)",
+        "u": "https://www.instagram.com/reel/DdM7CBuz4qP/"
+       },
+       {
+        "t": "🧣 Neck release pt 2 (IG)",
+        "u": "https://www.instagram.com/reel/DdSIZ0UTyi3/"
+       }
+      ],
+      "pick": {
+       "label": "Rotate in 1–2 per day (swap, don't add, so this stays 3 min):",
+       "items": [
+        {
+         "t": "Hyoid release (for pitch): tongue heavy like sand, jaw loose, nose breathing. Feel the hyoid tips between thumb and finger, rest in the soft space below it, then above it. Very gentle, not a place to push. 1–2 min.",
+         "u": "https://www.instagram.com/reel/DdFFFUmzsO_/"
+        },
+        {
+         "t": "Front-of-neck (platysma): one hand gently presses in and down on the collarbone while the chin slowly lifts ×2. Then hands crossed on the upper chest, shoulders down, look up gently. Then the same with the tongue suctioned to the roof. Until you sigh or yawn.",
+         "u": "https://www.instagram.com/reel/DecUMsoTc53/"
+        },
+        {
+         "t": "Open the back of the mouth: 'cat claw' circles on the temples, then stroke down the masseter (cheekbone to jaw) with the mouth open. 30–60 sec a side.",
+         "u": "https://www.instagram.com/reel/DePzOcdxW4w/"
+        },
+        {
+         "t": "SCM pincer walk + 'ice cream scoop' behind the ear: tilt ear to shoulder, gently pinch the whole rope muscle and walk up and down ~1 min, then scoop behind the ear. Both sides.",
+         "u": "https://www.instagram.com/reel/DfSosjDTwBB/"
+        }
+       ]
+      }
+     },
+     {
+      "n": 3,
+      "title": "Breath control",
+      "min": 2,
+      "text": "One breath, steady quiet 'sss' hiss. Time it and note the seconds. Then 3 rounds of 'fff' pulses: 4 short kicks + 1 long. This is what fixes running out at the ends of lines.",
+      "links": [
+       {
+        "t": "▶️ Hissing breath follow-along (Berklee Online)",
+        "u": "https://www.youtube.com/watch?v=K67vIp7_93I"
+       }
+      ]
+     },
+     {
+      "n": 4,
+      "title": "Warm the sound",
+      "min": 3,
+      "text": "Lip trill or straw hum sliding 5-4-3-2-1 down, starting around C4, moving up by half steps. Stop before it strains. Then 'ng' (as in 'sing') sirens, low → high → low, quiet and smooth.",
+      "links": [
+       {
+        "t": "▶️ How to lip trill (Singgeek)",
+        "u": "https://www.youtube.com/watch?v=fwNPp-RS4IY"
+       },
+       {
+        "t": "▶️ Straw exercise (Dr. Ingo Titze, NCVS)",
+        "u": "https://www.youtube.com/watch?v=0xYDvwvmBIM"
+       },
+       {
+        "t": "▶️ 'NG' siren (Dionne Slater)",
+        "u": "https://www.youtube.com/watch?v=1ntZgIRA0Co"
+       }
+      ]
+     },
+     {
+      "n": 5,
+      "title": "Build",
+      "min": 3,
+      "text": "Sing 1-2-3-4-5-4-3-2-1 on 'mee', then 'mah', with space between the back teeth (open the back, not the front). Medium volume, never push.",
+      "links": [
+       {
+        "t": "▶️ 5-tone 'mee-meh-mah' follow-along (Dots Singing)",
+        "u": "https://www.youtube.com/watch?v=T2bvn7jdHNM"
+       },
+       {
+        "t": "😮 Open the back of the mouth (IG)",
+        "u": "https://www.instagram.com/reel/DePzOcdxW4w/"
+       },
+       {
+        "t": "👅 Bonus: tongue release for high notes (IG)",
+        "u": "https://www.instagram.com/reel/DdcXQuGz3au/"
+       }
+      ]
+     },
+     {
+      "n": 6,
+      "title": "Apply",
+      "min": 2,
+      "text": "One song line. Mark where you'll breathe. Sing it at 70% effort, then with full feeling and the same ease.",
+      "links": []
+     }
+    ],
+    "tired": {
+     "min": 5,
+     "text": "Steps 1, 2 and 4 only. It still counts. ✅ Super-short option: the 13-second ear and jaw sweep, a few rounds (glide in front of the ear, sweep down behind it, gently pull the ear out).",
+     "links": [
+      {
+       "t": "⚡ 13-second sweep (IG)",
+       "u": "https://www.instagram.com/reel/DchMbeWTQvp/"
+      }
+     ]
+    },
+    "watch": [
+     {
+      "t": "🧠 Watch once: 'Your nervous system state is your sound' (IG)",
+      "u": "https://www.instagram.com/reel/DfQOJ3LTVQ_/"
+     }
+    ],
+    "test": {
+     "min": 5,
+     "when": "Once a week, same day, same time",
+     "baseline": "Range A3–A4 · about 21 cents off on average · breath fades at the ends of lines",
+     "targets": "In 12 weeks: wider easy range · pitch within 10–15 cents · strong line endings",
+     "fields": [
+      {
+       "id": "hiss",
+       "label": "Hiss (seconds)",
+       "ph": "e.g. 22"
+      },
+      {
+       "id": "low",
+       "label": "Lowest easy trill note",
+       "ph": "e.g. A3"
+      },
+      {
+       "id": "high",
+       "label": "Highest easy trill note",
+       "ph": "e.g. A4"
+      },
+      {
+       "id": "cents",
+       "label": "1-5-1 pitch (cents off)",
+       "ph": "e.g. 21"
+      },
+      {
+       "id": "line",
+       "label": "Song line recorded (notes)",
+       "ph": "song + how it felt"
+      }
+     ]
+    }
+   },
+   "skills": [
+    [
+     "v1",
+     "Did the routine 5 days this week"
+    ],
+    [
+     "v2",
+     "Hiss 30 seconds steady"
+    ],
+    [
+     "v3",
+     "Easy lip trill from G3 to C5"
+    ],
+    [
+     "v4",
+     "1-5-1 within 15 cents"
+    ],
+    [
+     "v5",
+     "Line ending strong on one breath"
+    ]
+   ],
+   "next": "Add a song phrase with mixed vowels, same ease"
+  },
+  {
+   "id": "piano",
+   "name": "🎹 Piano",
+   "color": "#8E44EC",
+   "tint": "#F2E8FE",
+   "now": "Treble and bass clef notes 🎼",
+   "skills": [
+    [
+     "p1",
+     "Musical alphabet A–G, forward and backward fast"
+    ],
+    [
+     "p2",
+     "Treble clef notes"
+    ],
+    [
+     "p3",
+     "Bass clef notes"
+    ],
+    [
+     "p4",
+     "Name 20 clef notes in under 30 seconds ⏱️"
+    ],
+    [
+     "p5",
+     "Half & whole steps, sharps & flats (find C#, Bb)"
+    ],
+    [
+     "p6",
+     "Count note values out loud: \"1 & 2 &\""
+    ]
+   ],
+   "next": "Major scale W W H W W W H: C, G, D, F"
+  },
+  {
+   "id": "guitar",
+   "name": "🎸 Guitar",
+   "color": "#FF8A00",
+   "tint": "#FFF1DE",
+   "now": "Fretboard notes on the low E & A strings (starter pick)",
+   "starter": true,
+   "skills": [
+    [
+     "g1",
+     "Musical alphabet, find each letter on the low E string"
+    ],
+    [
+     "g2",
+     "Strings E A D G B E, half step per fret"
+    ],
+    [
+     "g3",
+     "Name any note on low E, frets 0–12"
+    ],
+    [
+     "g4",
+     "Name any note on A, frets 0–12"
+    ],
+    [
+     "g5",
+     "Half & whole steps on one string (C#, Bb)"
+    ],
+    [
+     "g6",
+     "Count a strum pattern out loud: \"1 & 2 &\""
+    ]
+   ],
+   "next": "G major scale, one octave (frets 2-2-1-2-2-2-1)"
+  }
+ ]
+}
