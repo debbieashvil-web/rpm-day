@@ -30,6 +30,7 @@ h1{font-family:Fredoka;font-size:28px;text-shadow:0 2px 0 rgba(0,0,0,.15)}
 .sg{font-size:12px;opacity:.7;padding:0 14px 8px}
 .st{padding:10px 14px;border-top:1px solid rgba(0,0,0,.05);font-size:15px;line-height:1.4}.st h3{font-family:Fredoka;font-size:17px;color:var(--c)}
 .st a{display:inline-block;margin:6px 6px 0 0;padding:5px 10px;border-radius:12px;background:#fff;border:2px solid var(--c);color:var(--c);font-weight:800;font-size:13px;text-decoration:none}
+a.vtool{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;min-height:72px;margin:2px 0 4px;padding:16px 14px;border:0;border-radius:18px;background:var(--c);color:#fff;font-family:Fredoka,system-ui,sans-serif;font-size:19px;font-weight:600;line-height:1.25;text-align:center;text-decoration:none}
 .tb{float:right;border:0;border-radius:12px;background:var(--c);color:#fff;font-family:Fredoka;font-size:14px;padding:4px 10px}
 .pk{margin-top:6px;padding:6px 10px;background:#fff;border-radius:12px;font-size:14px}.pk li{margin:4px 0 4px 16px}
 .lg input{width:100%;padding:8px;margin:3px 0;border:2px solid var(--c);border-radius:10px;font:inherit}.lg table{width:100%;font-size:13px;border-collapse:collapse;margin-top:8px}.lg td,.lg th{border:1px solid rgba(0,0,0,.1);padding:3px}
@@ -105,8 +106,14 @@ function lk(a){return (a||[]).map(l=>'<a href="'+safeU(l.u)+'" target="_blank" r
 function timer(b,min){if(TM.id){clearInterval(TM.id);if(TM.b)TM.b.textContent=TM.lbl;if(TM.b===b){TM={};return}}
  let t=min*60;TM={b,lbl:b.textContent};const f=()=>{b.textContent='⏱ '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' ■'};f();
  TM.id=setInterval(()=>{t--;f();if(t<=0){clearInterval(TM.id);b.textContent=TM.lbl;TM={};if(navigator.vibrate)navigator.vibrate([200,100,200]);toast('Time! Next step 🎶')}},1000)}
+function sameSite(u){if(typeof u!=='string'||!/^[A-Za-z0-9._/-]+$/.test(u)||u.indexOf('..')>=0||u.charAt(0)==='/')return '';
+ var base=location.href.split('#')[0].split('?')[0];if(base.slice(-1)!=='/')base=base.replace(/[^/]*$/,'');return base+u}
+function testLinks(T){var L=T&&T.links;if(!L||!L.length)return '';var h='',n=0;
+ L.forEach(function(l){var href=sameSite(l&&l.u);if(!href)return;
+  h+=n?'<a href="'+esc(href)+'">'+esc(l.t)+'</a>':'<a class="vtool" href="'+esc(href)+'">'+esc(l.t)+'</a>';n++});return h}
 function renderRoutine(R){const w=document.createElement('div');
  const box=(h)=>{const e=document.createElement('div');e.className='st';e.innerHTML=h;w.appendChild(e);return e};
+ const tools=testLinks(R.test);if(tools)box(tools);
  box('<b>Daily routine · about '+esc(R.total)+' min</b>'+(R.credit?'<div class="sg" style="padding:4px 0 0">'+esc(R.credit)+'</div>':''));
  (R.steps||[]).forEach(p=>{const e=box('<h3>'+esc(p.n)+'. '+esc(p.title)+' <span style="font-size:14px">· '+esc(p.min)+' min</span><button class="tb">⏱ '+esc(p.min)+':00</button></h3><div>'+esc(p.text)+'</div>'+lk(p.links)+
   (p.pick?'<div class="pk"><b>'+esc(p.pick.label)+'</b><ul>'+p.pick.items.map(i=>'<li>'+esc(i.t)+(i.u?' <a href="'+safeU(i.u)+'" target="_blank" rel="noopener">▶ reel</a>':'')+'</li>').join('')+'</ul></div>':''));

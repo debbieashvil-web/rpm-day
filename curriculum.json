@@ -150,6 +150,16 @@
      "when": "Once a week, same day, same time",
      "baseline": "Range A3–A4 · about 21 cents off on average · breath fades at the ends of lines",
      "targets": "In 12 weeks: wider easy range · pitch within 10–15 cents · strong line endings",
+     "links": [
+      {
+       "t": "🎤 Weekly voice test (listens to you)",
+       "u": "voice-test/index.html"
+      },
+      {
+       "t": "Tap-along backup (no mic)",
+       "u": "voice-test/coach.html"
+      }
+     ],
      "fields": [
       {
        "id": "hiss",
