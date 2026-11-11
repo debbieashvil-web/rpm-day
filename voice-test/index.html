@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F7F5F0">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; form-action 'none'; frame-src 'none'; object-src 'none'">
+<title>Weekly Voice Test - Listening Coach</title>
+<style>
+:root{--bg:#F7F5F0;--ink:#22343C;--sub:#54646C;--card:#fff;--line:#D6DDE0;--orange:#B8611F;--orange2:#CC7330;--teal:#147F78;--tealL:#E2F1EF;--orangeL:#FAEADC;--rec:#C33A3A;--grey:#6E7D80}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Poppins","Nunito","Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+body{min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:12px 16px 120px}
+header{display:flex;gap:5px;flex-wrap:wrap;margin:4px 0 8px}
+.chip{flex:1 1 auto;border:2px solid var(--line);background:var(--card);color:var(--grey);font:inherit;font-weight:700;font-size:13px;border-radius:999px;padding:6px 8px;cursor:pointer;min-height:36px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.done{background:var(--tealL);color:var(--teal);border-color:var(--tealL)}
+.micbar{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--grey);margin:0 0 10px;min-height:22px}
+.micbar .dot{width:12px;height:12px;border-radius:50%;background:var(--line);flex:0 0 12px}
+.micbar.live{color:var(--teal)}.micbar.live .dot{background:var(--teal);animation:blink 1.6s infinite}
+.micbar.paused{color:var(--orange)}.micbar.paused .dot{background:var(--orange2);animation:none}
+.micbar .rec{margin-left:auto;color:var(--rec);display:none;align-items:center;gap:6px}
+.micbar .rec:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--rec)}
+.micbar.recording .rec{display:inline-flex}
+h1{font-size:32px;line-height:1.15;margin:4px 0 4px}
+h2{font-size:21px;margin:0 0 10px}
+.lead{font-size:19px;line-height:1.4;color:var(--sub);margin:0 0 14px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:16px 18px;margin:0 0 16px}
+ul.tips{margin:0;padding:0;list-style:none}
+ul.tips li{font-size:18px;line-height:1.4;padding:9px 0 9px 28px;position:relative;border-bottom:1px solid #EEF1F2}
+ul.tips li:last-child{border-bottom:0}
+ul.tips li:before{content:"";position:absolute;left:3px;top:17px;width:12px;height:12px;border-radius:50%;background:var(--teal)}
+.win{display:flex;gap:14px;align-items:center;background:var(--orangeL);border:2px solid #F0CDAE;border-radius:22px;padding:14px 16px;margin-bottom:16px}
+.star{flex:0 0 52px;height:52px;border-radius:50%;background:var(--orange2);display:flex;align-items:center;justify-content:center}
+.win b{font-size:20px}.win .s{color:var(--sub);font-size:16px}
+.ico{display:inline-block;width:1em;height:1em;vertical-align:-.13em;fill:currentColor}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:72px;border:0;border-radius:20px;font:inherit;font-size:23px;font-weight:800;cursor:pointer;margin:0 0 12px;letter-spacing:.2px;padding:8px 14px;line-height:1.15;text-align:center}
+.btn:active{transform:scale(.985)}
+.btn[disabled]{opacity:.45}
+.go{background:var(--teal);color:#fff}.stop{background:var(--rec);color:#fff}
+.soft{background:var(--card);color:var(--ink);border:3px solid var(--ink)}
+.tone{background:var(--orange);color:#fff}
+.row{display:flex;gap:10px}.row .btn{flex:1;font-size:clamp(16px,4.6vw,20px);gap:6px;padding:8px 6px;white-space:nowrap}
+.big{font-size:112px;font-weight:800;line-height:1;text-align:center;margin:6px 0 0;font-variant-numeric:tabular-nums}
+.mid{font-size:80px}
+.unit{text-align:center;color:var(--sub);font-size:18px;font-weight:700;margin-bottom:10px}
+.state{display:flex;justify-content:center;margin:2px 0 10px;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:8px 16px;font-weight:800;font-size:16px;background:#E9EDEE;color:var(--ink);line-height:1.25}
+.pill.live{background:var(--tealL);color:var(--teal)}
+.pill.rec{background:var(--rec);color:#fff}
+.pill.rec:before,.pill.live:before{content:"";flex:0 0 12px;width:12px;height:12px;border-radius:50%;background:currentColor;animation:blink 1.2s infinite}
+.pill.wait{background:var(--orangeL);color:var(--orange)}
+@keyframes blink{50%{opacity:.25}}
+.bar{position:relative;height:26px;border-radius:13px;background:var(--line);margin:40px 4px 34px}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:13px;background:var(--orange2);width:0}
+.bar .goal{position:absolute;top:-34px;bottom:-10px;width:5px;background:var(--teal);border-radius:3px}
+.bar .goal span{position:absolute;top:-4px;left:10px;white-space:nowrap;color:var(--teal);font-weight:800;font-size:15px}
+.bar .tick{position:absolute;top:32px;font-size:13px;color:var(--grey);font-weight:700;transform:translateX(-50%)}
+.bar .tick.end{transform:translateX(-100%)}.bar .tick.st{transform:none}
+.meterbox{margin:4px 0 12px}
+.meterlab{display:flex;justify-content:space-between;font-size:13px;color:var(--grey);font-weight:700;margin-bottom:4px}
+.meter{position:relative;height:24px;border-radius:12px;background:#E6EAEC;overflow:hidden}
+.meter i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--orange2);border-radius:12px;transition:width .07s linear}
+.meter.ok i{background:var(--teal)}
+.meter .gate{position:absolute;top:0;bottom:0;width:3px;background:var(--ink);opacity:.55;display:none}
+.coach{text-align:center;font-size:21px;font-weight:800;min-height:30px;margin:6px 0 4px;color:var(--sub)}
+.coach.ok{color:var(--teal)}.coach.more{color:var(--orange)}
+.result{background:var(--tealL);border:2px solid var(--teal);border-radius:18px;padding:14px 16px;font-size:19px;text-align:center;margin-bottom:12px;line-height:1.35}
+.result b{font-size:28px;color:var(--teal)}
+.result.warm{background:var(--orangeL);border-color:#F0CDAE}.result.warm b{color:var(--orange)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-weight:800;font-size:15px;margin:8px 0 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:22px;height:10px;border-radius:5px}
+svg.pic{width:100%;max-width:560px;margin:0 auto;height:auto;display:block}
+.now{display:flex;justify-content:center;align-items:baseline;gap:12px;min-height:48px;margin:4px 0 0}
+.now .n{font-size:40px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums}
+.now .l{font-size:16px;color:var(--sub);font-weight:700}
+.strip{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin:14px -10px 6px}
+.strip div{border:2px solid var(--line);border-radius:10px;text-align:center;font-weight:800;font-size:16px;padding:10px 0;background:#fff;white-space:nowrap;letter-spacing:-.3px}
+.strip div.on{background:var(--orange2);border-color:var(--orange2);color:#fff}
+.strip div.sung{background:var(--tealL);border-color:var(--teal);color:var(--teal)}
+.strip div.sung.on{background:var(--teal);color:#fff}
+.tuner{text-align:center;margin:6px 0 4px}
+.tuner .note{font-size:76px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;min-height:76px}
+.tuner .cents{font-size:22px;font-weight:800;min-height:30px;margin-top:4px}
+.gauge{position:relative;height:34px;margin:12px 6px 4px;border-radius:17px;background:#EEF1F2}
+.gauge .zone{position:absolute;top:0;bottom:0;left:35%;width:30%;background:var(--tealL);border-left:2px solid var(--teal);border-right:2px solid var(--teal)}
+.gauge .needle{position:absolute;top:-6px;bottom:-6px;width:8px;margin-left:-4px;border-radius:4px;background:var(--ink);left:50%;transition:left .1s;display:none}
+.gauge .mid{position:absolute;top:4px;bottom:4px;left:50%;width:2px;margin-left:-1px;background:var(--teal)}
+.glab{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:var(--grey);margin:0 4px}
+.paused{display:none;text-align:center;font-weight:800;color:var(--orange);background:var(--orangeL);border-radius:14px;padding:8px 10px;margin:8px 0;font-size:16px}
+.paused.on{display:block}
+.takes{display:flex;gap:14px;justify-content:center;margin:6px 0 12px}
+.takes div{width:62px;height:62px;border-radius:50%;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--grey);background:#fff}
+.takes div.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.takes div.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.takeres{list-style:none;margin:0 0 10px;padding:0}
+.takeres li{display:flex;justify-content:space-between;gap:10px;font-size:18px;padding:8px 2px;border-bottom:1px solid #EEF1F2}
+.takeres li b{white-space:nowrap}
+.small{font-size:16px;color:var(--sub);line-height:1.4}
+.check{display:flex;align-items:center;gap:12px;font-size:17px;color:var(--ink);font-weight:600;padding:8px 0;cursor:pointer;line-height:1.3}
+.check input{width:26px;height:26px;flex:0 0 26px;accent-color:var(--teal)}
+.seg{display:flex;gap:8px;margin:6px 0 4px}
+.seg button{flex:1;min-height:48px;border-radius:14px;border:2px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:16px;color:var(--sub)}
+.seg button.on{border-color:var(--teal);background:var(--tealL);color:var(--teal)}
+nav.foot{position:fixed;left:0;right:0;bottom:0;background:rgba(247,245,240,.97);border-top:2px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:5}
+nav.foot .in{max-width:760px;margin:0 auto;display:flex;gap:12px}
+nav.foot .btn{margin:0;min-height:60px;font-size:20px}
+.hide{display:none!important}
+table.log{width:100%;border-collapse:collapse;font-size:17px}
+table.log td{padding:11px 4px;border-bottom:1px solid #EEF1F2;vertical-align:top;line-height:1.35}
+table.log td:last-child{text-align:right;color:var(--orange);font-weight:800}
+table.log td .tc{display:block;font-size:13px;color:var(--grey);font-weight:600}
+input.text{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px solid var(--line);border-radius:14px;margin-top:6px}
+.dl{display:flex;gap:10px;align-items:center;justify-content:space-between;border-bottom:1px solid #EEF1F2;padding:8px 0;font-size:18px}
+.dl a{display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 16px;border-radius:14px;background:var(--teal);color:#fff;font-weight:800;text-decoration:none;font-size:17px}
+.dl span.none{color:var(--grey);font-size:15px}
+.foot-note{text-align:center;color:var(--grey);font-size:14px;margin-top:6px}
+.demo{display:inline-block;background:var(--ink);color:#fff;font-size:12px;font-weight:800;border-radius:999px;padding:4px 10px;margin:0 0 8px}
+.nomic .listenOnly{display:none!important}body.mic .micOffOnly{display:none!important}
+.fallback{background:var(--orangeL);border-color:#F0CDAE}
+@media(min-width:700px){h1{font-size:40px}.big{font-size:150px}.mid{font-size:96px}.strip div{font-size:18px}}
+</style>
+</head>
+<body class="nomic">
+<div class="wrap">
+<header id="chips"></header>
+<div class="micbar" id="micbar"><span class="dot"></span><span id="micTxt">Mic off</span><span class="rec">Saving this take</span></div>
+
+<!-- 0 SETUP -->
+<section data-s="0">
+  <h1>Weekly Voice Test</h1>
+  <p class="lead">4 short takes. This page can listen and help as you go.</p>
+  <div class="win"><div class="star"><svg class="ico" style="width:30px;height:30px;fill:#fff" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 16.9 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></div><div><b>Win: your song already reaches C#5</b><div class="s">That's above the trill goal!</div></div></div>
+
+  <div class="card" id="micCard">
+    <h2>Let the page hear you</h2>
+    <button class="btn go" id="micBtn" onclick="enableMic()"><svg class="ico" viewBox="0 0 24 24"><path d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 0 0-7 0v6A3.5 3.5 0 0 0 12 15zm6-3.5a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-2.6a8 8 0 0 0 7-7.9z"/></svg>Allow microphone</button>
+    <div id="micLive" class="hide">
+      <div class="meterbox"><div class="meterlab"><span>quiet</span><span>loud</span></div><div class="meter" id="m0"><i></i></div></div>
+      <div class="coach" id="c0">Hiss or hum. Watch the bar move.</div>
+      <label class="check" id="recRow"><input type="checkbox" id="recOn" checked onchange="recPref()"><span>Save my takes on this device, so I can download them at the end</span></label>
+      <p class="small hide" id="recNo">This browser can't save takes here. Record with your memo app instead. Listening still works.</p>
+      <button class="btn soft" onclick="disableMic()">Turn the mic off</button>
+    </div>
+    <div id="micStarting" class="small hide">Asking for the microphone&hellip; tap Allow.</div>
+  </div>
+
+  <div class="card fallback hide" id="micBlocked">
+    <h2>No mic? That's okay.</h2>
+    <p class="small" style="font-size:17px;margin:0 0 8px" id="blockWhy">The browser didn't let this page use the microphone.</p>
+    <ul class="tips">
+      <li>Use the timers and tones, like before. Tap START and STOP yourself.</li>
+      <li>Record each take with your memo app.</li>
+      <li>To try again later: allow the microphone for this page in your browser settings, then reload.</li>
+    </ul>
+  </div>
+
+  <div class="card"><ul class="tips">
+    <li>This page listens on this device. Your voice stays here. Nothing is uploaded.</li>
+    <li>Making your usual voice memos too? Keep this page playing, and record with your memo app or DJI mic as usual. Or let this page save the takes and download them at the end.</li>
+    <li>DJI mic on your collar, about a hand's width away, noise cancelling <b>off</b>, is still the best memo mic. The phone mic is fine for live feedback.</li>
+    <li>Playing tones and singing on one phone? Headphones help, so the page hears only you.</li>
+    <li>Keep every sound easy. If it strains, stop. That's always okay.</li>
+  </ul></div>
+  <button class="btn go" onclick="go(1)">Start the test</button>
+</section>
+
+<!-- 1 HISS -->
+<section data-s="1" class="hide">
+  <h1>1 &nbsp;Hiss</h1>
+  <p class="lead">Breathe in low, then one long, steady "sss". Go until the air runs out on its own.</p>
+  <div class="card">
+    <div class="state"><span class="pill" id="hissState">Tap START, then hiss</span></div>
+    <div class="big" id="hissNum">0</div><div class="unit">seconds</div>
+    <div class="bar"><div class="fill" id="hissFill"></div>
+      <div class="goal" style="left:66.6%"><span>GOAL 30</span></div>
+      <div class="tick st" style="left:0">0</div><div class="tick" style="left:22.2%">10</div><div class="tick" style="left:44.4%">20</div><div class="tick end" style="left:100%">45</div></div>
+    <div class="meterbox listenOnly"><div class="meterlab"><span>hiss level</span><span id="gateLab">timer starts past the line</span></div><div class="meter" id="m1"><i></i><b class="gate"></b></div></div>
+    <div class="coach listenOnly" id="c1"></div>
+    <div id="hissResult" class="result hide"></div>
+    <button class="btn go" id="hissBtn" onclick="hissToggle()">START</button>
+    <button class="btn soft hide" id="hissReset" onclick="hissReset()">Reset &amp; try again</button>
+    <div class="listenOnly">
+      <p class="small" style="margin:4px 0 2px">The timer starts by itself when it hears a steady hiss, and stops when the hiss ends. You can also tap START and STOP.</p>
+      <div class="small" style="font-weight:700;margin-top:8px">Hard to hear you?</div>
+      <div class="seg" id="sens"><button class="on" onclick="setSens('normal')">Normal</button><button onclick="setSens('more')">More sensitive</button></div>
+    </div>
+    <p class="small micOffOnly">The mic is off, so tap START and STOP yourself. <a href="#0" onclick="go(0);return false">Turn on listening</a></p>
+    <label class="check"><input type="checkbox" id="chimes"><span>Soft chime at 10, 20 and 30 seconds<span class="small" id="chimeNote"> (best with headphones)</span></span></label>
+    <p class="small" style="margin:2px 0 0">A little more present than last time, but still easy.</p>
+  </div>
+</section>
+
+<!-- 2 TRILL -->
+<section data-s="2" class="hide">
+  <h1>2 &nbsp;Lip trill</h1>
+  <p class="lead">Loose lips, gentle "brrr". One slow, continuous slide: low, up, then back down.</p>
+  <div class="card">
+    <svg class="pic" id="kb" viewBox="0 0 440 262" aria-label="Range on a keyboard"></svg>
+    <div class="legend"><span style="color:var(--orange)"><i style="background:var(--orange)"></i>Today</span><span style="color:var(--teal)"><i style="background:var(--teal)"></i>Goal</span><span style="color:var(--ink)"><i style="background:var(--ink)"></i>This take</span><span style="color:var(--orange)"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 16.9 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg>your song, C#5</span></div>
+    <div class="now listenOnly"><span class="l" id="trillNowL">Now</span><span class="n" id="trillNow">&ndash;</span></div>
+    <p class="small" style="margin:6px 0 0">Your song already reaches C#5. The notes are there; now make the slide smooth.</p>
+  </div>
+  <div class="card">
+    <div class="state"><span class="pill" id="trillState">Tap START, then brrr</span></div>
+    <svg class="pic" id="arch" viewBox="0 0 700 235" aria-label="Pace guide"></svg>
+    <div class="big mid" id="trillNum">0:00</div><div class="unit">about 30 seconds &middot; pace guide, not a pitch to match</div>
+    <div class="meterbox listenOnly"><div class="meterlab"><span>your sound</span><span></span></div><div class="meter" id="m2"><i></i></div></div>
+    <div id="trillResult" class="result hide"></div>
+    <button class="btn go" id="trillBtn" onclick="trillToggle()">START</button>
+    <button class="btn soft hide" id="trillAgain" onclick="trillReset()">Try again</button>
+    <ul class="tips"><li>Start low, where the brrr is easy.</li><li>Lips stop? Just reset and keep going.</li><li>Don't push through the break.</li></ul>
+  </div>
+</section>
+
+<!-- 3 1-5-1 -->
+<section data-s="3" class="hide">
+  <h1>3 &nbsp;1-5-1 on "mee"</h1>
+  <p class="lead">Three times. Match E3 first, and stay with it. (You tend to sit a little high.)</p>
+  <div class="card">
+    <div class="row"><button class="btn tone" id="e3Btn" onclick="playE3()"><svg class="ico" viewBox="0 0 24 24"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17V7h8V3z"/></svg>Play E3</button><button class="btn tone" id="patBtn" onclick="playPattern()"><svg class="ico" viewBox="0 0 24 24"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17V7h8V3z"/></svg>Play pattern</button></div>
+    <div class="strip" id="strip"></div>
+    <p class="small" style="margin:4px 0 0">E major, all in octave 3: E3 &ndash; F#3 &ndash; G#3 &ndash; A3 &ndash; B3 &ndash; and back down.</p>
+    <div class="paused" id="paused">Listening paused while the tone plays</div>
+    <div class="tuner listenOnly">
+      <div class="note" id="tNote">&ndash;</div>
+      <div class="cents" id="tCents">Sing, and I'll show your pitch</div>
+      <div class="gauge"><div class="zone"></div><div class="mid"></div><div class="needle" id="tNeedle"></div></div>
+      <div class="glab"><span>flat</span><span style="color:var(--teal)">in tune</span><span>sharp</span></div>
+    </div>
+    <p class="small" style="margin:10px 0 0">One phone for tones and singing? Headphones help.</p>
+  </div>
+  <div class="card">
+    <div class="takes" id="takes"><div>1</div><div>2</div><div>3</div></div>
+    <div class="state"><span class="pill" id="takeState">Take 1 of 3</span></div>
+    <p style="text-align:center;font-size:19px;font-weight:700;margin:0 0 12px" id="takeTxt">Tap Start take. You'll hear E3, then sing.</p>
+    <button class="btn go" id="takeBtn" onclick="takeStart()">Start take 1</button>
+    <button class="btn stop hide" id="takeDone" onclick="takeEnd(true)">Done with this take</button>
+    <label class="check"><input type="checkbox" id="e3First" checked><span>Play E3 before each take</span></label>
+    <ul class="takeres" id="takeRes"></ul>
+    <div id="takeSum" class="result hide"></div>
+    <div class="row"><button class="btn soft" onclick="takeBack()">Redo a take</button><button class="btn soft micOffOnly" onclick="takeNextManual()">Next take</button></div>
+  </div>
+</section>
+
+<!-- 4 SONG -->
+<section data-s="4" class="hide">
+  <h1>4 &nbsp;Song line</h1>
+  <p class="lead">One line you love. Easy is beautiful.</p>
+  <div class="card"><ul class="tips">
+    <li>Mark where you'll breathe first.</li>
+    <li>Breathe before the last phrase, so the ending stays easy.</li>
+    <li>No pushing on the big emotional moments.</li>
+  </ul></div>
+  <div class="card">
+    <div class="state"><span class="pill" id="songState">Think time, then sing</span></div>
+    <div class="big mid" id="songNum">0:00</div><div class="unit" id="songUnit">about 30 seconds</div>
+    <div class="meterbox listenOnly"><div class="meterlab"><span>your voice</span><span></span></div><div class="meter" id="m4"><i></i></div></div>
+    <div class="coach listenOnly" id="c4"></div>
+    <div id="songResult" class="result hide"></div>
+    <button class="btn soft" id="thinkBtn" onclick="think()">10-second think time</button>
+    <button class="btn go" id="songBtn" onclick="songToggle()">START SINGING</button>
+  </div>
+</section>
+
+<!-- 5 DONE -->
+<section data-s="5" class="hide">
+  <h1>You're done!</h1>
+  <p class="lead">Here's your weekly log. Numbers from the page are live estimates. Your teacher can confirm them from your memos.</p>
+  <div class="card"><table class="log">
+    <tr><td><b>Hiss (seconds)</b></td><td id="logHiss"></td></tr>
+    <tr><td><b>Lowest easy trill note</b></td><td id="logLo"></td></tr>
+    <tr><td><b>Highest easy trill note</b></td><td id="logHi"></td></tr>
+    <tr><td><b>1-5-1 pitch (cents off)</b></td><td id="log151"></td></tr>
+    <tr><td colspan="2" style="text-align:left;color:var(--ink);font-weight:400"><b>Song line I sang</b><input class="text" id="songLine" placeholder="Type the line, or leave it blank" oninput="saveSongLine()"></td></tr>
+  </table></div>
+  <div class="card" id="dlCard">
+    <h2>Your takes on this device</h2>
+    <div id="dlList"></div>
+    <p class="small" style="margin:8px 0 0">Download them before you close this page. They are not saved anywhere else.</p>
+  </div>
+  <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:800">Upload your voice memos</div><div class="lead" style="margin:6px 0 0">Google Drive &rarr; "Vocal tests" folder</div><div class="small" style="margin-top:6px">Your voice stayed on this device. Nothing was uploaded by this page.</div></div>
+  <p class="lead" style="text-align:center">Showing up is what counts. See you next week.</p>
+  <button class="btn soft" onclick="go(0)">Back to start</button>
+  <button class="btn soft" onclick="clearWeek()">Clear this week's log</button>
+</section>
+<p class="foot-note"># means sharp &middot; keep every sound easy</p>
+</div>
+<nav class="foot"><div class="in"><button class="btn soft" id="prevB" onclick="go(cur-1)"><svg class="ico" viewBox="0 0 24 24"><path d="M15.5 4L7.5 12l8 8 1.6-1.6L10.7 12l6.4-6.4z"/></svg>Back</button><button class="btn go" id="nextB" onclick="go(cur+1)"><span id="nextTxt">Next</span><svg class="ico" viewBox="0 0 24 24"><path d="M8.5 4l8 8-8 8-1.6-1.6 6.4-6.4-6.4-6.4z"/></svg></button></div></nav>
+
+<script src="dsp.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

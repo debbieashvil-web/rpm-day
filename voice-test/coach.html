@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F7F5F0">
+<title>Weekly Voice Test Coach</title>
+<style>
+:root{--bg:#F7F5F0;--ink:#22343C;--sub:#54646C;--card:#fff;--line:#D6DDE0;--orange:#B8611F;--orange2:#CC7330;--teal:#147F78;--tealL:#E2F1EF;--orangeL:#FAEADC;--rec:#C33A3A;--grey:#7C8B8E}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Poppins","Nunito","Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+body{min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:16px 18px 120px}
+header{display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;margin:4px 0 14px}
+.chip{border:2px solid var(--line);background:var(--card);color:var(--grey);font-weight:700;font-size:13px;border-radius:999px;padding:6px 9px;cursor:pointer}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.done{background:var(--tealL);color:var(--teal);border-color:var(--tealL)}
+h1{font-size:34px;line-height:1.15;margin:6px 0 4px}
+.lead{font-size:19px;color:var(--sub);margin:0 0 16px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px 20px;margin:0 0 16px}
+ul.tips{margin:0;padding:0;list-style:none}
+ul.tips li{font-size:19px;line-height:1.4;padding:9px 0 9px 30px;position:relative;border-bottom:1px solid #EEF1F2}
+ul.tips li:last-child{border-bottom:0}
+ul.tips li:before{content:"";position:absolute;left:4px;top:18px;width:13px;height:13px;border-radius:50%;background:var(--teal)}
+.win{display:flex;gap:14px;align-items:center;background:var(--orangeL);border:2px solid #F0CDAE;border-radius:22px;padding:14px 18px;margin-bottom:16px}
+.star{flex:0 0 52px;height:52px;border-radius:50%;background:var(--orange2);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center}
+.win b{font-size:20px}.win div div{color:var(--sub);font-size:16px}
+.btn{display:block;width:100%;min-height:72px;border:0;border-radius:20px;font:inherit;font-size:24px;font-weight:800;cursor:pointer;margin:0 0 12px;letter-spacing:.3px}
+.btn:active{transform:scale(.985)}
+.go{background:var(--teal);color:#fff}
+.stop{background:var(--rec);color:#fff}
+.soft{background:var(--card);color:var(--ink);border:3px solid var(--ink)}
+.tone{background:var(--orange);color:#fff}
+.row{display:flex;gap:12px}.row .btn{flex:1;font-size:21px}
+.big{font-size:120px;font-weight:800;line-height:1;text-align:center;margin:8px 0 0;font-variant-numeric:tabular-nums}
+.unit{text-align:center;color:var(--sub);font-size:20px;font-weight:700;margin-bottom:10px}
+.state{display:flex;justify-content:center;margin:2px 0 10px}
+.pill{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:8px 18px;font-weight:800;font-size:17px;background:var(--line);color:var(--ink)}
+.pill.rec{background:var(--rec);color:#fff}
+.pill.rec:before{content:"";width:14px;height:14px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.bar{position:relative;height:26px;border-radius:13px;background:var(--line);margin:40px 4px 34px}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:13px;background:var(--orange2);width:0}
+.bar .goal{position:absolute;top:-34px;bottom:-10px;width:5px;background:var(--teal);border-radius:3px}
+.bar .goal span{position:absolute;top:-4px;left:10px;white-space:nowrap;color:var(--teal);font-weight:800;font-size:15px}
+.bar .tick{position:absolute;top:32px;font-size:13px;color:var(--grey);font-weight:700;transform:translateX(-50%)}
+.result{background:var(--tealL);border:2px solid var(--teal);border-radius:18px;padding:14px 16px;font-size:20px;text-align:center;margin-bottom:12px}
+.result b{font-size:30px;color:var(--teal)}
+.legend{display:flex;gap:18px;font-weight:800;font-size:16px;margin:2px 0 8px}
+.legend .o{color:var(--orange)}.legend .t{color:var(--teal)}
+svg{width:100%;max-width:560px;margin:0 auto;height:auto;display:block}
+.strip{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:14px 0 6px}
+.strip div{flex:0 0 56px;border:2px solid var(--line);border-radius:12px;text-align:center;font-weight:800;font-size:18px;padding:10px 0;background:#fff}
+.strip div.on{background:var(--orange2);border-color:var(--orange2);color:#fff}
+.takes{display:flex;gap:14px;justify-content:center;margin:6px 0 14px}
+.takes div{width:64px;height:64px;border-radius:50%;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--grey);background:#fff}
+.takes div.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.takes div.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.small{font-size:16px;color:var(--sub)}
+nav.foot{position:fixed;left:0;right:0;bottom:0;background:rgba(247,245,240,.96);border-top:2px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+nav.foot .in{max-width:760px;margin:0 auto;display:flex;gap:12px}
+nav.foot .btn{margin:0;min-height:60px;font-size:20px}
+.hide{display:none}
+table.log{width:100%;border-collapse:collapse;font-size:17px}
+table.log td{padding:11px 4px;border-bottom:1px solid #EEF1F2;vertical-align:top}
+table.log td:last-child{text-align:right;color:var(--sub)}
+.foot-note{text-align:center;color:var(--grey);font-size:14px;margin-top:6px}
+@media(min-width:700px){h1{font-size:42px}.big{font-size:160px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header id="chips"></header>
+
+<!-- SETUP -->
+<section data-s="0">
+  <h1>Weekly Voice Test</h1>
+  <p class="lead">4 short takes. Big timers and reference tones to guide you.</p>
+  <div class="win"><div class="star">&#9733;</div><div><b>Win: your song already reaches C#5</b><div>That's above the trill goal!</div></div></div>
+  <div class="card"><ul class="tips">
+    <li>Record each take as its own voice memo on your phone.</li>
+    <li>Open this page on another device or a speaker, so tones stay off your recording. (Or turn the volume low.)</li>
+    <li>Mic on your collar, about a hand's width from your mouth. Noise cancelling <b>off</b>.</li>
+    <li>Keep every sound easy. If anything strains, stop. That's always okay.</li>
+  </ul></div>
+  <button class="btn go" onclick="go(1)">Start the test</button>
+</section>
+
+<!-- HISS -->
+<section data-s="1" class="hide">
+  <h1>1 &nbsp;Hiss</h1>
+  <p class="lead">Breathe in low, then one long, steady "sss". Go until the air runs out on its own.</p>
+  <div class="card">
+    <div class="state"><span class="pill" id="hissState">Start your voice memo, then tap START</span></div>
+    <div class="big" id="hissNum">0</div><div class="unit">seconds</div>
+    <div class="bar" id="hissBar"><div class="fill" id="hissFill"></div>
+      <div class="goal" style="left:66.6%"><span>GOAL 30</span></div>
+      <div class="tick" style="left:0">0</div><div class="tick" style="left:22.2%">10</div><div class="tick" style="left:44.4%">20</div><div class="tick" style="left:100%">45</div></div>
+    <div id="hissResult" class="result hide"></div>
+    <button class="btn go" id="hissBtn" onclick="hissToggle()">START</button>
+    <button class="btn soft hide" id="hissReset" onclick="hissReset()">Reset &amp; try again</button>
+    <p class="small">A little more present than last time, but still easy. Soft chime at 10, 20 and 30 seconds (can be off).</p>
+    <label class="small"><input type="checkbox" id="chimes" checked> Soft chimes</label>
+  </div>
+</section>
+
+<!-- TRILL -->
+<section data-s="2" class="hide">
+  <h1>2 &nbsp;Lip trill</h1>
+  <p class="lead">Loose lips, gentle "brrr". One slow, continuous slide: low, up, then back down.</p>
+  <div class="card">
+        <svg id="kb" viewBox="0 0 440 230" aria-label="Range on a keyboard"></svg>
+    <p class="small">&#9733; Your song already reaches C#5. The notes are there; now make the slide smooth.</p>
+  </div>
+  <div class="card">
+    <div class="state"><span class="pill" id="trillState">Start your voice memo, then tap START</span></div>
+    <svg id="arch" viewBox="0 0 700 235" aria-label="Pace guide"></svg>
+    <div class="big" id="trillNum" style="font-size:84px">0:00</div><div class="unit">suggested: about 30 seconds &middot; pace guide, not a pitch</div>
+    <button class="btn go" id="trillBtn" onclick="trillToggle()">START</button>
+    <ul class="tips"><li>Start low, where the brrr is easy.</li><li>Lips stop? Just reset and keep going.</li><li>Don't push through the break.</li></ul>
+  </div>
+</section>
+
+<!-- 1-5-1 -->
+<section data-s="3" class="hide">
+  <h1>3 &nbsp;1-5-1 on "mee"</h1>
+  <p class="lead">Three times. Match E3 first, and stay with it. (You tend to sit a little high.)</p>
+  <div class="card">
+    <div class="row"><button class="btn tone" onclick="playE3()">&#9835; Play E3</button><button class="btn tone" onclick="playPattern()">&#9835; Play pattern</button></div>
+    <div class="strip" id="strip"></div>
+    <p class="small">E major: E3 &ndash; F#3 &ndash; G#3 &ndash; A3 &ndash; B3 &ndash; and back down. Hum E3 softly before each take.</p>
+  </div>
+  <div class="card">
+    <div class="takes" id="takes"><div>1</div><div>2</div><div>3</div></div>
+    <p style="text-align:center;font-size:20px;font-weight:700;margin:0 0 12px" id="takeTxt">Take 1 of 3: play E3, then sing.</p>
+    <div class="row"><button class="btn soft" onclick="takeBack()">&larr; Back</button><button class="btn go" onclick="takeNext()">Next take &rarr;</button></div>
+  </div>
+</section>
+
+<!-- SONG -->
+<section data-s="4" class="hide">
+  <h1>4 &nbsp;Song line</h1>
+  <p class="lead">One line you love. Easy is beautiful.</p>
+  <div class="card"><ul class="tips">
+    <li>Mark where you'll breathe first.</li>
+    <li>Breathe before the last phrase, so the ending stays easy.</li>
+    <li>No pushing on the big emotional moments.</li>
+  </ul></div>
+  <div class="card">
+    <div class="state"><span class="pill" id="songState">Think time, then sing</span></div>
+    <div class="big" id="songNum" style="font-size:84px">0:00</div><div class="unit" id="songUnit">suggested: about 30 seconds</div>
+    <button class="btn soft" id="thinkBtn" onclick="think()">10-second think time</button>
+    <button class="btn go" id="songBtn" onclick="songToggle()">START SINGING</button>
+  </div>
+</section>
+
+<!-- DONE -->
+<section data-s="5" class="hide">
+  <h1>You're done!</h1>
+  <p class="lead">Here's what to put in your weekly log.</p>
+  <div class="card"><table class="log">
+    <tr><td><b>Hiss (seconds)</b></td><td id="logHiss" style="color:var(--orange);font-weight:800">your number from the timer</td></tr>
+    <tr><td><b>Lowest easy trill note</b></td><td>teacher measures</td></tr>
+    <tr><td><b>Highest easy trill note</b></td><td>teacher measures</td></tr>
+    <tr><td><b>1-5-1 pitch (cents off)</b></td><td>teacher measures</td></tr>
+    <tr><td><b>Song line recorded</b></td><td>write which line you sang</td></tr>
+  </table></div>
+  <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:800">Upload your 4 voice memos</div><div class="lead" style="margin:6px 0 0">Google Drive &rarr; "Vocal tests" folder</div></div>
+  <p class="lead" style="text-align:center">Showing up is what counts. See you next week. &#9835;</p>
+  <button class="btn soft" onclick="go(0)">Back to start</button>
+</section>
+<p class="foot-note"># means sharp &middot; keep every sound easy</p>
+</div>
+<nav class="foot"><div class="in"><button class="btn soft" id="prevB" onclick="go(cur-1)">&larr; Back</button><button class="btn go" id="nextB" onclick="go(cur+1)">Next &rarr;</button></div></nav>
+
+<script>
+const NAMES=["Setup","Hiss","Trill","1-5-1","Song","Done"];let cur=0;
+const chips=document.getElementById('chips');
+NAMES.forEach((n,i)=>{const b=document.createElement('button');b.className='chip';b.textContent=n;b.onclick=()=>go(i);chips.appendChild(b)});
+function go(i){i=Math.max(0,Math.min(5,i));stopAll();cur=i;
+ document.querySelectorAll('section').forEach(s=>s.classList.toggle('hide',+s.dataset.s!==i));
+ [...chips.children].forEach((c,j)=>{c.className='chip'+(j===i?' on':(j<i?' done':''))});
+ document.getElementById('prevB').style.visibility=i?'visible':'hidden';
+ document.getElementById('nextB').style.visibility=i===5?'hidden':'visible';document.getElementById('nextB').textContent=i===0?'Start →':'Next →';
+ if(i===5){const v=localStorage.getItem('vt_hiss');document.getElementById('logHiss').textContent=v?v+' seconds':'your number from the timer'}
+ window.scrollTo(0,0)}
+// ---------- audio (Web Audio, A440)
+let ac;function ctx(){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
+const hz=m=>440*Math.pow(2,(m-69)/12);
+function note(m,start,dur,vol=0.22,sustain=false){const a=ctx();const out=a.createGain();out.gain.value=vol;out.connect(a.destination);
+ [[1,1],[2,.5],[3,.28],[4,.14],[5,.07]].forEach(([k,amp],idx)=>{const o=a.createOscillator();o.type='sine';o.frequency.value=hz(m)*k;
+  const g=a.createGain();const t0=a.currentTime+start;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(amp,t0+0.01);
+  if(sustain){g.gain.setTargetAtTime(amp*0.45,t0+0.02,0.4/(1+idx*0.5));g.gain.setTargetAtTime(0,t0+dur-0.35,0.12)}
+  else{g.gain.setTargetAtTime(0,t0+0.02,0.9/(1+idx*0.6));}
+  o.connect(g);g.connect(out);o.start(t0);o.stop(t0+dur+0.5)})}
+function chime(){if(!document.getElementById('chimes').checked)return;const a=ctx();[[1318.5,1],[1975.5,.35]].forEach(([f,amp])=>{const o=a.createOscillator();o.frequency.value=f;const g=a.createGain();const t0=a.currentTime;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(0.05*amp,t0+0.005);g.gain.setTargetAtTime(0,t0+0.01,0.3);o.connect(g);g.connect(a.destination);o.start();o.stop(t0+1.6)})}
+const PAT=[52,54,56,57,59,57,56,54,52],NN=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"],nm=m=>NN[m%12]+(Math.floor(m/12)-1);
+const strip=document.getElementById('strip');PAT.forEach(m=>{const d=document.createElement('div');d.textContent=nm(m);strip.appendChild(d)});
+let patTimers=[];
+function lightStrip(j){[...strip.children].forEach((d,k)=>d.classList.toggle('on',k===j))}
+function playE3(){ctx();note(52,0.02,3.0,0.24,true);lightStrip(0);patTimers.push(setTimeout(()=>lightStrip(-1),3000))}
+function playPattern(){ctx();patTimers.forEach(clearTimeout);patTimers=[];const B=60/72;
+ PAT.forEach((m,j)=>{note(m,0.05+j*B,j===8?1.6:B*1.1,0.22);patTimers.push(setTimeout(()=>lightStrip(j),(50+j*B*1000)))});
+ patTimers.push(setTimeout(()=>lightStrip(-1),(0.05+9*B)*1000+400))}
+// takes
+let take=1;const takesEl=document.getElementById('takes');
+function drawTakes(){[...takesEl.children].forEach((d,k)=>d.className=(k+1<take?'done':(k+1===take?'on':'')));
+ document.getElementById('takeTxt').textContent=take>3?'All 3 takes done! Stop your recording.':`Take ${take} of 3: play E3, then sing.`}
+function takeNext(){if(take<=3)take++;drawTakes();if(take>3)setTimeout(()=>{},0)}
+function takeBack(){if(take>1)take--;drawTakes()}
+drawTakes();
+// ---------- keyboard SVG for trill range (D3..D5)
+(function(){const svg=document.getElementById('kb');const lo=50,hi=74,isB=m=>[1,3,6,8,10].includes(m%12);
+ const whites=[];for(let m=lo;m<=hi;m++)if(!isB(m))whites.push(m);const x0=6,w=(428)/whites.length,y0=118,kh=80;const pos={};let s='';
+ whites.forEach((m,j)=>{const x=x0+j*w;pos[m]=x+w/2;s+=`<rect x="${x}" y="${y0}" width="${w}" height="${kh}" fill="#fff" stroke="#22343C" stroke-width="2"/>`});
+ whites.forEach((m,j)=>{if(m+1<=hi&&isB(m+1)){const x=x0+(j+1)*w;pos[m+1]=x;s+=`<rect x="${x-w*.29}" y="${y0}" width="${w*.58}" height="${kh*.62}" fill="#22343C"/>`}});
+ [50,55,60,64,67,72].forEach(m=>{s+=`<text x="${pos[m]}" y="${y0+kh+24}" text-anchor="middle" font-size="20" font-weight="700" fill="#54646C">${nm(m)}</text>`});
+ const bar=(a,b,y,c,l)=>`<rect x="${pos[a]-9}" y="${y-9}" width="${pos[b]-pos[a]+18}" height="18" rx="9" fill="${c}"/><text x="${pos[a]-4}" y="${y-15}" font-size="19" font-weight="800" fill="${c}">${l}</text>`;
+ s+=bar(51,69,36,'#B8611F','Today D#3 – A4')+bar(55,72,82,'#147F78','Goal G3 – C5');
+ s+=`<circle cx="${pos[73]}" cy="104" r="9" fill="#FAEADC" stroke="#B8611F" stroke-width="3"/><text x="${pos[73]-16}" y="110" text-anchor="end" font-size="17" font-weight="800" fill="#B8611F">your song C#5</text>`;
+ svg.innerHTML=s})();
+// arch pace guide
+const arch=document.getElementById('arch');const AP=[];for(let i=0;i<=100;i++)AP.push([36+628*i/100,200-165*Math.sin(Math.PI*i/100)]);
+function drawArch(u){const k=Math.round(100*Math.min(u,1));const d=p=>p.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)).join('');
+ const p=AP[k];arch.innerHTML=`<path d="${d(AP)}" fill="none" stroke="#D6DDE0" stroke-width="16" stroke-linecap="round"/>`+(k>0?`<path d="${d(AP.slice(0,k+1))}" fill="none" stroke="#147F78" stroke-width="16" stroke-linecap="round"/>`:'')+
+ `<circle cx="${p[0]}" cy="${p[1]}" r="24" fill="#CC7330" stroke="#fff" stroke-width="4"/><text x="350" y="165" text-anchor="middle" font-size="40" font-weight="800" fill="#22343C">${u<=0?'ready':(u<.5?'slowly up…':(u<1?'slowly down…':'easy finish'))}</text>`}
+drawArch(0);
+// ---------- timers
+let raf=null,wl=null;async function wake(){try{if('wakeLock' in navigator)wl=await navigator.wakeLock.request('screen')}catch(e){}}
+function unwake(){try{wl&&wl.release();wl=null}catch(e){}}
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+function setPill(id,txt,rec){const p=document.getElementById(id);p.textContent=txt;p.className='pill'+(rec?' rec':'')}
+// hiss
+let hissOn=false,hissT0=0,lastChime=0;
+function hissToggle(){ctx();if(!hissOn){hissOn=true;hissT0=performance.now();lastChime=0;wake();
+ setPill('hissState','RECORDING · HISS',true);const b=document.getElementById('hissBtn');b.textContent='STOP — out of air';b.className='btn stop';
+ document.getElementById('hissResult').classList.add('hide');document.getElementById('hissReset').classList.add('hide');
+ const tick=()=>{const el=(performance.now()-hissT0)/1000;document.getElementById('hissNum').textContent=Math.floor(el);
+  document.getElementById('hissNum').style.color=el>=30?'#147F78':'#B8611F';const f=document.getElementById('hissFill');f.style.width=Math.min(100,el/45*100)+'%';f.style.background=el>=30?'#147F78':'#CC7330';
+  const c=Math.floor(el/10)*10;if(c>lastChime&&c<=30){lastChime=c;chime()}
+  raf=requestAnimationFrame(tick)};tick()}
+ else hissStop()}
+function hissStop(){if(!hissOn)return;hissOn=false;cancelAnimationFrame(raf);unwake();const el=Math.floor((performance.now()-hissT0)/1000);
+ localStorage.setItem('vt_hiss',el);setPill('hissState','Stopped — stop your voice memo',false);
+ const r=document.getElementById('hissResult');r.innerHTML=`Log this: <b>${el} seconds</b><br><span class="small">Goal: 30 seconds steady. ${el>=30?'You made it!':'Every second counts.'}</span>`;r.classList.remove('hide');
+ const b=document.getElementById('hissBtn');b.textContent='START';b.className='btn go';b.classList.add('hide');document.getElementById('hissReset').classList.remove('hide')}
+function hissReset(){document.getElementById('hissNum').textContent='0';document.getElementById('hissNum').style.color='';document.getElementById('hissFill').style.width='0';
+ document.getElementById('hissResult').classList.add('hide');document.getElementById('hissReset').classList.add('hide');document.getElementById('hissBtn').classList.remove('hide');setPill('hissState','Start your voice memo, then tap START',false)}
+// generic up-timer
+function mkTimer(numId,pillId,btnId,label,onTick){let on=false,t0=0,r=null;
+ return {get on(){return on},toggle(){ctx();if(!on){on=true;t0=performance.now();wake();setPill(pillId,label,true);const b=document.getElementById(btnId);b.dataset.l=b.textContent;b.textContent='STOP';b.className='btn stop';
+  const tk=()=>{const el=(performance.now()-t0)/1000;document.getElementById(numId).textContent=fmt(el);onTick&&onTick(el);r=requestAnimationFrame(tk)};tk()}else this.stop()},
+  stop(){if(!on)return;on=false;cancelAnimationFrame(r);unwake();setPill(pillId,'Stopped — stop your voice memo',false);const b=document.getElementById(btnId);b.textContent=b.dataset.l||'START';b.className='btn go'}}}
+const trill=mkTimer('trillNum','trillState','trillBtn','RECORDING · YOUR TURN',el=>drawArch(el/26));
+function trillToggle(){trill.toggle()}
+const song=mkTimer('songNum','songState','songBtn','RECORDING · SING');
+function songToggle(){clearThink();song.toggle()}
+let thinkI=null;function clearThink(){if(thinkI){clearInterval(thinkI);thinkI=null}}
+function think(){clearThink();let n=10;setPill('songState','THINK TIME · mark your breaths',false);document.getElementById('songNum').textContent=n;
+ thinkI=setInterval(()=>{n--;if(n<=0){clearThink();document.getElementById('songNum').textContent='0:00';setPill('songState','Start your voice memo, then START SINGING',false)}else document.getElementById('songNum').textContent=n},1000)}
+function stopAll(){hissStop();trill.on&&trill.stop();song.on&&song.stop();clearThink();patTimers.forEach(clearTimeout);lightStrip(-1)}
+go(parseInt(location.hash.slice(1))||0);
+</script>
+</body>
+</html>
