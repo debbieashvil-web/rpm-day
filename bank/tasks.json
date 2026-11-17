@@ -122,8 +122,10 @@
       "fill": 100,
       "meaning": "Voice, instruments, songs, and any creating.",
       "tasks": [
-        {"id": "mus-vocals", "label": "Vocal exercises", "points": 25, "cadence": "daily", "kind": "points"},
-        {"id": "mus-instrument", "label": "Piano or guitar study block after dinner", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "mus-vocals", "label": "Vocal exercises, 10 minutes or more", "points": 35, "cadence": "daily", "kind": "points", "slot": "voice", "countsTowardCap": true, "note": "A 5-minute tired day is 15, in place of this."},
+        {"id": "mus-piano", "label": "Piano block", "points": 25, "cadence": "daily", "kind": "points", "slot": "piano", "countsTowardCap": true},
+        {"id": "mus-guitar", "label": "Guitar block", "points": 25, "cadence": "daily", "kind": "points", "slot": "guitar", "countsTowardCap": true},
+        {"id": "mus-book", "label": "Book 1, next 2 pages", "points": 25, "cadence": "daily", "kind": "points", "slot": "book", "countsTowardCap": true},
         {"id": "mus-own-song", "label": "Worked on one of my own songs (a lyric, a tune, or a chord change)", "points": 25, "cadence": "progress", "kind": "points", "repeat": true},
         {"id": "mus-assignment", "label": "Did a music lesson assignment", "points": 20, "cadence": "weekly_or_occasional", "kind": "points"},
         {"id": "mus-performed", "label": "Performed, anywhere, any size", "points": 50, "cadence": "weekly_or_occasional", "kind": "points"},

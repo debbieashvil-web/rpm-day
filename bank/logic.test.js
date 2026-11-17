@@ -18,7 +18,7 @@ tasks.domains.forEach(function (d) {
   });
 });
 
-assert.strictEqual(count, 98, "task count");
+assert.strictEqual(count, 100, "task count");
 L.DOMAINS.forEach(function (d) {
   const fromFile = tasks.domains.find(function (x) { return x.id === d.id; });
   assert.ok(fromFile, d.id);
@@ -95,35 +95,80 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(s.meters["music-creativity"], 0);
 }
 
-// Proposal practice uses the task points once. Draft mode does not also add them.
+// Approved Songbird points. Piano and guitar are separate. A short vocal is not the 35.
+{
+  const s = fresh();
+  const afternoon = new Date(2026, 10, 17, 15, 0, 0);
+  const voice = L.logPractice(s, { track: "voice", minutes: 20, at: afternoon.toISOString() }, ctx);
+  assert.strictEqual(voice.points, 35);
+  const short = L.logPractice(s, { track: "voice", minutes: 5, at: afternoon.toISOString() }, ctx);
+  assert.strictEqual(short.points, 0);
+  const both = fresh();
+  const piano = L.logPractice(both, { track: "piano", minutes: 20, at: afternoon.toISOString() }, ctx);
+  const guitar = L.logPractice(both, { track: "guitar", minutes: 20, at: afternoon.toISOString() }, ctx);
+  assert.strictEqual(piano.points, 25);
+  assert.strictEqual(guitar.points, 25);
+  assert.strictEqual(both.meters["music-creativity"], 50);
+  assert.strictEqual(byId["mus-vocals"].points, scoring.tracks.voice.points);
+  assert.strictEqual(byId["mus-piano"].points, scoring.tracks.piano.points);
+  assert.strictEqual(byId["mus-guitar"].points, scoring.tracks.guitar.points);
+}
+
+// Before noon adds 10 on the first morning session only.
+{
+  const s = fresh();
+  const morning = new Date(2026, 10, 18, 9, 0, 0);
+  const later = new Date(2026, 10, 18, 11, 0, 0);
+  const afternoon = new Date(2026, 10, 18, 13, 0, 0);
+  const first = L.logPractice(s, { track: "piano", minutes: 10, at: morning.toISOString() }, ctx);
+  assert.strictEqual(first.points, 25 + 10);
+  const second = L.logPractice(s, { track: "guitar", minutes: 10, at: later.toISOString() }, ctx);
+  assert.strictEqual(second.points, 25);
+  const after = L.logPractice(s, { track: "book1", minutes: 10, at: afternoon.toISOString() }, ctx);
+  assert.strictEqual(after.session.beforeNoon, undefined);
+  assert.ok(after.points <= 25);
+  assert.ok(after.points !== 35);
+  const nextDay = new Date(2026, 10, 19, 16, 0, 0);
+  const noMorning = L.logPractice(s, { track: "piano", minutes: 10, at: nextDay.toISOString() }, ctx);
+  assert.strictEqual(noMorning.points, 25);
+}
+
+// A tired day stands in for that session and does not stack.
+{
+  const s = fresh();
+  const when = new Date(2026, 10, 18, 16, 0, 0);
+  const tired = L.logPractice(s, { track: "voice", minutes: 5, tired: true, at: when.toISOString() }, ctx);
+  assert.strictEqual(tired.points, 15);
+  const full = L.logPractice(s, { track: "voice", minutes: 20, at: when.toISOString() }, ctx);
+  assert.strictEqual(full.points, 0);
+  assert.strictEqual(s.meters["music-creativity"], 15);
+  const other = fresh();
+  const fullFirst = L.logPractice(other, { track: "voice", minutes: 20, at: when.toISOString() }, ctx);
+  const tiredLater = L.logPractice(other, { track: "voice", minutes: 5, tired: true, at: when.toISOString() }, ctx);
+  assert.strictEqual(fullFirst.points, 35);
+  assert.strictEqual(tiredLater.points, 0);
+  assert.strictEqual(tiredLater.stoodIn, true);
+  assert.strictEqual(other.meters["music-creativity"], 35);
+}
+
+// The day stops at 75. A bonus coin is not part of that cap.
 {
   const s = fresh();
   const when = new Date(2026, 10, 17, 15, 0, 0);
-  const a = L.logPractice(s, { track: "voice", minutes: 20, at: when.toISOString() }, ctx);
-  assert.strictEqual(a.points, 25);
-  assert.strictEqual(s.meters["music-creativity"], 25);
-  const b = L.logPractice(s, { track: "voice", minutes: 10, at: when.toISOString() }, ctx);
-  assert.strictEqual(b.points, 0);
-  assert.strictEqual(s.practice.length, 2);
-  assert.strictEqual(s.meters["music-creativity"], 25);
-  s.scoring = "draft";
-  const next = new Date(2026, 10, 18, 15, 0, 0);
-  const c = L.logPractice(s, { track: "piano", minutes: 30, at: next.toISOString(), hardestTrack: "piano" }, ctx);
-  assert.strictEqual(c.points, 3 + 2);
-  assert.strictEqual(s.meters["music-creativity"], 25 + 5);
-  const d = L.logPractice(s, { track: "guitar", minutes: 30, at: next.toISOString() }, ctx);
-  assert.strictEqual(d.points, 3);
-  const e = L.logPractice(s, { track: "voice", minutes: 30, at: next.toISOString() }, ctx);
-  assert.strictEqual(e.points, 0);
-}
-
-// Tired day in draft mode is +1, and 5 minutes adds no minute-points.
-{
-  const s = fresh();
-  s.scoring = "draft";
-  const when = new Date(2026, 10, 18, 9, 0, 0);
-  const r = L.logPractice(s, { track: "voice", minutes: 5, tired: true, at: when.toISOString() }, ctx);
-  assert.strictEqual(r.points, 1);
+  L.logPractice(s, { track: "voice", minutes: 20, at: when.toISOString() }, ctx);
+  L.logPractice(s, { track: "piano", minutes: 20, at: when.toISOString() }, ctx);
+  const guitar = L.logPractice(s, { track: "guitar", minutes: 20, at: when.toISOString() }, ctx);
+  assert.strictEqual(guitar.capped, true);
+  assert.strictEqual(guitar.points, 15);
+  assert.strictEqual(s.meters["music-creativity"], 75);
+  const book = L.logPractice(s, { track: "book1", minutes: 10, at: when.toISOString() }, ctx);
+  assert.strictEqual(book.points, 0);
+  assert.strictEqual(book.capped, true);
+  assert.strictEqual(s.practice.length, 4);
+  const song = L.creditTask(s, byId["mus-finished-song"], { day: "2026-11-17" });
+  assert.strictEqual(song.dropped.length, 1);
+  assert.strictEqual(song.dropped[0].bonus, true);
+  assert.strictEqual(s.meters["music-creativity"], 75);
 }
 
 // No music points Friday evening or Saturday. Minutes still save.
@@ -143,18 +188,21 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(L.weekMinutes(s, fri, scoring).goal, 300);
 }
 
-// Skill checkoff and voice test follow the active set.
+// A passed checkoff banks one Songbird. The weekly voice test is 25, once.
 {
   const s = fresh();
   const when = new Date();
-  assert.strictEqual(L.setSkill(s, "v1", true, scoring, when).points, 0);
-  s.scoring = "draft";
-  assert.strictEqual(L.setSkill(s, "v1", true, scoring, when).points, 10);
+  const skill = L.setSkill(s, "v1", true, scoring, when);
+  assert.strictEqual(skill.points, 0);
+  assert.strictEqual(skill.coins, 1);
+  assert.strictEqual(s.banked.length, 1);
+  assert.strictEqual(s.meters["music-creativity"], 0);
   assert.strictEqual(L.setSkill(s, "v1", true, scoring, when).duplicate, true);
   L.setSkill(s, "v1", false, scoring, when);
-  assert.strictEqual(s.meters["music-creativity"], 0);
-  assert.strictEqual(L.creditVoiceTest(s, scoring, when).points, 5);
+  assert.strictEqual(s.banked.length, 0);
+  assert.strictEqual(L.creditVoiceTest(s, scoring, when).points, 25);
   assert.strictEqual(L.creditVoiceTest(s, scoring, when).duplicate, true);
+  assert.strictEqual(s.meters["music-creativity"], 25);
 }
 
 // Shabbos logs once per week and does not prompt during the quiet window.

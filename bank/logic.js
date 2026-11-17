@@ -60,7 +60,6 @@
     DOMAINS.forEach(function (d) { meters[d.id] = 0; });
     return {
       version: 1,
-      scoring: "proposal",
       meters: meters,
       banked: [],
       entries: [],
@@ -149,11 +148,55 @@
       kind: spec.kind || "points",
       source: spec.source || "task",
       coins: spec.kind === "bonus_coin" ? (spec.coins || spec.points || 1) : 0,
-      shabbosKey: spec.shabbosKey || ""
+      shabbosKey: spec.shabbosKey || "",
+      countsTowardCap: !!spec.countsTowardCap,
+      slot: spec.slot || ""
     };
     state.entries.push(entry);
     recompute(state);
     return { duplicate: false, entry: entry, dropped: droppedFor(state, entry.id) };
+  }
+
+  function musicCap(rules) {
+    return (rules && rules.dailyCap) || 75;
+  }
+
+  function cappedMusicToday(state, day) {
+    var sum = 0;
+    active(state).forEach(function (e) {
+      if (e.day === day && e.countsTowardCap) sum += e.points || 0;
+    });
+    return sum;
+  }
+
+  function slotTaken(state, day, slot) {
+    if (!slot) return false;
+    return active(state).some(function (e) { return e.day === day && e.slot === slot; });
+  }
+
+  function grantMusicPoints(state, spec) {
+    var cap = spec.cap;
+    var already = cappedMusicToday(state, spec.day);
+    var capped = already >= cap || already + (spec.points || 0) > cap;
+    if (spec.slot && slotTaken(state, spec.day, spec.slot)) {
+      return { points: 0, duplicate: true, capped: already >= cap, dropped: [], entry: null };
+    }
+    var give = Math.min(spec.points || 0, Math.max(0, cap - already));
+    if (give <= 0) return { points: 0, duplicate: false, capped: true, dropped: [], entry: null };
+    var res = creditRaw(state, {
+      group: spec.group,
+      at: spec.at,
+      day: spec.day,
+      domainId: "music-creativity",
+      taskId: spec.taskId,
+      label: spec.label,
+      points: give,
+      kind: "points",
+      source: spec.source || "songbird",
+      countsTowardCap: true,
+      slot: spec.slot || ""
+    });
+    return { points: give, duplicate: false, capped: capped, dropped: res.dropped, entry: res.entry };
   }
 
   function loggedToday(state, taskId, day) {
@@ -193,6 +236,21 @@
       existing.forEach(function (e) { e.undone = true; });
       recompute(state);
       return { removed: true, entry: existing[0], dropped: [] };
+    }
+    if (task.countsTowardCap && task.slot && opts.rules) {
+      var when = opts.at ? new Date(opts.at) : new Date();
+      if (isMusicBlackout(when, opts.rules)) return { blackout: true, points: 0, dropped: [], capped: false };
+      return grantMusicPoints(state, {
+        points: task.points,
+        day: day,
+        at: opts.at || when.toISOString(),
+        group: opts.group,
+        taskId: task.id,
+        label: task.label,
+        source: opts.source || "task",
+        slot: task.slot,
+        cap: musicCap(opts.rules)
+      });
     }
     return creditTask(state, task, opts);
   }
@@ -354,7 +412,6 @@
     opts = opts || {};
     ctx = ctx || {};
     var scoring = ctx.scoring;
-    var byId = ctx.byId || {};
     var when = opts.at ? new Date(opts.at) : new Date();
     if (isNaN(when.getTime())) return { error: "time" };
     var minutes = opts.minutes;
@@ -377,64 +434,55 @@
       blackout: blackout
     };
     var dropped = [];
-    var mode = state.scoring === "draft" ? "draft" : "proposal";
-    if (!blackout && scoring) {
-      if (mode === "proposal") {
-        var taskId = opts.tired ? scoring.proposal.tiredDayMapsTo : scoring.proposal.practiceMapsTo[opts.track];
-        var task = byId[taskId];
-        if (task) {
-          var res = creditTask(state, task, { day: day, at: session.at, source: "practice", group: group });
-          if (!res.duplicate && res.entry) {
-            session.entryIds.push(res.entry.id);
-            session.points += task.points || 0;
-            dropped = dropped.concat(res.dropped || []);
-          }
-        }
-      } else {
-        var per = Math.floor(minutes / scoring.draft.pointsPerMinutes) * scoring.draft.pointsEach;
-        var already = 0;
-        active(state).forEach(function (e) {
-          if (e.day === day && e.source === "draft-minutes") already += e.points || 0;
-        });
-        var give = Math.min(per, Math.max(0, scoring.draft.dailyCap - already));
-        if (give > 0) {
-          var resM = creditRaw(state, {
-            group: group, day: day, at: session.at, domainId: "music-creativity",
-            taskId: "draft:minutes:" + session.id,
-            label: trackLabel(opts.track) + " · " + minutes + " min",
-            points: give, kind: "points", source: "draft-minutes"
-          });
-          session.entryIds.push(resM.entry.id);
-          session.points += give;
-          dropped = dropped.concat(resM.dropped);
-        }
-        var earlier = state.practice.filter(function (p) { return p.day === day && !p.blackout; });
-        if (!earlier.length && opts.hardestTrack && opts.hardestTrack === opts.track && scoring.draft.hardestFirst) {
-          var resH = creditRaw(state, {
-            group: group, day: day, at: session.at, domainId: "music-creativity",
-            taskId: "draft:hardest:" + session.id,
-            label: "Hardest thing first",
-            points: scoring.draft.hardestFirst, kind: "points", source: "draft-hardest"
-          });
-          session.entryIds.push(resH.entry.id);
-          session.points += scoring.draft.hardestFirst;
-          dropped = dropped.concat(resH.dropped);
-        }
-        if (opts.tired && scoring.draft.tiredDay) {
-          var resT = creditRaw(state, {
-            group: group, day: day, at: session.at, domainId: "music-creativity",
-            taskId: "draft:tired:" + session.id,
-            label: "Tired-day practice",
-            points: scoring.draft.tiredDay, kind: "points", source: "draft-tired"
-          });
-          session.entryIds.push(resT.entry.id);
-          session.points += scoring.draft.tiredDay;
-          dropped = dropped.concat(resT.dropped);
-        }
+    var capped = false;
+    var duplicate = false;
+    var stoodIn = false;
+    var trackRule = scoring && scoring.tracks ? scoring.tracks[opts.track] : null;
+    if (!blackout && trackRule) {
+      var cap = musicCap(scoring);
+      var slot = opts.tired ? (scoring.tiredDaySlot || "voice") : trackRule.slot;
+      var base = 0;
+      if (opts.tired) base = scoring.tiredDay || 0;
+      else if (!(trackRule.minMinutes && minutes < trackRule.minMinutes)) base = trackRule.points || 0;
+      if (base > 0 && slotTaken(state, day, slot)) {
+        stoodIn = !!opts.tired;
+        duplicate = !opts.tired;
+        base = 0;
       }
+      if (base > 0) {
+        var res = grantMusicPoints(state, {
+          points: base, day: day, at: session.at, group: group, cap: cap, slot: slot,
+          taskId: trackRule.taskId,
+          label: opts.tired ? "Tired-day practice" : trackLabel(opts.track) + " · " + minutes + " min",
+          source: "songbird"
+        });
+        session.points += res.points;
+        capped = capped || res.capped;
+        duplicate = duplicate || res.duplicate;
+        if (res.entry) session.entryIds.push(res.entry.id);
+        dropped = dropped.concat(res.dropped || []);
+      }
+      var noonHour = scoring.noonHour == null ? 12 : scoring.noonHour;
+      if (when.getHours() < noonHour && !slotTaken(state, day, "before-noon")) {
+        var noonRes = grantMusicPoints(state, {
+          points: scoring.beforeNoon || 0, day: day, at: session.at, group: group, cap: cap,
+          slot: "before-noon", taskId: "songbird:before-noon:" + day,
+          label: "Before noon", source: "songbird"
+        });
+        session.points += noonRes.points;
+        session.beforeNoon = true;
+        capped = capped || noonRes.capped;
+        if (noonRes.entry) session.entryIds.push(noonRes.entry.id);
+        dropped = dropped.concat(noonRes.dropped || []);
+      }
+      if (cappedMusicToday(state, day) >= cap) capped = true;
     }
+    session.capped = capped;
     state.practice.push(session);
-    return { session: session, dropped: dropped, points: session.points, blackout: blackout, duplicate: session.points === 0 && !blackout && mode === "proposal" };
+    return {
+      session: session, dropped: dropped, points: session.points, blackout: blackout,
+      capped: capped, duplicate: duplicate, stoodIn: stoodIn
+    };
   }
 
   function setSkill(state, skillId, on, scoring, when) {
@@ -447,22 +495,19 @@
       recompute(state);
       return { points: 0, removed: true };
     }
-    if (existing.length) return { points: 0, duplicate: true };
-    if (state.scoring !== "draft") return { points: 0, skipped: true };
-    if (isMusicBlackout(when, scoring)) return { points: 0, blackout: true };
-    var pts = scoring && scoring.draft ? scoring.draft.skillCheckoff : 0;
-    if (!pts) return { points: 0 };
-    creditRaw(state, {
-      domainId: "music-creativity", taskId: taskId, label: "Skill checkoff",
-      points: pts, kind: "points", source: "draft-skill",
+    if (existing.length) return { points: 0, coins: 0, duplicate: true };
+    if (isMusicBlackout(when, scoring)) return { points: 0, coins: 0, blackout: true };
+    var coins = scoring && scoring.bonusCoin ? scoring.bonusCoin : 1;
+    var res = creditRaw(state, {
+      domainId: "music-creativity", taskId: taskId, label: "Passed a checkoff",
+      points: 0, kind: "bonus_coin", coins: coins, source: "songbird-coin",
       day: dayKey(when), at: when.toISOString()
     });
-    return { points: pts };
+    return { points: 0, coins: coins, dropped: res.dropped };
   }
 
   function creditVoiceTest(state, scoring, when) {
     when = when || new Date();
-    if (state.scoring !== "draft") return { skipped: true, points: 0 };
     var age = (Date.now() - when.getTime()) / 86400000;
     if (age > 8 || age < -1) return { skipped: true, points: 0 };
     if (isMusicBlackout(when, scoring)) return { blackout: true, points: 0 };
@@ -470,14 +515,13 @@
     var taskId = "voicetest:" + wk;
     var existing = active(state).filter(function (e) { return e.taskId === taskId; });
     if (existing.length) return { duplicate: true, points: 0 };
-    var pts = scoring && scoring.draft ? scoring.draft.weeklyVoiceTest : 0;
+    var pts = scoring && scoring.weeklyVoiceTest ? scoring.weeklyVoiceTest : 0;
     if (!pts) return { points: 0 };
-    var res = creditRaw(state, {
-      domainId: "music-creativity", taskId: taskId, label: "Weekly voice test",
-      points: pts, kind: "points", source: "draft-voicetest",
-      day: dayKey(when), at: when.toISOString()
+    var res = grantMusicPoints(state, {
+      points: pts, day: dayKey(when), at: when.toISOString(), cap: musicCap(scoring),
+      slot: "voice-test:" + wk, taskId: taskId, label: "Weekly voice test", source: "songbird"
     });
-    return { points: pts, dropped: res.dropped };
+    return { points: res.points, capped: res.capped, dropped: res.dropped };
   }
 
   function shabbosLogged(state, date) {
@@ -564,7 +608,6 @@
     if (state.entries.length > 5000) return { ok: false, error: "That save is too large for this phone." };
     var base = blank();
     Object.keys(base).forEach(function (k) { if (state[k] === undefined) state[k] = base[k]; });
-    if (state.scoring !== "draft") state.scoring = "proposal";
     recompute(state);
     return { ok: true, state: state };
   }

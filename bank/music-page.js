@@ -16,15 +16,6 @@
     var el = document.getElementById("pracMsg");
     if (el) el.textContent = m;
   }
-  function hardestTrack(curriculum) {
-    var week = curriculum && curriculum.week;
-    if (!week || !week.actions || !week.actions.length) return null;
-    var actions = week.actions.slice();
-    if (actions.some(function (a) { return typeof a.rank === "number"; })) {
-      actions.sort(function (a, b) { return (a.rank || 99) - (b.rank || 99); });
-    }
-    return actions[0].track || null;
-  }
   function paint(curriculum) {
     var bar = document.getElementById("minFill");
     var label = document.getElementById("minLabel");
@@ -49,6 +40,7 @@
       if (p.note) line += " · " + esc(p.note);
       if (p.blackout) line += " · saved, no Songbird points";
       else if (p.points) line += " · " + p.points + " in the Songbird";
+      if (p.capped) line += " · today is full";
       return '<div class="ln">' + line + (rows[0] === p ? ' <button type="button" class="tb" data-undo-prac="' + esc(p.id) + '">Undo</button>' : "") + "</div>";
     }).join("");
     var undo = list.querySelector("[data-undo-prac]");
@@ -76,7 +68,6 @@
         minutes: minutes,
         note: draftNote,
         tired: !!tired,
-        hardestTrack: hardestTrack(curriculum),
         at: new Date().toISOString()
       });
       draftNote = "";
@@ -84,9 +75,12 @@
       if (note) note.value = "";
       paint(curriculum);
       if (!res || res.error) { say("Pick a length of 5, 10, 20, or 30."); return; }
-      if (res.blackout) say("Saved. Songbird rests from Friday evening through Saturday.");
+      if (res.blackout) say("Saved. No Songbird points from Friday evening through Saturday.");
+      else if (res.capped && res.points) say("Saved. " + res.points + " in the Songbird. Today is full.");
+      else if (res.capped) say("Saved. Today is full.");
+      else if (res.stoodIn) say("Saved. The 5-minute version stands in for that session, so it does not add more.");
       else if (res.points) say("Saved. " + res.points + " in the Songbird.");
-      else say("Minutes saved. That Songbird credit was already in the coin today.");
+      else say("Minutes saved. That session is already in the Songbird today.");
     });
   }
   function timer(btn, seconds, done) {
@@ -107,7 +101,7 @@
     card.style.setProperty("--c", "#8C4630");
     card.style.setProperty("--t", "#F8F1E6");
     card.innerHTML = '<h2>Practice log</h2>' +
-      '<div class="ln">One tap logs a session. Sunday through Thursday, the bar is about 60 minutes a day.</div>' +
+      '<div class="ln">One tap logs a session. Vocals, 10 minutes or more, are 35. Piano and guitar are 25 each. A 5-minute tired day is 15, in place of that session. Before noon adds 10, once. The day stops at 75. Sunday through Thursday, the bar is about 60 minutes a day.</div>' +
       '<div class="sg">Book 1 is the next 2 pages of Thompson\'s Easiest Piano Course, Part 1.</div>' +
       '<div class="chipsel" id="pracTracks"></div>' +
       '<div class="chipsel" id="pracMins"></div>' +

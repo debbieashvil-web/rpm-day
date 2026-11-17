@@ -259,11 +259,6 @@
       html += "</div>";
     }
     html += "</section>";
-    html += '<section class="panel score"><h2 style="font-family:var(--serif);margin:0 0 6px">Songbird scoring</h2>';
-    html += '<p class="hint">Proposal task points are the default. The minute draft is not approved, and the two are never added together.</p>';
-    html += '<label><input type="radio" name="scoring" data-scoring value="proposal"' + (state.scoring !== "draft" ? " checked" : "") + "> Proposal task points, the default</label>";
-    html += '<label><input type="radio" name="scoring" data-scoring value="draft"' + (state.scoring === "draft" ? " checked" : "") + "> Draft minute scoring, not approved yet</label>";
-    html += "</section>";
     html += phoneBox();
     html += footer();
     return html;
@@ -384,7 +379,7 @@
     if (el.hasAttribute("data-task")) {
       var task = taskById(el.getAttribute("data-task"));
       if (!task) return;
-      commit(L.toggleTask(state, task, { day: day, source: "task" }));
+      commit(L.toggleTask(state, task, { day: day, source: "task", rules: window.SONG_SCORING }));
       return;
     }
     if (el.hasAttribute("data-undo-task")) {
@@ -508,7 +503,6 @@
       if (L.setEasyTasks(state, ids, mergedById())) SLB.save(state);
     }
     if (t.hasAttribute("data-custom-repeat")) { ui.customDraft.repeat = t.checked; }
-    if (t.hasAttribute("data-scoring")) { state.scoring = t.value === "draft" ? "draft" : "proposal"; SLB.save(state); }
   }
 
   function mergedById() {
