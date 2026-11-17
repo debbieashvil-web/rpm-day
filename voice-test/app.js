@@ -402,6 +402,20 @@ function handleSong(fr, t, dt, muted) {
 }
 
 /* ================= 5 DONE ================= */
+function archiveVoiceResult() {
+  if (DEMO) return;
+  var p = store.get('p151');
+  if (!p || typeof p.avg !== 'number') return;
+  var d = new Date(), ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  var takes = (P.res || []).filter(function (n) { return typeof n === 'number'; });
+  var within = takes.length ? Math.round(100 * takes.filter(function (c) { return Math.abs(c) <= 25; }).length / takes.length) : null;
+  var hist = store.get('history'); if (!Array.isArray(hist)) hist = [];
+  var row = { date: ds, avg: Math.round(Math.abs(p.avg) * 10) / 10, n: p.n, within25: within };
+  var i = -1; for (var k = 0; k < hist.length; k++) if (hist[k].date === ds) i = k;
+  if (i >= 0) hist[i] = row; else hist.push(row);
+  if (hist.length > 12) hist = hist.slice(-12);
+  store.set('history', hist);
+}
 function renderDone() {
   var h = store.get('hiss'), tr = store.get('trill'), p = store.get('p151');
   $('logHiss').innerHTML = h !== null ? h + ' seconds' : '<span class="tc">use your timer number</span>';
@@ -415,9 +429,12 @@ function renderDone() {
     else if (R.ok && R.enabled && M.on) html += '<div class="dl"><span>' + TAKE_LABEL[k] + '</span><span class="none">not saved</span></div>'; });
   if (!html) html = '<p class="small" style="margin:0">Nothing was saved on this page. Use the recordings from your memo app.</p>';
   list.innerHTML = html;
+  archiveVoiceResult();
 }
 window.saveSongLine = function () { store.set('songLine', $('songLine').value); };
-window.clearWeek = function () { ['hiss', 'trill', 'p151', 'songLine', 'songDone'].forEach(store.del); H.ui = 'idle'; T.ui = 'idle'; P.res = [null, null, null]; P.take = 1; SG.ui = 'idle'; renderDone(); };
+window.clearWeek = function () { ['hiss', 'trill', 'p151', 'songLine', 'songDone'].forEach(store.del); H.ui = 'idle'; T.ui = 'idle'; P.res = [null, null, null]; P.take = 1; SG.ui = 'idle';
+  if (!DEMO) { var hist = store.get('history'); if (Array.isArray(hist)) { var d = new Date(), ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); store.set('history', hist.filter(function (r) { return r.date !== ds; })); } }
+  renderDone(); };
 
 /* ---------- screen hooks ---------- */
 var ENTER = { 1: enterHiss, 2: enterTrill, 3: enter151, 5: renderDone };
