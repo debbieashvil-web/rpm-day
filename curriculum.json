@@ -1,6 +1,15 @@
 {
  "updated": "2026-11-04",
  "note": "Teacher Must-Knows list (curriculum/teacher_skills_*.csv), steps 1-2, plus the daily Voice routine. Edit 'now', 'skills', 'next', 'routine'. Keep skill ids stable so checkoffs stick.",
+ "songs": [
+  {
+   "title": "Heal",
+   "key": "B minor",
+   "chords": "Bm G D A",
+   "focus": "planned breaths and ease on big notes",
+   "status": "rough take done"
+  }
+ ],
  "cards": [
   {
    "id": "voice",

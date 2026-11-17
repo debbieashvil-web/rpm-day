@@ -1,0 +1,13 @@
+{
+  "id": "nov16",
+  "day": "2026-11-16",
+  "at": "2026-11-16T21:30:00.000Z",
+  "note": "Point totals only. Applied once, and only if the phone's save is still empty.",
+  "meters": {
+    "body": 140,
+    "resilience": 70,
+    "finances": 75,
+    "music-creativity": 25,
+    "kindness-connection": 30
+  }
+}
