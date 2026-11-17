@@ -1,0 +1,191 @@
+{
+  "game": "The Self Love Bank",
+  "version": 1,
+  "house_rules": [
+    "One task, one domain.",
+    "Points roll over into the next coin.",
+    "A quiet day changes nothing.",
+    "A step counts the same as a finish."
+  ],
+  "domains": [
+    {
+      "id": "resilience",
+      "name": "Resilience",
+      "coin": "The Oak",
+      "fill": 200,
+      "meaning": "Things that cost courage.",
+      "tasks": [
+        {"id": "res-hard-call", "label": "Made a hard call I'd been putting off", "points": 40, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-hard-admin", "label": "Handled a hard admin or legal task", "points": 50, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-short-sleep", "label": "Showed up on a short-sleep day and did at least one thing", "points": 30, "cadence": "daily", "kind": "points"},
+        {"id": "res-comeback", "label": "Comeback credit: came back to my routine after a break, with no guilt", "points": 40, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-asked-help", "label": "Asked for help (from a person or a bot)", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-social-courage", "label": "Social courage: put myself out there (talked to someone new, joined in, spoke up)", "points": 30, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-no-landed", "label": "Let a \"no\" land and stayed okay", "points": 40, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-dreading", "label": "Did something I was dreading", "points": 30, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-boundary", "label": "Set a boundary kindly", "points": 30, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "res-paused", "label": "Felt a strong feeling and paused before acting on it", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "res-unfinished-step", "label": "Took a step on an unfinished job I'd been avoiding", "points": 20, "cadence": "progress", "kind": "points", "repeat": true}
+      ]
+    },
+    {
+      "id": "body",
+      "name": "Body",
+      "coin": "The Ember",
+      "fill": 150,
+      "meaning": "Moving, lifting, fueling, and stretching.",
+      "tasks": [
+        {"id": "body-hop-walk", "label": "Hour of Power morning walk", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "body-gym", "label": "Strength gym session", "points": 50, "cadence": "weekly_or_occasional", "kind": "points", "note": "Showing up counts. Not the weight, and not the reps."},
+        {"id": "body-friday-cardio", "label": "Friday low-impact cardio", "points": 40, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "body-hg-session", "label": "Human Garage session", "points": 20, "cadence": "daily", "kind": "points"},
+        {"id": "body-hg-milestone", "label": "Human Garage milestone: every 7 sessions done, any order, any days", "points": 25, "cadence": "progress", "kind": "bonus_points", "repeat": true},
+        {"id": "body-stretch", "label": "Doorway stretch", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "body-protein", "label": "Hit my protein (around 160 g)", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "body-mfp", "label": "Logged my food in MyFitnessPal (just logging, whatever the numbers say)", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "body-water", "label": "Drank my water bottles", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "body-breakfast", "label": "Real breakfast after the gym", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "body-steps", "label": "10,000 steps", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "body-meal-prep", "label": "Meal prep or cooked a healthy meal for myself", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "body-progress-photos", "label": "Sunday progress photos and waist", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "body-5lb", "label": "Every 5 lb down", "points": 1, "cadence": "progress", "kind": "bonus_coin", "repeat": true, "note": "One Ember. A higher number never takes a coin back."}
+      ]
+    },
+    {
+      "id": "finances",
+      "name": "Finances",
+      "coin": "The Copper Key",
+      "fill": 150,
+      "meaning": "Moves toward debt-free, savings, and a place of your own.",
+      "tasks": [
+        {"id": "fin-check-balance", "label": "Checked my balance or Every Dollar (10 minutes)", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "fin-bill-on-time", "label": "Paid a bill on time", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "fin-screenshot", "label": "Sent Wally the payment screenshot", "points": 10, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "fin-extra-payment", "label": "Extra debt payment, any amount, decided with Wally", "points": 40, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "fin-24h-pause", "label": "Used the 24-hour pause on a small charge or trial", "points": 20, "cadence": "daily", "kind": "points", "note": "Not yet is a real win."},
+        {"id": "fin-cancel-sub", "label": "Canceled an unused subscription or trial", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "fin-savings", "label": "Moved money to savings, or made the investment I chose", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "fin-hysa", "label": "Opened the HYSA", "points": 50, "cadence": "weekly_or_occasional", "kind": "points", "note": "Once."},
+        {"id": "fin-debt-admin", "label": "FDR call or debt admin", "points": 30, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "fin-read", "label": "Read a chapter of Unshakable", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "fin-card-paid-off", "label": "A card paid off completely", "points": 1, "cadence": "progress", "kind": "bonus_coin", "repeat": true, "note": "One Copper Key."},
+        {"id": "fin-per-1000", "label": "Every $1,000 of debt paid down", "points": 1, "cadence": "progress", "kind": "bonus_coin", "repeat": true, "note": "One Copper Key."},
+        {"id": "fin-move-out-step", "label": "Step on the move-out plan (budget, research, savings target)", "points": 20, "cadence": "progress", "kind": "points", "repeat": true}
+      ]
+    },
+    {
+      "id": "career",
+      "name": "Career",
+      "coin": "The Teacher's Bell",
+      "fill": 150,
+      "meaning": "Teaching, the studio, the game, and making things.",
+      "tasks": [
+        {"id": "car-lesson", "label": "Taught a lesson", "points": 20, "cadence": "daily", "kind": "points", "repeat": true, "note": "Each one."},
+        {"id": "car-lesson-prep", "label": "Prepped a lesson sheet", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "car-parent-note", "label": "Wrote or approved a parent note", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "car-mms-admin", "label": "Attendance or invoicing done in My Music Staff", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "car-payment-followup", "label": "Followed up on a payment", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "car-game-work", "label": "Self Love Bank Game work block", "points": 30, "cadence": "progress", "kind": "points", "repeat": true},
+        {"id": "car-reel", "label": "Filmed a reel or Speaking Up clip", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "car-posted", "label": "Posted content", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "car-website", "label": "Worked on my lesson website", "points": 20, "cadence": "progress", "kind": "points", "repeat": true},
+        {"id": "car-outreach", "label": "Reached out to a possible new student or family", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "car-team-debrief", "label": "Planning or debrief block with my team (the bots count)", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "car-skill", "label": "Learned a business skill (a video, an article)", "points": 15, "cadence": "daily", "kind": "points"}
+      ]
+    },
+    {
+      "id": "self-care",
+      "name": "Self-Care",
+      "coin": "Still Water",
+      "fill": 100,
+      "meaning": "Rest, care, sleep, and feeding the mind.",
+      "tasks": [
+        {"id": "sc-teeth", "label": "Brushed my teeth (morning and night)", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "sc-shower", "label": "Showered or did skincare", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "sc-meds", "label": "Took my meds", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "sc-nature", "label": "Visited my nature spot (water and trees)", "points": 20, "cadence": "daily", "kind": "points"},
+        {"id": "sc-wake", "label": "Woke up at my set time", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "sc-lights-out", "label": "Lights out at my set time (midnight at the latest for now)", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "sc-phone-charger", "label": "Phone on the charger away from the bed", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "sc-rest", "label": "Rested or napped when my body asked", "points": 10, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "sc-therapy", "label": "Therapy session", "points": 30, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "sc-ue-audio", "label": "Ultimate Edge audio or Hour of Power reflection", "points": 20, "cadence": "daily", "kind": "points"},
+        {"id": "sc-ue-homework", "label": "Ultimate Edge homework", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "sc-journal", "label": "Quiet time or journaling (5 minutes counts)", "points": 10, "cadence": "daily", "kind": "points"}
+      ]
+    },
+    {
+      "id": "music-creativity",
+      "name": "Music & Creativity",
+      "coin": "The Songbird",
+      "fill": 100,
+      "meaning": "Voice, instruments, songs, and any creating.",
+      "tasks": [
+        {"id": "mus-vocals", "label": "Vocal exercises", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "mus-instrument", "label": "Piano or guitar study block after dinner", "points": 25, "cadence": "daily", "kind": "points"},
+        {"id": "mus-own-song", "label": "Worked on one of my own songs (a lyric, a melody, a chord change)", "points": 25, "cadence": "progress", "kind": "points", "repeat": true},
+        {"id": "mus-assignment", "label": "Did a Melody assignment", "points": 20, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "mus-performed", "label": "Performed, anywhere, any size", "points": 50, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "mus-practice-clip", "label": "Recorded a practice clip for myself", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "mus-finished-song", "label": "Finished a song (a full draft or recording)", "points": 1, "cadence": "progress", "kind": "bonus_coin", "repeat": true, "note": "One Songbird."},
+        {"id": "mus-other-creating", "label": "Any other creating (writing, design, art)", "points": 15, "cadence": "daily", "kind": "points"}
+      ]
+    },
+    {
+      "id": "kindness-connection",
+      "name": "Kindness & Connection",
+      "coin": "Warm Bread",
+      "fill": 100,
+      "meaning": "Caring for people and being with them.",
+      "tasks": [
+        {"id": "kc-fed-family", "label": "Fed or cooked for family", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "kc-helped-family", "label": "Helped a parent or sibling", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "kc-family-call", "label": "Real call or message with family (parents, siblings, nieces and nephews)", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "kc-niece-nephew", "label": "Quality time with a niece or nephew", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "kc-gave-friend", "label": "Gave to a friend (time, a ride, listening)", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "kc-showed-up", "label": "Showed up for someone's simcha, event, or hard day", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "kc-new-friend", "label": "Followed up with a new friend", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "kc-student-promise", "label": "Kept a promise to a student", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "kc-encouraged", "label": "Encouraged or complimented someone", "points": 5, "cadence": "daily", "kind": "points"},
+        {"id": "kc-chesed", "label": "Chesed or tzedakah act", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "kc-hosted", "label": "Hosted guests", "points": 30, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "kc-catch-all", "label": "I took care of someone (anything that doesn't fit above)", "points": 10, "cadence": "daily", "kind": "points"}
+      ]
+    },
+    {
+      "id": "faith",
+      "name": "Faith",
+      "coin": "Candlelight",
+      "fill": 100,
+      "meaning": "Shabbos, learning, prayer, and gratitude.",
+      "tasks": [
+        {"id": "faith-shabbos", "label": "Kept Shabbos", "points": 50, "cadence": "weekly_or_occasional", "kind": "points", "note": "One tap after havdalah."},
+        {"id": "faith-shabbos-prep", "label": "Friday Shabbos prep (cooking, cleaning, getting ready)", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "faith-shiur", "label": "Thursday night shiur", "points": 25, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "faith-shabbat-meal", "label": "Went to friends or community for a Shabbat meal", "points": 20, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "faith-davening", "label": "Davening or brachos", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "faith-torah", "label": "Torah learning (10 minutes counts)", "points": 15, "cadence": "daily", "kind": "points"},
+        {"id": "faith-gratitude", "label": "Gratitude list, 3 things", "points": 10, "cadence": "daily", "kind": "points"}
+      ]
+    },
+    {
+      "id": "home",
+      "name": "Home",
+      "coin": "The Hearth",
+      "fill": 75,
+      "meaning": "A space and things kept in order.",
+      "tasks": [
+        {"id": "home-bed", "label": "Made my bed", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "home-dishes", "label": "Dishes done", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "home-tidy", "label": "10-minute tidy", "points": 10, "cadence": "daily", "kind": "points"},
+        {"id": "home-laundry-wash", "label": "Washed a load of laundry", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "home-laundry-fold", "label": "Folded it and put it away", "points": 10, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "home-deep-clean", "label": "Cleaned the bathroom or kitchen properly", "points": 20, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "home-car", "label": "Car care (tidy, tires, gas)", "points": 10, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "home-packed", "label": "Packed for a trip or Shabbos away", "points": 15, "cadence": "weekly_or_occasional", "kind": "points"},
+        {"id": "home-project-step", "label": "Step on a home project (closet, sorting, getting ready to move)", "points": 20, "cadence": "progress", "kind": "points", "repeat": true}
+      ]
+    }
+  ]
+}
