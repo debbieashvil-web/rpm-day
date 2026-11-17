@@ -1,34 +1,52 @@
 {
- "date": "2026-11-03",
- "title": "Tue Nov 3",
- "tag": "Breathe, create, build 🌬️",
- "result": "Today I start breath work, build my content strategy, and move Self Love Money Box forward. 🌟",
+ "date": "2026-11-17",
+ "title": "Tue Nov 17",
+ "tag": "Strong and calm 🌿",
+ "result": "A strong, calm day. Hard times are covered, daily musts are done, and the reel promise is kept.",
  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Every day I keep my word proves I can. 💪",
+ "musts": [
+  {
+   "label": "Vocals, before noon if I can",
+   "domainId": "music-creativity"
+  },
+  {
+   "label": "Hour of Power walk",
+   "domainId": "body"
+  },
+  {
+   "label": "Reel filmed and posted",
+   "domainId": "career"
+  },
+  {
+   "label": "Ink return (due Wed)",
+   "domainId": "home"
+  }
+ ],
  "sections": [
   {
-   "name": "✅ Done earlier",
-   "color": "#12B76A",
-   "tint": "#E3FBEF",
+   "name": "⭐ Musts",
+   "color": "#7C3AED",
+   "tint": "#F1E9FF",
    "items": [
     [
-     "d1",
-     "8:08 AM",
-     "Walk 🚶‍♀️"
+     "m1",
+     "Before noon",
+     "Vocals 🎤 (Songbird)"
     ],
     [
-     "d2",
-     "9:06 AM",
-     "Walk 🚶‍♀️"
+     "m2",
+     "6:45 AM",
+     "Hour of Power walk 🚶‍♀️ (Ember)"
     ],
     [
-     "d3",
-     "10:01 AM",
-     "Trampoline 20 min 🤸"
+     "m3",
+     "10:45 AM",
+     "Reel filmed and posted 🎬 (Teacher's Bell)"
     ],
     [
-     "d4",
-     "Today",
-     "Parking ticket H-488993 disputed online ✅"
+     "m4",
+     "2:30 PM",
+     "Ink return 🧾 (Hearth, due Wed)"
     ]
    ]
   },
@@ -39,90 +57,95 @@
    "items": [
     [
      "s1",
-     "Now",
-     "Breath work #1, first time: 10 breaths, in 4, hold 16, out 8 🌬️"
+     "6:30 AM",
+     "Laundry into the dryer 🧺"
     ],
     [
      "s2",
-     "Now",
-     "Fold laundry 🧺"
+     "6:45 AM",
+     "Hour of Power walk 🚶‍♀️"
     ],
     [
      "s3",
-     "Now",
-     "Chin exercise 💪"
+     "7:45 AM",
+     "Human Garage Day 2 + vocals 🎤"
     ],
     [
      "s4",
-     "Now",
-     "Vocals 🎤"
+     "8:30 AM",
+     "Gym 🏋️‍♀️"
     ],
     [
      "s5",
-     "4:30 PM",
-     "Green juice #2 🥬, then optional walk 🚶‍♀️"
+     "10:30 AM",
+     "Protein shake 🥤"
     ],
     [
      "s6",
-     "Before 5 PM",
-     "Plea packet: print, sign, mail certified, photo of receipt 📬"
+     "10:45 AM",
+     "Film + post reel (goal 3, at least 1) 🎬"
     ],
     [
      "s7",
-     "6:00 PM",
-     "Cleanse dinner 🥗"
+     "12:30 PM",
+     "Appointment"
     ],
     [
      "s8",
-     "6:30 PM",
-     "Content strategy, main focus today 📱"
+     "1:30 PM",
+     "Food + call the doctor's office to move the appointment 📞"
     ],
     [
      "s9",
-     "7:00 PM",
-     "Breath work #2 + green juice #3 🌬️🥬"
+     "2:00 PM",
+     "Ultimate Edge audio 🎧"
     ],
     [
      "s10",
-     "8:00 PM",
-     "Self Love Money Box work with Anvil 💛"
+     "2:30 PM",
+     "Whole Foods ink return 🧾"
     ],
     [
      "s11",
-     "9:15 PM",
-     "Money check-in + My Music Staff card 📊"
+     "3:30 PM",
+     "Fold laundry 🧺"
     ],
     [
      "s12",
-     "9:45 PM",
-     "Mobility flow: 90/90, pelvic tilts, dead bug, bridge, figure-4, cat-cow, legs up the wall + journal 🧘"
+     "4:30 PM",
+     "Lesson prep 🎹"
     ],
     [
      "s13",
-     "10:00 PM",
-     "Wind down, nightly wins, lights out 10:30 😴"
+     "5:00 PM",
+     "Piano lesson 🎹"
+    ],
+    [
+     "s14",
+     "After dinner",
+     "Piano or guitar, or record 🎸"
+    ],
+    [
+     "s15",
+     "Midnight",
+     "Lights out 😴"
     ]
    ]
   },
   {
-   "name": "🏆 Wins",
-   "color": "#E0A800",
-   "tint": "#FFF8D6",
+   "name": "🗂️ Later this week",
+   "color": "#6B7280",
+   "tint": "#F3F4F6",
    "items": [
     [
-     "w1",
-     "",
-     "11 of 16 done Monday ✅"
+     "l1",
+     "From Wed",
+     "Declutter room, 15 min per zone per day 🧹"
     ],
     [
-     "w2",
-     "",
-     "Parking ticket disputed early ✅"
-    ],
-    [
-     "w3",
-     "",
-     "Pull-up bar = coin game reward 🎯"
+     "l2",
+     "Next Costco trip",
+     "Bottle recycling ♻️"
     ]
    ]
   }
