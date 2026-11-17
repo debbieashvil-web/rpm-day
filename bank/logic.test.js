@@ -217,7 +217,7 @@ const ctx = { byId: byId, scoring: scoring };
     assert.ok(ids.indexOf(id) >= 0, id);
   });
   assert.strictEqual(cur.updated, "2026-11-16");
-  assert.strictEqual(cur.cards[0].now, "Regulate → Release → Rebuild");
+  assert.strictEqual(cur.cards[0].now, "Daily voice routine, about 15 min: Regulate → Release → Rebuild");
   assert.strictEqual(cur.cards[0].routine.steps[0].title, "Regulate");
   assert.strictEqual(cur.cards[0].routine.steps[1].title, "Release");
   assert.strictEqual(cur.cards[0].routine.steps[4].title, "Rebuild");
