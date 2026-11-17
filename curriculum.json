@@ -1,13 +1,22 @@
 {
- "updated": "2026-11-04",
+ "updated": "2026-11-16",
  "note": "Teacher Must-Knows list (curriculum/teacher_skills_*.csv), steps 1-2, plus the daily Voice routine. Edit 'now', 'skills', 'next', 'routine'. Keep skill ids stable so checkoffs stick.",
+ "songs": [
+  {
+   "title": "Heal",
+   "key": "B minor",
+   "chords": "Bm G D A",
+   "focus": "planned breaths and ease on big notes",
+   "status": "rough take done"
+  }
+ ],
  "cards": [
   {
    "id": "voice",
    "name": "🎤 Voice",
    "color": "#FF2E63",
    "tint": "#FFE8EE",
-   "now": "Daily voice routine, about 15 min: Regulate → Release → Build",
+   "now": "Regulate → Release → Rebuild",
    "routine": {
     "total": 15,
     "credit": "Release exercises from @thesomaticscientist (instagram.com/thesomaticscientist). Gentle pressure only, never push through pain.",
@@ -103,7 +112,7 @@
      },
      {
       "n": 5,
-      "title": "Build",
+      "title": "Rebuild",
       "min": 3,
       "text": "Sing 1-2-3-4-5-4-3-2-1 on 'mee', then 'mah', with space between the back teeth (open the back, not the front). Medium volume, never push.",
       "links": [
