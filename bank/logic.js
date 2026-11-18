@@ -7,15 +7,15 @@
   "use strict";
 
   var DOMAINS = [
-    { id: "resilience", name: "Resilience", coin: "The Oak", fill: 200, meaning: "Things that cost courage." },
-    { id: "body", name: "Body", coin: "The Ember", fill: 150, meaning: "Moving, lifting, fueling, and stretching." },
-    { id: "finances", name: "Finances", coin: "The Copper Key", fill: 150, meaning: "Moves toward debt-free, savings, and a place of your own." },
-    { id: "career", name: "Career", coin: "The Teacher's Bell", fill: 150, meaning: "Teaching, the studio, the game, and making things." },
-    { id: "self-care", name: "Self-Care", coin: "Still Water", fill: 100, meaning: "Rest, care, sleep, and feeding the mind." },
-    { id: "music-creativity", name: "Music & Creativity", coin: "The Songbird", fill: 100, meaning: "Voice, instruments, songs, and any creating." },
-    { id: "kindness-connection", name: "Kindness & Connection", coin: "Warm Bread", fill: 100, meaning: "Caring for people and being with them." },
-    { id: "faith", name: "Faith", coin: "Candlelight", fill: 100, meaning: "Shabbos, learning, prayer, and gratitude." },
-    { id: "home", name: "Home", coin: "The Hearth", fill: 75, meaning: "A space and things kept in order." }
+    { id: "resilience", name: "Resilience", coin: "The Oak", fill: 200, enamel: "#A84828", meaning: "Things that cost courage." },
+    { id: "body", name: "Body", coin: "The Ember", fill: 150, enamel: "#C85008", meaning: "Moving, lifting, fueling, and stretching." },
+    { id: "finances", name: "Finances", coin: "The Copper Key", fill: 150, enamel: "#005850", meaning: "Moves toward debt-free, savings, and a place of your own." },
+    { id: "career", name: "Career", coin: "The Teacher's Bell", fill: 150, enamel: "#182840", meaning: "Teaching, the studio, the game, and making things." },
+    { id: "self-care", name: "Self-Care", coin: "Still Water", fill: 100, enamel: "#90A8B8", meaning: "Rest, care, sleep, and feeding the mind." },
+    { id: "music-creativity", name: "Music & Creativity", coin: "The Songbird", fill: 100, enamel: "#889070", meaning: "Voice, instruments, songs, and any creating." },
+    { id: "kindness-connection", name: "Kindness & Connection", coin: "Warm Bread", fill: 100, enamel: "#B86820", meaning: "Caring for people and being with them." },
+    { id: "faith", name: "Faith", coin: "Candlelight", fill: 100, enamel: "#481028", meaning: "Shabbos, learning, prayer, and gratitude." },
+    { id: "home", name: "Home", coin: "The Hearth", fill: 75, enamel: "#703820", meaning: "A space and things kept in order." }
   ];
 
   var EASY_DEFAULT = ["sc-daily-care", "sc-teeth", "body-hop-walk", "mus-vocals", "sc-lights-out"];
@@ -309,11 +309,9 @@
     state.weekPlans[weekKey][domainId] = cur;
   }
 
-  function isMusicBlackout(date, scoring) {
-    var d = date instanceof Date ? date : new Date();
-    var from = (scoring && scoring.shabbat && scoring.shabbat.fridayFromHour) || 18;
-    if (d.getDay() === 6) return true;
-    if (d.getDay() === 5 && d.getHours() >= from) return true;
+  /* Friday evening and Saturday earn coins like any other day.
+     A skipped day never takes points away. */
+  function isMusicBlackout() {
     return false;
   }
 
@@ -344,15 +342,118 @@
     return dayKey(d);
   }
 
-  function shabbatQuiet(state, date) {
-    var d = date instanceof Date ? date : new Date();
-    var key = shabbosKey(d);
-    if (state.shabbatLifted === key) return false;
-    if (state.shabbatHold) return true;
-    var mins = d.getHours() * 60 + d.getMinutes();
-    if (d.getDay() === 5 && mins >= 18 * 60) return true;
-    if (d.getDay() === 6 && mins < 21 * 60) return true;
+  function shabbatQuiet() {
     return false;
+  }
+
+  var COIN_NAMES = [
+    ["the teacher's bell", "career"],
+    ["teacher's bell", "career"],
+    ["teachers bell", "career"],
+    ["the copper key", "finances"],
+    ["copper key", "finances"],
+    ["still water", "self-care"],
+    ["warm bread", "kindness-connection"],
+    ["the songbird", "music-creativity"],
+    ["songbird", "music-creativity"],
+    ["candlelight", "faith"],
+    ["the hearth", "home"],
+    ["hearth", "home"],
+    ["the ember", "body"],
+    ["ember", "body"],
+    ["the oak", "resilience"],
+    ["oak", "resilience"],
+    ["music and creativity", "music-creativity"],
+    ["kindness and connection", "kindness-connection"],
+    ["self care", "self-care"],
+    ["resilience", "resilience"],
+    ["finances", "finances"],
+    ["career", "career"],
+    ["faith", "faith"],
+    ["home", "home"],
+    ["body", "body"]
+  ];
+
+  function domainsInLabel(label) {
+    var text = " " + String(label || "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9']+/g, " ").replace(/\s+/g, " ") + " ";
+    var found = [];
+    COIN_NAMES.forEach(function (pair) {
+      if (text.indexOf(" " + pair[0] + " ") >= 0 && domain(pair[1]) && found.indexOf(pair[1]) < 0) found.push(pair[1]);
+    });
+    return found;
+  }
+
+  var PLAN_STOP = { with: 1, this: 1, that: 1, from: 1, your: 1, have: 1, been: 1, when: 1, just: 1, into: 1, over: 1, after: 1, before: 1, them: 1, they: 1, will: 1, each: 1, more: 1, than: 1, about: 1, once: 1, time: 1, today: 1, example: 1 };
+
+  function catalogPoints(domainId, label, byId) {
+    var text = String(label || "").toLowerCase();
+    var best = null;
+    var bestScore = 0;
+    var keys = Object.keys(byId || {});
+    var i;
+    for (i = 0; i < keys.length; i++) {
+      var task = byId[keys[i]];
+      if (!task || task.domainId !== domainId || task.kind === "bonus_coin") continue;
+      var words = String(task.label || "").toLowerCase().match(/[a-z][a-z']{3,}/g) || [];
+      var score = 0;
+      for (var w = 0; w < words.length; w++) {
+        if (PLAN_STOP[words[w]]) continue;
+        if (text.indexOf(words[w]) >= 0) score += words[w].length;
+      }
+      if (score > bestScore) { bestScore = score; best = task; }
+    }
+    if (best && bestScore >= 5) return best.points;
+    for (i = 0; i < keys.length; i++) {
+      var daily = byId[keys[i]];
+      if (daily && daily.domainId === domainId && daily.kind === "points" && daily.cadence === "daily") return daily.points;
+    }
+    return 0;
+  }
+
+  function planItemOn(state, day, itemId) {
+    var prefix = "plan:" + day + ":" + itemId + ":";
+    return active(state).some(function (e) {
+      return e.taskId && e.taskId.indexOf(prefix) === 0;
+    });
+  }
+
+  function togglePlanItem(state, spec) {
+    spec = spec || {};
+    var day = spec.day || dayKey(new Date());
+    var itemId = String(spec.id || "");
+    if (!itemId) return { error: "item", dropped: [] };
+    var prefix = "plan:" + day + ":" + itemId + ":";
+    var existing = active(state).filter(function (e) {
+      return e.taskId && e.taskId.indexOf(prefix) === 0;
+    });
+    if (existing.length) {
+      existing.forEach(function (e) { e.undone = true; });
+      recompute(state);
+      return { removed: true, dropped: [] };
+    }
+    var domains = spec.domains || [];
+    if (!domains.length) return { skipped: true, dropped: [] };
+    var group = uid();
+    var dropped = [];
+    var entries = [];
+    domains.forEach(function (d) {
+      var pts = Math.round(Number(d.points));
+      if (!domain(d.domainId) || !(pts > 0)) return;
+      var res = creditRaw(state, {
+        group: group,
+        day: day,
+        at: spec.at,
+        domainId: d.domainId,
+        taskId: prefix + d.domainId,
+        label: spec.label || d.label || coinLabel(d.domainId),
+        points: pts,
+        kind: "points",
+        source: "plan"
+      });
+      if (res.entry) entries.push(res.entry);
+      dropped = dropped.concat(res.dropped || []);
+    });
+    return { entries: entries, entry: entries[0] || null, dropped: dropped };
   }
 
   function trackLabel(track) { return TRACKS[track] || track; }
@@ -576,6 +677,9 @@
     return { ok: true, state: state };
   }
 
+  /* Live phones store this under localStorage slb.v1, version 1.
+     The ledger is kept. Meters and banked coins are rebuilt from it.
+     A load does not zero a coin or drop an entry. */
   function ensureShape(state) {
     var base = blank();
     if (!state || state.version !== 1 || !Array.isArray(state.entries)) return blank();
@@ -591,6 +695,10 @@
     TRACKS: TRACKS,
     domain: domain,
     coinLabel: coinLabel,
+    domainsInLabel: domainsInLabel,
+    catalogPoints: catalogPoints,
+    planItemOn: planItemOn,
+    togglePlanItem: togglePlanItem,
     dayKey: dayKey,
     prettyDay: prettyDay,
     blank: blank,
