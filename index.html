@@ -110,7 +110,7 @@ function renderCur(){const w=$('cur');w.innerHTML='';if(!C){w.innerHTML='<div cl
   c.skills.forEach(([id,tx])=>{const r=document.createElement('div');r.className='it'+(CS[id]?' done':'');
    r.innerHTML='<div class="ck">'+(CS[id]?'✓':'')+'</div><div class="tx">'+esc(tx)+'</div>';
    r.onclick=()=>{CS[id]=!CS[id];localStorage.rpm_cur=JSON.stringify(CS);if(navigator.vibrate)navigator.vibrate(20);var extra='';
-    if(window.SLB&&SLB.skill){try{var cr=SLB.skill(id,!!CS[id]);if(cr&&cr.points)extra=' Songbird +'+cr.points;}catch(e){}}
+    if(window.SLB&&SLB.skill){try{var cr=SLB.skill(id,!!CS[id]);if(cr&&cr.points)extra=' '+(window.SLBLogic&&SLBLogic.coinLabel?SLBLogic.coinLabel('music-creativity'):'')+' +'+cr.points;}catch(e){}}
     toast(CS[id]?'Mastered! 🎉'+extra:'Unchecked');renderCur()};d.appendChild(r)});
   const x=document.createElement('div');x.className='ln';x.style.borderTop='1px solid rgba(0,0,0,.05)';x.innerHTML='<b>Next up:</b> '+esc(c.next);d.appendChild(x);
   w.appendChild(d)})}

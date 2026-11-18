@@ -16,6 +16,9 @@
     var el = document.getElementById("pracMsg");
     if (el) el.textContent = m;
   }
+  function coinTitle() {
+    return window.SLBLogic && SLBLogic.coinLabel ? SLBLogic.coinLabel("music-creativity") : "";
+  }
   function hardestTrack(curriculum) {
     var week = curriculum && curriculum.week;
     if (!week || !week.actions || !week.actions.length) return null;
@@ -47,8 +50,8 @@
     list.innerHTML = rows.map(function (p) {
       var line = esc(SLBLogic.prettyDay(p.day)) + " · " + esc(names[p.track] || p.track) + " · " + p.minutes + " min";
       if (p.note) line += " · " + esc(p.note);
-      if (p.blackout) line += " · saved, no Songbird points";
-      else if (p.points) line += " · " + p.points + " in the Songbird";
+      if (p.blackout) line += " · saved, no " + esc(coinTitle()) + " points";
+      else if (p.points) line += " · " + p.points + " in " + esc(coinTitle());
       return '<div class="ln">' + line + (rows[0] === p ? ' <button type="button" class="tb" data-undo-prac="' + esc(p.id) + '">Undo</button>' : "") + "</div>";
     }).join("");
     var undo = list.querySelector("[data-undo-prac]");
@@ -84,9 +87,9 @@
       if (note) note.value = "";
       paint(curriculum);
       if (!res || res.error) { say("Pick a length of 5, 10, 20, or 30."); return; }
-      if (res.blackout) say("Saved. Songbird rests from Friday evening through Saturday.");
-      else if (res.points) say("Saved. " + res.points + " in the Songbird.");
-      else say("Minutes saved. That Songbird credit was already in the coin today.");
+      if (res.blackout) say("Saved. " + coinTitle() + " rests from Friday evening through Saturday.");
+      else if (res.points) say("Saved. " + res.points + " in " + coinTitle() + ".");
+      else say("Minutes saved. That " + coinTitle() + " credit was already in the coin today.");
     });
   }
   function timer(btn, seconds, done) {
