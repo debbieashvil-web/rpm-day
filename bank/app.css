@@ -177,7 +177,21 @@ textarea.field { min-height: 72px; resize: vertical; }
   background: #fff;
   font-size: 14.5px;
 }
+.chip.coinchip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: 14px;
+  line-height: 1.15;
+  padding: 6px 12px;
+  text-align: left;
+}
+.chip .stack { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+.chip .bd { display: block; font-family: var(--serif); font-size: 13.5px; font-weight: 640; white-space: nowrap; }
+.chip .sub { display: block; font-size: 11px; color: var(--ink-soft); white-space: nowrap; }
 .chip.on { background: var(--walnut); color: var(--cream); border-color: var(--walnut); }
+.chip.on .sub { color: #E7D3BA; }
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 8px; margin: 4px 0 14px; }
 .coin { border: 0; background: transparent; padding: 0; text-align: center; color: var(--ink); }
 .medallion { position: relative; width: 100%; aspect-ratio: 1; display: grid; place-items: center; }
@@ -194,13 +208,20 @@ textarea.field { min-height: 72px; resize: vertical; }
 }
 .coin.on .medallion { filter: drop-shadow(0 0 0 transparent); }
 .coin.on .ring { box-shadow: 0 0 0 2px var(--cream), 0 0 0 4px var(--walnut); }
-.coin .nm { display: block; margin-top: 6px; font-family: var(--serif); font-size: 13px; line-height: 1.15; }
+.coin .nm { display: block; margin-top: 6px; line-height: 1.15; }
+.coin .stack { display: flex; flex-direction: column; align-items: center; gap: 1px; max-width: 100%; }
+.coin .bd { font-family: var(--serif); font-size: 13px; font-weight: 640; line-height: 1.15; }
+.coin .sub { font-size: 11px; color: var(--ink-soft); line-height: 1.2; }
 .coin .frac { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .coin small { display: block; color: var(--ink-soft); font-size: 11px; letter-spacing: .04em; }
+.coinhead { font-family: var(--serif); margin: 0 0 2px; font-size: 24px; font-weight: 640; line-height: 1.15; }
 .group { margin: 8px 0 14px; }
 .group h3 { margin: 0 0 2px; font-size: 18px; }
 .bonus { min-height: 64px; margin-top: 8px; padding: 12px 14px; border: 1px solid #E2C48A; background: #FBF3E4; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
-.bonus b { font-family: var(--serif); font-size: 17px; font-weight: 640; }
+.bonus > b { flex: 1; min-width: 0; font-family: var(--serif); font-size: 17px; font-weight: 640; line-height: 1.2; }
+.bonus .stack { flex: 0 0 auto; max-width: 46%; text-align: right; }
+.bonus .bd { display: block; font-family: var(--serif); font-size: 13px; font-weight: 640; line-height: 1.15; }
+.bonus .sub { display: block; font-size: 11px; color: var(--ink-soft); line-height: 1.15; }
 .tray {
   margin: 8px 0 14px;
   padding: 14px 12px 10px;
@@ -215,9 +236,12 @@ textarea.field { min-height: 72px; resize: vertical; }
 .shelf { display: flex; gap: 12px; overflow-x: auto; padding: 10px 2px 4px; }
 .kept { flex: 0 0 96px; text-align: center; }
 .kept img { width: 84px; height: 84px; border-radius: 50%; box-shadow: 0 8px 12px rgba(0,0,0,.28); }
-.kept span { display: block; margin-top: 4px; font-size: 12px; color: #F0E2CF; }
+.kept .stack { display: block; margin-top: 4px; line-height: 1.2; }
+.kept .bd { display: block; font-family: var(--serif); font-size: 12px; color: #F6F0E4; }
+.kept .sub, .kept .when { display: block; font-size: 11px; color: #E7D3BA; line-height: 1.25; }
+.kept .when { margin-top: 2px; }
 .card { margin: 0 0 12px; }
-.card h2 { margin: 0; font-size: 20px; }
+.card h2 { margin: 0; font-size: 18px; line-height: 1.2; }
 .card .coinlet { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
 .card .coinlet img { width: 48px; height: 48px; border-radius: 50%; }
 .links { display: flex; gap: 14px; justify-content: center; margin: 14px 0 4px; }
@@ -266,7 +290,7 @@ textarea.field { min-height: 72px; resize: vertical; }
   background: #120c09;
   box-shadow: 0 7px 0 #8a6244;
 }
-.fall-name { font-family: var(--serif); font-size: 34px; margin: 8px 0 0; }
+.fall-name { font-family: var(--serif); font-size: 28px; line-height: 1.15; margin: 8px 0 0; }
 .fall-date, .fall-note, .fall-free { margin: 4px 0; font-size: 17px; color: #F6E7D4; }
 @keyframes fall {
   0% { transform: translateY(-70px) scale(.84); }

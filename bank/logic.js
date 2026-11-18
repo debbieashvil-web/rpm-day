@@ -43,6 +43,13 @@
     return null;
   }
 
+  /* "Resilience · The Oak". Pass a domain object or an id. Names stay on DOMAINS. */
+  function coinLabel(domOrId) {
+    var dom = domOrId && typeof domOrId === "object" ? domOrId : domain(domOrId);
+    if (!dom || !dom.name || !dom.coin) return "";
+    return dom.name + " · " + dom.coin;
+  }
+
   function dayKey(d) {
     var dt = d instanceof Date ? d : new Date();
     return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
@@ -583,6 +590,7 @@
     CELEBRATE: CELEBRATE,
     TRACKS: TRACKS,
     domain: domain,
+    coinLabel: coinLabel,
     dayKey: dayKey,
     prettyDay: prettyDay,
     blank: blank,

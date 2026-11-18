@@ -24,6 +24,10 @@
   }
   function now() { return new Date(); }
   function art(id) { return (ART && ART[id]) || ""; }
+  function coinStack(dom) {
+    if (!dom) return "";
+    return '<span class="stack"><span class="bd">' + esc(dom.name) + '</span><span class="sub">' + esc(dom.coin) + "</span></span>";
+  }
   function tasksFor(id) {
     var list = [];
     Object.keys(SLB.byId).forEach(function (k) {
@@ -95,7 +99,7 @@
   function renderQuiet() {
     var step = ui.quietStep;
     var html = '<section class="quiet">';
-    html += '<img src="' + esc(art("faith")) + '" alt="Candlelight">';
+    html += '<img src="' + esc(art("faith")) + '" alt="' + esc(L.coinLabel("faith")) + '">';
     html += "<h2>Shabbos</h2>";
     html += '<p class="hint">The coins can wait. There is nothing to catch up.</p>';
     if (step < 1) {
@@ -109,7 +113,7 @@
     return html;
   }
 
-  function taskButton(task, day) {
+  function taskButton(task, day, withCoin) {
     var n = L.loggedToday(state, task.id, day).length;
     var on = !task.repeat && n > 0;
     var html = '<button type="button" class="task' + (on ? " on" : "") + '" data-task="' + esc(task.id) + '">';
@@ -118,6 +122,10 @@
     var tag = on ? "In the coin" : (task.cadence === "progress" ? "A step counts" : (task.kind === "bonus_points" ? "Bonus points" : ""));
     if (task.repeat && n) tag = n + " today";
     if (task.note && !tag) tag = task.note;
+    if (withCoin) {
+      var named = L.coinLabel(task.domainId);
+      tag = named + (tag ? " · " + tag : "");
+    }
     html += '<span class="tag">' + esc(tag) + "</span>";
     html += "</button>";
     if (task.repeat && n) html += '<button type="button" class="undo-mini" data-undo-task="' + esc(task.id) + '">Undo one</button>';
@@ -133,7 +141,7 @@
       html += '<p class="hint">Suggested to start: daily care, teeth, a walk, vocals, lights out. Change them whenever you like.</p>';
       (state.easyDayTaskIds || []).forEach(function (id) {
         var task = taskById(id);
-        if (task) html += taskButton(task, day);
+        if (task) html += taskButton(task, day, true);
       });
       html += '<button type="button" class="ghost" data-easy-open>' + (ui.easyOpen ? "Close" : "Change these five") + "</button>";
       if (ui.easyOpen) {
@@ -160,7 +168,7 @@
         html += '<button type="button" class="task' + (on ? " on" : "") + '" data-must="' + esc(m.id) + '">';
         html += "<b>" + esc(m.label) + "</b>";
         html += '<span class="pts">' + (task ? esc(task.points) : "") + "</span>";
-        html += '<span class="tag">' + esc(dom ? dom.coin : "") + (on ? " · in the coin" : "") + "</span></button>";
+        html += '<span class="tag">' + esc(dom ? L.coinLabel(dom) : "") + (on ? " · in the coin" : "") + "</span></button>";
         html += '<button type="button" class="undo-mini" data-remove-must="' + esc(m.id) + '">Remove from today</button>';
       });
       if (state.musts.length < 5) {
@@ -185,7 +193,7 @@
     html += '<input class="field" id="mustLabel" data-must-label maxlength="80" value="' + esc(d.label) + '" placeholder="A walk, vocals, the hard call">';
     html += '<p class="hint">Which coin does it fill?</p><div class="chips">';
     L.DOMAINS.forEach(function (dom) {
-      html += '<button type="button" class="chip' + (dom.id === d.domainId ? " on" : "") + '" data-pick-domain="' + dom.id + '">' + esc(dom.coin) + "</button>";
+      html += '<button type="button" class="chip coinchip' + (dom.id === d.domainId ? " on" : "") + '" data-pick-domain="' + dom.id + '">' + coinStack(dom) + "</button>";
     });
     html += '</div><p class="hint">Which task is the credit? One tap, one coin.</p><div class="chips">';
     tasksFor(d.domainId).forEach(function (t) {
@@ -206,15 +214,15 @@
       var kept = state.banked.filter(function (c) { return c.domainId === d.id; }).length;
       html += '<button type="button" class="coin' + (d.id === ui.domainId ? " on" : "") + '" data-domain="' + d.id + '" style="--p:' + pct + '">';
       html += '<span class="medallion"><span class="ring"></span><img src="' + esc(art(d.id)) + '" alt=""></span>';
-      html += '<span class="nm">' + esc(d.coin) + "</span>";
+      html += '<span class="nm">' + coinStack(d) + "</span>";
       html += '<span class="frac">' + meter + " / " + d.fill + "</span>";
       if (kept) html += "<small>" + kept + " kept</small>";
       html += "</button>";
     });
     html += "</div>";
     var dom = L.domain(ui.domainId);
-    html += '<section class="panel" id="tasks"><h2 style="font-family:var(--serif);margin:0">' + esc(dom.coin) + "</h2>";
-    html += '<p class="hint">' + esc(dom.name) + " · " + esc(dom.meaning) + "</p>";
+    html += '<section class="panel" id="tasks"><h2 class="coinhead">' + esc(L.coinLabel(dom)) + "</h2>";
+    html += '<p class="hint">' + esc(dom.meaning) + "</p>";
     var groups = { daily: [], weekly_or_occasional: [], progress: [] };
     tasksFor(dom.id).forEach(function (t) {
       if (t.kind === "bonus_coin") return;
@@ -232,8 +240,7 @@
     ["body-milestone", "fin-card-paid-off", "fin-debt-milestone", "mus-finished-song"].forEach(function (id) {
       var t = SLB.byId[id];
       if (!t) return;
-      var coin = L.domain(t.domainId).coin;
-      html += '<button type="button" class="bonus" data-bonus="' + id + '"><b>' + esc(t.label) + "</b><span>" + esc(coin) + "</span></button>";
+      html += '<button type="button" class="bonus" data-bonus="' + id + '"><b>' + esc(t.label) + "</b>" + coinStack(L.domain(t.domainId)) + "</button>";
     });
     html += "</section>";
     html += '<section class="panel"><button type="button" class="ghost" data-custom-open>' + (ui.customOpen ? "Close" : "Add a task of my own") + "</button>";
@@ -242,7 +249,7 @@
       html += '<input class="field" data-custom-points inputmode="numeric" min="1" max="200" value="' + esc(ui.customDraft.points) + '" aria-label="Points">';
       html += '<div class="chips">';
       L.DOMAINS.forEach(function (d) {
-        html += '<button type="button" class="chip' + (d.id === ui.customDraft.domainId ? " on" : "") + '" data-custom-domain="' + d.id + '">' + esc(d.coin) + "</button>";
+        html += '<button type="button" class="chip coinchip' + (d.id === ui.customDraft.domainId ? " on" : "") + '" data-custom-domain="' + d.id + '">' + coinStack(d) + "</button>";
       });
       html += '</div><label class="check"><input type="checkbox" data-custom-repeat' + (ui.customDraft.repeat ? " checked" : "") + "> A step I may repeat</label>";
       html += '<button type="button" class="stamp" data-custom-save>Add it</button>';
@@ -254,12 +261,12 @@
       html += '<div class="shelf">';
       state.banked.slice().reverse().forEach(function (c) {
         var domc = L.domain(c.domainId);
-        html += '<div class="kept"><img src="' + esc(art(c.domainId)) + '" alt=""><span>' + esc(domc.coin) + "<br>" + esc(L.prettyDay(c.day)) + (c.bonus ? "<br>celebration" : "") + "</span></div>";
+        html += '<div class="kept"><img src="' + esc(art(c.domainId)) + '" alt="">' + coinStack(domc) + '<span class="when">' + esc(L.prettyDay(c.day)) + (c.bonus ? "<br>celebration" : "") + "</span></div>";
       });
       html += "</div>";
     }
     html += "</section>";
-    html += '<section class="panel score"><h2 style="font-family:var(--serif);margin:0 0 6px">Songbird scoring</h2>';
+    html += '<section class="panel score"><h2 class="coinhead">' + esc(L.coinLabel("music-creativity")) + " scoring</h2>";
     html += '<p class="hint">Proposal task points are the default. The minute draft is not approved, and the two are never added together.</p>';
     html += '<label><input type="radio" name="scoring" data-scoring value="proposal"' + (state.scoring !== "draft" ? " checked" : "") + "> Proposal task points, the default</label>";
     html += '<label><input type="radio" name="scoring" data-scoring value="draft"' + (state.scoring === "draft" ? " checked" : "") + "> Draft minute scoring, not approved yet</label>";
@@ -277,7 +284,7 @@
     html += "<b>Week of " + esc(L.prettyDay(key)) + '</b><button type="button" data-week-nav="1" aria-label="Next week">›</button></div>';
     L.DOMAINS.forEach(function (d) {
       var row = plan[d.id] || { result: "", purpose: "" };
-      html += '<section class="panel card"><div class="coinlet"><img src="' + esc(art(d.id)) + '" alt=""><div><h2>' + esc(d.name) + "</h2><span class=\"hint\">" + esc(d.coin) + "</span></div></div>";
+      html += '<section class="panel card"><div class="coinlet"><img src="' + esc(art(d.id)) + '" alt=""><div><h2>' + esc(L.coinLabel(d)) + "</h2></div></div>";
       html += '<label class="hint" for="r-' + d.id + '">Result</label>';
       html += '<textarea class="field" id="r-' + d.id + '" data-week-result="' + d.id + '" maxlength="280" placeholder="By the end of this week…">' + esc(row.result) + "</textarea>";
       html += '<label class="hint" for="p-' + d.id + '">Why</label>';
@@ -296,7 +303,7 @@
     else {
       html += '<div class="shelf">';
       kept.slice().reverse().forEach(function (c) {
-        html += '<div class="kept"><img src="' + esc(art(c.domainId)) + '" alt=""><span>' + esc(L.domain(c.domainId).coin) + "<br>" + esc(L.prettyDay(c.day)) + "</span></div>";
+        html += '<div class="kept"><img src="' + esc(art(c.domainId)) + '" alt="">' + coinStack(L.domain(c.domainId)) + '<span class="when">' + esc(L.prettyDay(c.day)) + "</span></div>";
       });
       html += "</div>";
     }
@@ -340,7 +347,7 @@
     var extra = state.meters[d.domainId] > 0 ? state.meters[d.domainId] + " points started the next coin." : "";
     veil.innerHTML = '<div class="stage" role="status"><img class="falling" src="' + esc(art(d.domainId)) + '" alt="">' +
       '<div class="slot"></div>' +
-      '<p class="fall-name">' + esc(dom.coin) + "</p>" +
+      '<p class="fall-name">' + esc(L.coinLabel(dom)) + "</p>" +
       '<p class="fall-date">' + esc(L.prettyDay(d.day)) + "</p>" +
       (extra ? '<p class="fall-note">' + esc(extra) + "</p>" : "") +
       '<p class="fall-free">' + esc(L.CELEBRATE[d.domainId] || "") + "</p></div>";
