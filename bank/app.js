@@ -1,16 +1,21 @@
-/* The Self Love Bank. Tap-first, phone-first, saved only on this device. */
+/* The Self Love Bank Game. Today comes from plan.json. This Week comes from week.json.
+   Taps stay on this phone. MUSIC_APP_URL is the music app link. Leave it blank until that app has an address. */
+var MUSIC_APP_URL = "";
+
 (function () {
   "use strict";
-  var L, ART, state;
+  var me = document.currentScript;
+  var PLAN_URL = (me && me.getAttribute("data-plan")) || "plan.json";
+  var WEEK_URL = (me && me.getAttribute("data-week")) || "week.json";
+  var ASSET = (me && me.getAttribute("data-asset")) || "";
+  var SW_URL = me && me.getAttribute("data-sw");
+  var CHECKS = "slb.planchecks.v1";
+
+  var L, ART, state, plan, week;
   var ui = {
     tab: "today",
     domainId: "",
-    mustOpen: false,
-    easyOpen: false,
     customOpen: false,
-    quietStep: 0,
-    weekOffset: 0,
-    mustDraft: { label: "", domainId: "body", taskId: "body-hop-walk" },
     customDraft: { label: "", points: "10", domainId: "home", repeat: false }
   };
   var dropQ = [];
@@ -23,10 +28,17 @@
     });
   }
   function now() { return new Date(); }
-  function art(id) { return (ART && ART[id]) || ""; }
+  function art(id) {
+    var p = (ART && ART[id]) || "";
+    return p ? ASSET + p : "";
+  }
   function coinStack(dom) {
     if (!dom) return "";
     return '<span class="stack"><span class="bd">' + esc(dom.name) + '</span><span class="sub">' + esc(dom.coin) + "</span></span>";
+  }
+  function miniArt(dom) {
+    if (!dom) return "";
+    return '<span class="miniwrap"><img class="mini" alt="" src="' + esc(art(dom.id)) + '"><i class="enamel" style="background:' + esc(dom.enamel || "#C9973E") + '"></i></span>';
   }
   function tasksFor(id) {
     var list = [];
@@ -52,14 +64,53 @@
     });
     return best;
   }
-  function weekDate() {
-    var d = now();
-    d.setDate(d.getDate() + ui.weekOffset * 7);
-    return d;
+  function readChecks() {
+    try { return JSON.parse(localStorage.getItem(CHECKS) || "{}"); } catch (e) { return {}; }
+  }
+  function writeChecks(map) { localStorage.setItem(CHECKS, JSON.stringify(map)); }
+  function awardsFor(label, domainId) {
+    var ids = [];
+    if (domainId && L.domain(domainId)) ids.push(domainId);
+    L.domainsInLabel(label).forEach(function (id) {
+      if (ids.indexOf(id) < 0) ids.push(id);
+    });
+    var out = [];
+    ids.forEach(function (id) {
+      var points = L.catalogPoints(id, label, SLB.byId);
+      if (points > 0) out.push({ domainId: id, points: points, label: L.coinLabel(id) });
+    });
+    return out;
+  }
+  function showLabel(label) {
+    return String(label || "").replace(/\s*\(([^)]*)\)\s*$/, function (full, inner) {
+      return L.domainsInLabel(inner).length ? "" : full;
+    }).replace(/\s{2,}/g, " ").trim();
+  }
+  function itemDone(day, item) {
+    if (awardsFor(item.label, item.domainId).length) return L.planItemOn(state, day, item.id);
+    var bag = readChecks()[day] || {};
+    return !!bag[item.id];
+  }
+  function toggleItem(day, item) {
+    var domains = awardsFor(item.label, item.domainId);
+    if (domains.length) {
+      commit(L.togglePlanItem(state, { id: item.id, day: day, label: showLabel(item.label), domains: domains }));
+      return;
+    }
+    var all = readChecks();
+    all[day] = all[day] || {};
+    all[day][item.id] = !all[day][item.id];
+    if (!all[day][item.id]) delete all[day][item.id];
+    writeChecks(all);
+    render();
+  }
+  function prettyDate(key) {
+    var p = String(key || "").split("-");
+    if (p.length < 3) return "";
+    var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
   }
   function capture() {
-    var a = document.querySelector("[data-must-label]");
-    if (a) ui.mustDraft.label = a.value;
     var b = document.querySelector("[data-custom-label]");
     if (b) ui.customDraft.label = b.value;
     var c = document.querySelector("[data-custom-points]");
@@ -71,24 +122,20 @@
     if (result && result.dropped && result.dropped.length) playDrops(result.dropped);
   }
   function render() {
-    var n = now();
-    var quiet = L.shabbatQuiet(state, n);
-    var titles = { today: "Today", bank: "The Bank", week: "This week" };
+    var titles = { today: "Today", bank: "Bank", week: "This Week" };
     var subs = {
-      today: n.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
-      bank: "What lands here stays.",
-      week: "Sunday outcomes, one for each life area."
+      today: plan ? [prettyDate(plan.date), plan.tag].filter(Boolean).join(" · ") : "The day plan will show here.",
+      bank: "Coins you earn stay here.",
+      week: week ? [week.title, week.tag].filter(Boolean).join(" · ") : "A week shows up when it is written."
     };
-    $("h1").textContent = quiet ? "Shabbos" : titles[ui.tab];
-    $("sub").textContent = quiet ? "Rest. Nothing is asked of you here." : subs[ui.tab];
+    $("h1").textContent = titles[ui.tab] || "Today";
+    $("sub").textContent = subs[ui.tab] || "";
     document.querySelectorAll("#tabs button").forEach(function (b) {
-      b.setAttribute("aria-selected", !quiet && b.getAttribute("data-tab") === ui.tab ? "true" : "false");
+      b.setAttribute("aria-selected", b.getAttribute("data-tab") === ui.tab ? "true" : "false");
     });
-    $("main").innerHTML = quiet ? renderQuiet() : (ui.tab === "bank" ? renderBank(n) : ui.tab === "week" ? renderWeek(n) : renderToday(n));
+    $("main").innerHTML = ui.tab === "bank" ? renderBank(now()) : ui.tab === "week" ? renderWeek() : renderToday();
     var last = null;
-    if (!quiet) {
-      for (var i = state.entries.length - 1; i >= 0; i--) if (!state.entries[i].undone) { last = state.entries[i]; break; }
-    }
+    for (var i = state.entries.length - 1; i >= 0; i--) if (!state.entries[i].undone) { last = state.entries[i]; break; }
     var undo = $("undo");
     if (last) {
       undo.hidden = false;
@@ -96,111 +143,152 @@
     } else undo.hidden = true;
   }
 
-  function renderQuiet() {
-    var step = ui.quietStep;
-    var html = '<section class="quiet">';
-    html += '<img src="' + esc(art("faith")) + '" alt="' + esc(L.coinLabel("faith")) + '">';
-    html += "<h2>Shabbos</h2>";
-    html += '<p class="hint">The coins can wait. There is nothing to catch up.</p>';
-    if (step < 1) {
-      html += '<button type="button" class="stamp" data-havdalah>Havdalah</button>';
-      html += '<p class="hint">When Shabbos is over.</p>';
-    } else {
-      html += '<button type="button" class="stamp" data-log-shabbos>I kept Shabbos</button>';
-      html += '<button type="button" class="ghost" data-back-day>Back to the day</button>';
-    }
+  function mustListSection(sec, source) {
+    var nameKey = String(sec && sec.name || "").toLowerCase().replace(/[^a-z]/g, "");
+    return nameKey === "musts" && (source.musts || []).some(function (m) { return m && m.label; });
+  }
+  function planRows(source) {
+    var rows = [];
+    (source.musts || []).forEach(function (m, i) {
+      if (!m || !m.label) return;
+      rows.push({ id: "must-" + i, time: "", label: m.label, domainId: m.domainId || "", group: "Musts" });
+    });
+    (source.sections || []).forEach(function (sec) {
+      if (mustListSection(sec, source)) return;
+      (sec.items || []).forEach(function (it) {
+        rows.push({ id: it[0], time: it[1] || "", label: it[2] || "", domainId: "", group: sec.name || "Plan" });
+      });
+    });
+    return rows;
+  }
+  function planButton(item, day) {
+    var domains = awardsFor(item.label, item.domainId);
+    var on = itemDone(day, item);
+    var pts = 0;
+    domains.forEach(function (d) { pts += d.points; });
+    var bits = [];
+    if (item.time) bits.push(item.time);
+    domains.forEach(function (d) { bits.push(d.label); });
+    var html = '<button type="button" class="task' + (domains.length ? " has-art" : " has-box") + (on ? " on" : "") + '" data-plan-item="' + esc(item.id) + '" data-day="' + esc(day) + '" data-label="' + esc(item.label) + '" data-plan-domain="' + esc(item.domainId || "") + '">';
+    if (domains.length) html += miniArt(L.domain(domains[0].domainId));
+    else html += '<span class="box"></span>';
+    html += "<b>" + esc(showLabel(item.label)) + "</b>";
+    html += '<span class="pts">' + (pts ? (on ? "✓ +" + pts : "+" + pts) : (on ? "✓" : "")) + "</span>";
+    html += '<span class="tag">' + esc(bits.join(" · ")) + "</span></button>";
+    return html;
+  }
+  function musicCard() {
+    var day = L.dayKey(now());
+    var vocal = SLB.byId["mus-vocals"];
+    var pts = vocal ? vocal.points : 0;
+    var on = L.loggedToday(state, "music-done", day).length > 0;
+    var dom = L.domain("music-creativity");
+    var html = '<section class="panel"><p class="kicker">Music</p>';
+    html += '<button type="button" class="task has-art' + (on ? " on" : "") + '" data-music-done>';
+    html += miniArt(dom);
+    html += "<b>Music done</b>";
+    html += '<span class="pts">' + (pts ? (on ? "✓ +" + pts : "+" + pts) : "") + "</span>";
+    html += '<span class="tag">' + esc(L.coinLabel(dom)) + "</span></button>";
+    if (MUSIC_APP_URL) html += '<a class="applink" href="' + esc(MUSIC_APP_URL) + '">Open music app</a>';
+    else html += '<a class="applink" href="#music-app" data-music-app>Open music app</a>';
     html += "</section>";
     return html;
   }
+  function renderToday() {
+    if (!plan) {
+      return '<section class="panel empty"><p class="kicker">Today</p><h2>No day plan yet</h2><p class="hint">Add a plan.json file and today will show up here.</p></section>' + musicCard();
+    }
+    var day = plan.date || L.dayKey(now());
+    var rows = planRows(plan);
+    var done = rows.filter(function (item) { return itemDone(day, item); }).length;
+    var html = "";
+    if (plan.result || plan.why) {
+      html += '<section class="panel">';
+      if (plan.result) {
+        html += '<p class="kicker">Result</p><p class="lead">' + esc(plan.result) + "</p>";
+      }
+      if (plan.why) {
+        if (plan.result) html += '<hr class="rule">';
+        html += '<p class="kicker">Why</p><p class="copy">' + esc(plan.why) + "</p>";
+      }
+      html += "</section>";
+    }
+    if (rows.length) {
+      var pct = Math.round(100 * done / rows.length);
+      html += '<div class="meter" aria-hidden="true"><i style="width:' + pct + '%"></i></div>';
+      html += '<p class="count">' + done + " of " + rows.length + " done</p>";
+    }
+    var seen = {};
+    var musts = rows.filter(function (r) { return r.id.indexOf("must-") === 0; });
+    if (musts.length) {
+      html += '<section class="panel"><p class="kicker">Musts</p>';
+      musts.forEach(function (item) { html += planButton(item, day); });
+      html += "</section>";
+    }
+    (plan.sections || []).forEach(function (sec) {
+      var items = (sec.items || []).map(function (it) {
+        return { id: it[0], time: it[1] || "", label: it[2] || "", domainId: "" };
+      });
+      if (mustListSection(sec, plan)) return;
+      if (!items.length || seen[sec.name]) return;
+      seen[sec.name] = 1;
+      html += '<section class="panel"><p class="kicker">' + esc(sec.name || "Plan") + "</p>";
+      items.forEach(function (item) { html += planButton(item, day); });
+      html += "</section>";
+    });
+    html += musicCard();
+    return html;
+  }
 
-  function taskButton(task, day, withCoin) {
+  function renderWeek() {
+    if (!week || (!week.title && !week.result && !(week.days && week.days.length))) {
+      return '<section class="panel empty"><p class="kicker">This week</p><h2>Nothing written for this week yet</h2><p class="hint">When a week.json file sits next to the day plan, the days will show up here.</p></section>';
+    }
+    var html = "";
+    if (week.result || week.why) {
+      html += '<section class="panel">';
+      if (week.result) html += '<p class="kicker">Result</p><p class="lead">' + esc(week.result) + "</p>";
+      if (week.why) {
+        if (week.result) html += '<hr class="rule">';
+        html += '<p class="kicker">Why</p><p class="copy">' + esc(week.why) + "</p>";
+      }
+      html += "</section>";
+    }
+    var mustDay = week.date || (week.days && week.days[0] && week.days[0].date) || L.dayKey(now());
+    var musts = [];
+    (week.musts || []).forEach(function (m, i) {
+      if (m && m.label) musts.push({ id: "must-" + i, time: "", label: m.label, domainId: m.domainId || "" });
+    });
+    if (musts.length) {
+      html += '<section class="panel"><p class="kicker">Musts</p>';
+      musts.forEach(function (item) { html += planButton(item, mustDay); });
+      html += "</section>";
+    }
+    (week.days || []).forEach(function (d) {
+      html += '<section class="panel"><p class="kicker">' + esc(d.title || "Day") + "</p>";
+      if (d.date) html += '<p class="daydate">' + esc(prettyDate(d.date)) + "</p>";
+      (d.items || []).forEach(function (it) {
+        html += planButton({ id: it[0], time: it[1] || "", label: it[2] || "", domainId: "" }, d.date || mustDay);
+      });
+      html += "</section>";
+    });
+    if (!(week.days && week.days.length) && !musts.length) {
+      html += '<section class="panel empty"><p class="kicker">Days</p><h2>This week has no days yet</h2><p class="hint">Add a days list to week.json and they will show up here.</p></section>';
+    }
+    return html;
+  }
+
+  function taskButton(task, day) {
     var n = L.loggedToday(state, task.id, day).length;
     var on = !task.repeat && n > 0;
     var html = '<button type="button" class="task' + (on ? " on" : "") + '" data-task="' + esc(task.id) + '">';
     html += "<b>" + esc(task.label) + "</b>";
-    html += '<span class="pts">' + (task.kind === "bonus_points" ? "+" : "") + esc(task.points) + "</span>";
-    var tag = on ? "In the coin" : (task.cadence === "progress" ? "A step counts" : (task.kind === "bonus_points" ? "Bonus points" : ""));
+    html += '<span class="pts">' + (on ? "✓ +" : "+") + esc(task.points) + "</span>";
+    var tag = on ? "In the coin" : (task.cadence === "progress" ? "A step counts" : "");
     if (task.repeat && n) tag = n + " today";
     if (task.note && !tag) tag = task.note;
-    if (withCoin) {
-      var named = L.coinLabel(task.domainId);
-      tag = named + (tag ? " · " + tag : "");
-    }
-    html += '<span class="tag">' + esc(tag) + "</span>";
-    html += "</button>";
+    html += '<span class="tag">' + esc(tag) + "</span></button>";
     if (task.repeat && n) html += '<button type="button" class="undo-mini" data-undo-task="' + esc(task.id) + '">Undo one</button>';
-    return html;
-  }
-
-  function renderToday(n) {
-    var day = L.dayKey(n);
-    var html = '<section class="panel"><div class="switchrow"><div><b>Easy day</b><span>Five gentle tasks still fill the coins.</span></div>';
-    html += '<button type="button" class="switch' + (state.easyDay ? " on" : "") + '" data-easy aria-pressed="' + (state.easyDay ? "true" : "false") + '" aria-label="Easy day"><i></i></button></div></section>';
-    if (state.easyDay) {
-      html += '<section class="panel"><h2 class="nm" style="font-family:var(--serif);margin:0 0 4px">Your five</h2>';
-      html += '<p class="hint">Suggested to start: daily care, teeth, a walk, vocals, lights out. Change them whenever you like.</p>';
-      (state.easyDayTaskIds || []).forEach(function (id) {
-        var task = taskById(id);
-        if (task) html += taskButton(task, day, true);
-      });
-      html += '<button type="button" class="ghost" data-easy-open>' + (ui.easyOpen ? "Close" : "Change these five") + "</button>";
-      if (ui.easyOpen) {
-        var pool = [];
-        L.DOMAINS.forEach(function (d) { tasksFor(d.id).forEach(function (t) { if (t.kind !== "bonus_coin") pool.push(t); }); });
-        for (var i = 0; i < 5; i++) {
-          html += '<select class="field" data-easy-slot="' + i + '">';
-          pool.forEach(function (t) {
-            var sel = state.easyDayTaskIds[i] === t.id ? " selected" : "";
-            html += '<option value="' + esc(t.id) + '"' + sel + ">" + esc(t.label) + "</option>";
-          });
-          html += "</select>";
-        }
-      }
-      html += "</section>";
-    } else {
-      html += '<section class="panel"><h2 style="font-family:var(--serif);margin:0">Today\'s musts</h2>';
-      html += '<p class="hint">Three to five. Each one is tagged to a coin, and checking it fills that coin once.</p>';
-      if (!state.musts.length) html += '<p class="hint">Nothing chosen yet. A short list is enough.</p>';
-      state.musts.forEach(function (m) {
-        var task = taskById(m.taskId);
-        var dom = L.domain(m.domainId);
-        var on = task && L.loggedToday(state, task.id, day).length > 0;
-        html += '<button type="button" class="task' + (on ? " on" : "") + '" data-must="' + esc(m.id) + '">';
-        html += "<b>" + esc(m.label) + "</b>";
-        html += '<span class="pts">' + (task ? esc(task.points) : "") + "</span>";
-        html += '<span class="tag">' + esc(dom ? L.coinLabel(dom) : "") + (on ? " · in the coin" : "") + "</span></button>";
-        html += '<button type="button" class="undo-mini" data-remove-must="' + esc(m.id) + '">Remove from today</button>';
-      });
-      if (state.musts.length < 5) {
-        html += '<button type="button" class="stamp" data-add-must>' + (ui.mustOpen ? "Close" : "Add a must") + "</button>";
-      }
-      if (ui.mustOpen) html += mustForm();
-      html += "</section>";
-    }
-    if (!L.shabbosLogged(state, n)) {
-      html += '<button type="button" class="ghost" data-log-shabbos>Log Shabbos</button>';
-    }
-    if (n.getDay() === 5 && n.getHours() < 18) {
-      html += '<button type="button" class="ghost" data-shabbos-hold>It\'s Shabbos</button>';
-    }
-    html += footer();
-    return html;
-  }
-
-  function mustForm() {
-    var d = ui.mustDraft;
-    var html = '<label class="hint" for="mustLabel">What will you do?</label>';
-    html += '<input class="field" id="mustLabel" data-must-label maxlength="80" value="' + esc(d.label) + '" placeholder="A walk, vocals, the hard call">';
-    html += '<p class="hint">Which coin does it fill?</p><div class="chips">';
-    L.DOMAINS.forEach(function (dom) {
-      html += '<button type="button" class="chip coinchip' + (dom.id === d.domainId ? " on" : "") + '" data-pick-domain="' + dom.id + '">' + coinStack(dom) + "</button>";
-    });
-    html += '</div><p class="hint">Which task is the credit? One tap, one coin.</p><div class="chips">';
-    tasksFor(d.domainId).forEach(function (t) {
-      if (t.kind === "bonus_coin") return;
-      html += '<button type="button" class="chip' + (t.id === d.taskId ? " on" : "") + '" data-pick-task="' + esc(t.id) + '">' + esc(t.label) + " · " + t.points + "</button>";
-    });
-    html += '</div><button type="button" class="stamp" data-save-must>Save this must</button>';
     return html;
   }
 
@@ -213,15 +301,16 @@
       var pct = Math.max(0, Math.min(100, Math.round(100 * meter / d.fill)));
       var kept = state.banked.filter(function (c) { return c.domainId === d.id; }).length;
       html += '<button type="button" class="coin' + (d.id === ui.domainId ? " on" : "") + '" data-domain="' + d.id + '" style="--p:' + pct + '">';
-      html += '<span class="medallion"><span class="ring"></span><img src="' + esc(art(d.id)) + '" alt=""></span>';
+      html += '<span class="medallion"><span class="ring"></span><img src="' + esc(art(d.id)) + '" alt=""><i class="enamel" style="background:' + esc(d.enamel || "#C9973E") + '"></i></span>';
       html += '<span class="nm">' + coinStack(d) + "</span>";
       html += '<span class="frac">' + meter + " / " + d.fill + "</span>";
       if (kept) html += "<small>" + kept + " kept</small>";
       html += "</button>";
     });
     html += "</div>";
+    html += musicCard();
     var dom = L.domain(ui.domainId);
-    html += '<section class="panel" id="tasks"><h2 class="coinhead">' + esc(L.coinLabel(dom)) + "</h2>";
+    html += '<section class="panel" id="tasks"><div class="coinlet">' + miniArt(dom) + "<div><p class=\"kicker\">Coin</p><h2>" + esc(L.coinLabel(dom)) + "</h2></div></div>";
     html += '<p class="hint">' + esc(dom.meaning) + "</p>";
     var groups = { daily: [], weekly_or_occasional: [], progress: [] };
     tasksFor(dom.id).forEach(function (t) {
@@ -235,12 +324,13 @@
       html += "</div>";
     });
     html += "</section>";
-    html += '<section class="panel"><h2 style="font-family:var(--serif);margin:0">Celebrations</h2>';
-    html += '<p class="hint">One tap banks a whole coin. No number is stored, and nothing is spent.</p>';
+    html += '<section class="panel"><p class="kicker">Celebrations</p>';
+    html += '<p class="hint">One tap banks a whole coin. Nothing is spent, and a quiet day changes nothing.</p>';
     ["body-milestone", "fin-card-paid-off", "fin-debt-milestone", "mus-finished-song"].forEach(function (id) {
       var t = SLB.byId[id];
       if (!t) return;
-      html += '<button type="button" class="bonus" data-bonus="' + id + '"><b>' + esc(t.label) + "</b>" + coinStack(L.domain(t.domainId)) + "</button>";
+      var cd = L.domain(t.domainId);
+      html += '<button type="button" class="bonus" data-bonus="' + id + '">' + miniArt(cd) + "<b>" + esc(t.label) + "</b>" + coinStack(cd) + "</button>";
     });
     html += "</section>";
     html += '<section class="panel"><button type="button" class="ghost" data-custom-open>' + (ui.customOpen ? "Close" : "Add a task of my own") + "</button>";
@@ -249,13 +339,13 @@
       html += '<input class="field" data-custom-points inputmode="numeric" min="1" max="200" value="' + esc(ui.customDraft.points) + '" aria-label="Points">';
       html += '<div class="chips">';
       L.DOMAINS.forEach(function (d) {
-        html += '<button type="button" class="chip coinchip' + (d.id === ui.customDraft.domainId ? " on" : "") + '" data-custom-domain="' + d.id + '">' + coinStack(d) + "</button>";
+        html += '<button type="button" class="chip' + (d.id === ui.customDraft.domainId ? " on" : "") + '" data-custom-domain="' + d.id + '">' + esc(L.coinLabel(d)) + "</button>";
       });
       html += '</div><label class="check"><input type="checkbox" data-custom-repeat' + (ui.customDraft.repeat ? " checked" : "") + "> A step I may repeat</label>";
       html += '<button type="button" class="stamp" data-custom-save>Add it</button>';
     }
     html += "</section>";
-    html += '<section class="tray"><h2>In the bank</h2><p class="hint">They stay. A quiet day changes nothing.</p>';
+    html += '<section class="tray"><p class="kicker">In the bank</p><h2>Kept coins</h2><p class="hint">They stay. A quiet day changes nothing.</p>';
     if (!state.banked.length) html += '<p class="hint">Your bank is ready. Coins land here and stay.</p>';
     else {
       html += '<div class="shelf">';
@@ -266,70 +356,24 @@
       html += "</div>";
     }
     html += "</section>";
-    html += '<section class="panel score"><h2 class="coinhead">' + esc(L.coinLabel("music-creativity")) + " scoring</h2>";
-    html += '<p class="hint">Proposal task points are the default. The minute draft is not approved, and the two are never added together.</p>';
-    html += '<label><input type="radio" name="scoring" data-scoring value="proposal"' + (state.scoring !== "draft" ? " checked" : "") + "> Proposal task points, the default</label>";
-    html += '<label><input type="radio" name="scoring" data-scoring value="draft"' + (state.scoring === "draft" ? " checked" : "") + "> Draft minute scoring, not approved yet</label>";
-    html += "</section>";
     html += phoneBox();
-    html += footer();
-    return html;
-  }
-
-  function renderWeek() {
-    var when = weekDate();
-    var key = L.sundayKey(when);
-    var plan = state.weekPlans[key] || {};
-    var html = '<div class="weeknav"><button type="button" data-week-nav="-1" aria-label="Previous week">‹</button>';
-    html += "<b>Week of " + esc(L.prettyDay(key)) + '</b><button type="button" data-week-nav="1" aria-label="Next week">›</button></div>';
-    L.DOMAINS.forEach(function (d) {
-      var row = plan[d.id] || { result: "", purpose: "" };
-      html += '<section class="panel card"><div class="coinlet"><img src="' + esc(art(d.id)) + '" alt=""><div><h2>' + esc(L.coinLabel(d)) + "</h2></div></div>";
-      html += '<label class="hint" for="r-' + d.id + '">Result</label>';
-      html += '<textarea class="field" id="r-' + d.id + '" data-week-result="' + d.id + '" maxlength="280" placeholder="By the end of this week…">' + esc(row.result) + "</textarea>";
-      html += '<label class="hint" for="p-' + d.id + '">Why</label>';
-      html += '<textarea class="field" id="p-' + d.id + '" data-week-purpose="' + d.id + '" maxlength="280" placeholder="Because…">' + esc(row.purpose) + "</textarea>";
-      html += "</section>";
-    });
-    var start = new Date(when.getFullYear(), when.getMonth(), when.getDate() - when.getDay());
-    var days = [];
-    for (var i = 0; i < 7; i++) {
-      var x = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-      days.push(L.dayKey(x));
-    }
-    var kept = state.banked.filter(function (c) { return days.indexOf(c.day) >= 0; });
-    html += '<section class="tray"><h2>Banked this week</h2>';
-    if (!kept.length) html += '<p class="hint">Coins you bank this week will sit here.</p>';
-    else {
-      html += '<div class="shelf">';
-      kept.slice().reverse().forEach(function (c) {
-        html += '<div class="kept"><img src="' + esc(art(c.domainId)) + '" alt="">' + coinStack(L.domain(c.domainId)) + '<span class="when">' + esc(L.prettyDay(c.day)) + "</span></div>";
-      });
-      html += "</div>";
-    }
-    html += "</section>";
-    html += footer();
     return html;
   }
 
   function phoneBox() {
-    var html = '<section class="panel"><h2 style="font-family:var(--serif);margin:0">This phone</h2>';
+    var html = '<section class="panel"><p class="kicker">This phone</p>';
     html += '<p class="hint">Taps stay on this phone. A save file is the way to move them.</p>';
     html += '<button type="button" class="ghost" data-export>Export save file</button>';
     html += '<button type="button" class="ghost" data-import-btn>Import save file</button>';
     if (L.canOfferSeed(state, "nov16")) {
       html += '<button type="button" class="stamp" data-seed>Import Nov 16 progress</button>';
-      html += '<p class="hint">Points only, one time: Body 140, Resilience 70, Finances 75, Music 25, Kindness 30. Nothing banked.</p>';
+      html += '<p class="hint">Points only, one time. Nothing banked yet.</p>';
       html += '<button type="button" class="ghost" data-seed-no>Not now</button>';
     }
     html += '<button type="button" class="ghost" data-install>Add to Home Screen</button>';
-    html += '<p class="hint" id="installHint" hidden>On iPhone: Share, then Add to Home Screen. The icon is the oak.</p>';
+    html += '<p class="hint" id="installHint" hidden>On iPhone: Share, then Add to Home Screen.</p>';
     html += "</section>";
     return html;
-  }
-
-  function footer() {
-    return '<p class="links"><a href="../index.html">Full day list</a><a href="../index.html#curriculum">Music page</a></p>';
   }
 
   function playDrops(list) {
@@ -370,22 +414,44 @@
     capture();
     var n = now();
     var day = L.dayKey(n);
+    if (el.hasAttribute("data-music-app")) {
+      ev.preventDefault();
+      return;
+    }
     if (el.hasAttribute("data-tab")) {
       ui.tab = el.getAttribute("data-tab");
       history.replaceState(null, "", "#" + ui.tab);
       render();
+      window.scrollTo(0, 0);
       return;
     }
-    if (el.hasAttribute("data-undo")) {
-      L.undoLast(state);
-      commit();
-      return;
-    }
+    if (el.hasAttribute("data-undo")) { L.undoLast(state); commit(); return; }
     if (el.hasAttribute("data-domain")) {
       ui.domainId = el.getAttribute("data-domain");
       render();
       var box = document.getElementById("tasks");
       if (box && box.scrollIntoView) box.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (el.hasAttribute("data-plan-item")) {
+      toggleItem(el.getAttribute("data-day"), {
+        id: el.getAttribute("data-plan-item"),
+        label: el.getAttribute("data-label") || "",
+        domainId: el.getAttribute("data-plan-domain") || ""
+      });
+      return;
+    }
+    if (el.hasAttribute("data-music-done")) {
+      var vocal = SLB.byId["mus-vocals"];
+      if (!vocal) return;
+      commit(L.toggleTask(state, {
+        id: "music-done",
+        domainId: "music-creativity",
+        label: "Music done",
+        points: vocal.points,
+        kind: "points",
+        cadence: "daily"
+      }, { day: day, source: "music-done" }));
       return;
     }
     if (el.hasAttribute("data-task")) {
@@ -402,34 +468,6 @@
     if (el.hasAttribute("data-bonus")) {
       var bonus = SLB.byId[el.getAttribute("data-bonus")];
       if (bonus) commit(L.creditTask(state, bonus, { day: day, source: "bonus" }));
-      return;
-    }
-    if (el.hasAttribute("data-easy")) {
-      state.easyDay = !state.easyDay;
-      commit();
-      return;
-    }
-    if (el.hasAttribute("data-easy-open")) { ui.easyOpen = !ui.easyOpen; render(); return; }
-    if (el.hasAttribute("data-add-must")) { ui.mustOpen = !ui.mustOpen; render(); return; }
-    if (el.hasAttribute("data-pick-domain")) {
-      ui.mustDraft.domainId = el.getAttribute("data-pick-domain");
-      var first = tasksFor(ui.mustDraft.domainId).filter(function (t) { return t.kind !== "bonus_coin"; })[0];
-      ui.mustDraft.taskId = first ? first.id : "";
-      render();
-      return;
-    }
-    if (el.hasAttribute("data-pick-task")) { ui.mustDraft.taskId = el.getAttribute("data-pick-task"); render(); return; }
-    if (el.hasAttribute("data-save-must")) {
-      var made = L.addMust(state, ui.mustDraft);
-      if (made) { ui.mustDraft.label = ""; ui.mustOpen = false; commit(); }
-      return;
-    }
-    if (el.hasAttribute("data-remove-must")) { L.removeMust(state, el.getAttribute("data-remove-must")); commit(); return; }
-    if (el.hasAttribute("data-must")) {
-      var must = null;
-      state.musts.forEach(function (m) { if (m.id === el.getAttribute("data-must")) must = m; });
-      var linked = must && taskById(must.taskId);
-      if (linked) commit(L.toggleMust(state, linked, { day: day }));
       return;
     }
     if (el.hasAttribute("data-custom-open")) { ui.customOpen = !ui.customOpen; render(); return; }
@@ -449,26 +487,6 @@
       }
       return;
     }
-    if (el.hasAttribute("data-shabbos-hold")) { state.shabbatHold = true; ui.quietStep = 0; commit(); return; }
-    if (el.hasAttribute("data-havdalah")) { ui.quietStep = 1; render(); return; }
-    if (el.hasAttribute("data-log-shabbos")) {
-      var faith = SLB.byId["faith-shabbos"];
-      if (faith) commit(L.logShabbos(state, faith, n));
-      ui.quietStep = 0;
-      return;
-    }
-    if (el.hasAttribute("data-back-day")) {
-      state.shabbatHold = false;
-      state.shabbatLifted = L.shabbosKey(n);
-      ui.quietStep = 0;
-      commit();
-      return;
-    }
-    if (el.hasAttribute("data-week-nav")) {
-      ui.weekOffset += parseInt(el.getAttribute("data-week-nav"), 10) || 0;
-      render();
-      return;
-    }
     if (el.hasAttribute("data-export")) {
       var blob = new Blob([JSON.stringify(L.exportBundle(state), null, 2)], { type: "application/json" });
       var a = document.createElement("a");
@@ -480,7 +498,7 @@
     }
     if (el.hasAttribute("data-import-btn")) { var f = $("importFile"); if (f) f.click(); return; }
     if (el.hasAttribute("data-seed")) {
-      fetch("seed-nov16.json").then(function (r) { return r.json(); }).then(function (seed) {
+      fetch(ASSET + "seed-nov16.json").then(function (r) { return r.json(); }).then(function (seed) {
         var res = L.applySeed(state, seed);
         if (res.ok) commit();
       });
@@ -495,34 +513,11 @@
 
   function onInput(ev) {
     var t = ev.target;
-    if (t.hasAttribute("data-week-result") || t.hasAttribute("data-week-purpose")) {
-      var id = t.getAttribute("data-week-result") || t.getAttribute("data-week-purpose");
-      var fields = {};
-      fields[t.hasAttribute("data-week-result") ? "result" : "purpose"] = t.value;
-      L.setWeek(state, L.sundayKey(weekDate()), id, fields);
-      SLB.save(state);
-    }
-    if (t.hasAttribute("data-must-label")) ui.mustDraft.label = t.value;
     if (t.hasAttribute("data-custom-label")) ui.customDraft.label = t.value;
     if (t.hasAttribute("data-custom-points")) ui.customDraft.points = t.value;
   }
-
   function onChange(ev) {
-    var t = ev.target;
-    if (t.hasAttribute("data-easy-slot")) {
-      var ids = (state.easyDayTaskIds || []).slice();
-      ids[+t.getAttribute("data-easy-slot")] = t.value;
-      if (L.setEasyTasks(state, ids, mergedById())) SLB.save(state);
-    }
-    if (t.hasAttribute("data-custom-repeat")) { ui.customDraft.repeat = t.checked; }
-    if (t.hasAttribute("data-scoring")) { state.scoring = t.value === "draft" ? "draft" : "proposal"; SLB.save(state); }
-  }
-
-  function mergedById() {
-    var map = {};
-    Object.keys(SLB.byId).forEach(function (k) { map[k] = SLB.byId[k]; });
-    state.customTasks.forEach(function (t) { map[t.id] = t; });
-    return map;
+    if (ev.target.hasAttribute("data-custom-repeat")) ui.customDraft.repeat = ev.target.checked;
   }
 
   document.getElementById("main").addEventListener("click", onClick);
@@ -556,15 +551,27 @@
   var start = location.hash.replace("#", "");
   if (start === "bank" || start === "week" || start === "today") ui.tab = start;
 
+  function loadJson(url) {
+    return fetch(url + (url.indexOf("?") >= 0 ? "&" : "?") + Date.now()).then(function (r) {
+      if (!r.ok) throw new Error("missing");
+      return r.json();
+    });
+  }
+
   SLB.ready.then(function () {
     L = SLBLogic;
     ART = COIN_ART;
     state = SLB.load();
+    return Promise.all([
+      loadJson(PLAN_URL).then(function (p) { plan = p; }).catch(function () { plan = null; }),
+      loadJson(WEEK_URL).then(function (w) { week = w; }).catch(function () { week = null; })
+    ]);
+  }).then(function () {
     if (!ui.domainId) ui.domainId = fullest();
     render();
     var host = location.hostname;
-    if ("serviceWorker" in navigator && host !== "localhost" && host !== "127.0.0.1") {
-      navigator.serviceWorker.register("sw.js").catch(function () {});
+    if (SW_URL && "serviceWorker" in navigator && host !== "localhost" && host !== "127.0.0.1") {
+      navigator.serviceWorker.register(SW_URL).catch(function () {});
     }
   });
 })();

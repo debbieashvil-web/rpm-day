@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-16",
+  "title": "Example week",
+  "tag": "Example only. Not a real week.",
+  "result": "Example: one small win written down for each day.",
+  "why": "Example: this file shows the shape of a week. Replace it when a real week is ready.",
+  "musts": [
+    {
+      "label": "Example: a short walk",
+      "domainId": "body"
+    }
+  ],
+  "sections": [],
+  "days": [
+    {
+      "date": "2026-11-16",
+      "title": "Example Monday",
+      "items": [
+        ["ex-mon-1", "Morning", "Example: a short walk (Ember)"],
+        ["ex-mon-2", "Evening", "Example: lights out"]
+      ]
+    },
+    {
+      "date": "2026-11-17",
+      "title": "Example Tuesday",
+      "items": [
+        ["ex-tue-1", "Afternoon", "Example: ten minutes of tidying (Hearth)"]
+      ]
+    },
+    {
+      "date": "2026-11-18",
+      "title": "Example Wednesday",
+      "items": [
+        ["ex-wed-1", "Morning", "Example: vocal play (Songbird)"],
+        ["ex-wed-2", "Afternoon", "Example: one lesson block (Teacher's Bell)"]
+      ]
+    },
+    {
+      "date": "2026-11-19",
+      "title": "Example Thursday",
+      "items": [
+        ["ex-thu-1", "Anytime", "Example: a kind note (Warm Bread)"]
+      ]
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Example Friday",
+      "items": [
+        ["ex-fri-1", "Evening", "Example: a quiet pause (Still Water)"]
+      ]
+    },
+    {
+      "date": "2026-11-21",
+      "title": "Example Saturday",
+      "items": [
+        ["ex-sat-1", "Afternoon", "Example: step outside (Oak)"]
+      ]
+    },
+    {
+      "date": "2026-11-22",
+      "title": "Example Sunday",
+      "items": [
+        ["ex-sun-1", "Morning", "Example: a gratitude list (Candlelight)"]
+      ]
+    }
+  ]
+}

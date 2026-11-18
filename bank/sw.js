@@ -1,5 +1,5 @@
 /* Offline cache for the bank app only. Scope is this folder. */
-var CACHE = "slb-static-v5";
+var CACHE = "slb-static-v6";
 var ASSETS = [
   "./",
   "./index.html",

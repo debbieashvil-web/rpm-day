@@ -1,11 +1,11 @@
 {
-  "name": "The Self Love Bank",
-  "short_name": "Love Bank",
+  "name": "The Self Love Bank Game",
+  "short_name": "Bank Game",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#F6F0E4",
-  "theme_color": "#3E291C",
+  "background_color": "#FFF8EF",
+  "theme_color": "#FFF8EF",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },

@@ -138,21 +138,29 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(r.points, 1);
 }
 
-// No music points Friday evening or Saturday. Minutes still save.
+// Friday evening and Saturday earn coins like any other day. A skipped day does not take points away.
 {
   const s = fresh();
   const fri = new Date(2026, 10, 20, 18, 30, 0);
   const sat = new Date(2026, 10, 21, 11, 0, 0);
+  assert.strictEqual(L.isMusicBlackout(fri, scoring), false);
+  assert.strictEqual(L.isMusicBlackout(sat, scoring), false);
+  assert.strictEqual(L.shabbatQuiet(s, sat), false);
   const a = L.logPractice(s, { track: "voice", minutes: 20, at: fri.toISOString() }, ctx);
   const b = L.logPractice(s, { track: "piano", minutes: 10, at: sat.toISOString() }, ctx);
-  assert.strictEqual(a.blackout, true);
-  assert.strictEqual(b.points, 0);
-  assert.strictEqual(s.meters["music-creativity"], 0);
+  assert.strictEqual(a.blackout, false);
+  assert.strictEqual(a.points, 25);
+  assert.strictEqual(b.points, 25);
+  assert.strictEqual(s.meters["music-creativity"], 50);
   assert.strictEqual(L.weekMinutes(s, fri, scoring).minutes, 0);
   const thu = new Date(2026, 10, 19, 19, 0, 0);
   L.logPractice(s, { track: "guitar", minutes: 30, at: thu.toISOString() }, ctx);
   assert.strictEqual(L.weekMinutes(s, fri, scoring).minutes, 30);
   assert.strictEqual(L.weekMinutes(s, fri, scoring).goal, 300);
+  const quiet = fresh();
+  L.toggleTask(quiet, byId["home-bed"], { day: "2026-11-13" });
+  L.recompute(quiet);
+  assert.strictEqual(quiet.meters.home, 10);
 }
 
 // Skill checkoff and voice test follow the active set.
@@ -169,16 +177,71 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(L.creditVoiceTest(s, scoring, when).duplicate, true);
 }
 
-// Shabbos logs once per week and does not prompt during the quiet window.
+// Shabbos still logs once per week, and Saturday is not a quiet block.
 {
   const s = fresh();
   const sat = new Date(2026, 10, 21, 20, 0, 0);
-  assert.strictEqual(L.shabbatQuiet(s, sat), true);
+  assert.strictEqual(L.shabbatQuiet(s, sat), false);
   const res = L.logShabbos(s, byId["faith-shabbos"], sat);
   assert.strictEqual(res.entry.points, 50);
   assert.strictEqual(L.shabbatQuiet(s, sat), false);
   assert.strictEqual(L.logShabbos(s, byId["faith-shabbos"], sat).duplicate, true);
   assert.strictEqual(s.meters.faith, 50);
+}
+
+// A plan check awards the named coin once. Uncheck and recheck does not double it.
+{
+  function same(a, b) { assert.deepStrictEqual(a.slice().sort(), b.slice().sort()); }
+  same(L.domainsInLabel("Grocery run (Ember, Oak)"), ["body", "resilience"]);
+  assert.deepStrictEqual(L.domainsInLabel("Vocals (Songbird)"), ["music-creativity"]);
+  assert.deepStrictEqual(L.domainsInLabel("Income hour (Teacher's Bell)"), ["career"]);
+  assert.deepStrictEqual(L.domainsInLabel("Fold laundry (Hearth)"), ["home"]);
+  assert.deepStrictEqual(L.domainsInLabel("Dinner (Still Water)"), ["self-care"]);
+  assert.deepStrictEqual(L.domainsInLabel("A gratitude list (Candlelight)"), ["faith"]);
+  assert.deepStrictEqual(L.domainsInLabel("A kind note (Warm Bread)"), ["kindness-connection"]);
+  assert.deepStrictEqual(L.domainsInLabel("Protein lunch"), []);
+  assert.strictEqual(L.coinLabel("resilience"), "Resilience · The Oak");
+  assert.strictEqual(L.catalogPoints("body", "Hour of Power walk (Ember)", byId), 25);
+  assert.strictEqual(L.catalogPoints("body", "Human Garage (Ember)", byId), 20);
+  assert.strictEqual(L.catalogPoints("music-creativity", "Vocals (Songbird)", byId), 25);
+  assert.strictEqual(L.catalogPoints("career", "Bank Game block (Teacher's Bell)", byId), 30);
+  assert.strictEqual(L.catalogPoints("resilience", "Grocery run and one phone call (Oak)", byId), 30);
+  const s = fresh();
+  const domains = [
+    { domainId: "body", points: 25, label: "Body · The Ember" },
+    { domainId: "resilience", points: 30, label: "Resilience · The Oak" }
+  ];
+  L.togglePlanItem(s, { id: "s7", day: "2026-11-21", label: "Grocery run", domains: domains });
+  assert.strictEqual(s.meters.body, 25);
+  assert.strictEqual(s.meters.resilience, 30);
+  assert.strictEqual(L.planItemOn(s, "2026-11-21", "s7"), true);
+  const off = L.togglePlanItem(s, { id: "s7", day: "2026-11-21", domains: domains });
+  assert.strictEqual(off.removed, true);
+  assert.strictEqual(s.meters.body, 0);
+  assert.strictEqual(s.meters.resilience, 0);
+  L.togglePlanItem(s, { id: "s7", day: "2026-11-21", domains: domains });
+  assert.strictEqual(s.meters.body, 25);
+  assert.strictEqual(s.meters.resilience, 30);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:2026-11-21:s7:") === 0; }).length, 2);
+}
+
+// Music done uses the Songbird vocal points, once per day, including Saturday.
+{
+  const s = fresh();
+  const music = {
+    id: "music-done",
+    domainId: "music-creativity",
+    label: "Music done",
+    points: byId["mus-vocals"].points,
+    kind: "points"
+  };
+  L.toggleTask(s, music, { day: "2026-11-21" });
+  assert.strictEqual(s.meters["music-creativity"], byId["mus-vocals"].points);
+  assert.strictEqual(L.toggleTask(s, music, { day: "2026-11-21" }).removed, true);
+  assert.strictEqual(s.meters["music-creativity"], 0);
+  L.toggleTask(s, music, { day: "2026-11-21" });
+  assert.strictEqual(s.meters["music-creativity"], byId["mus-vocals"].points);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId === "music-done"; }).length, 1);
 }
 
 // Seed is one time, totals only, and refuses a save that already has progress.
@@ -237,11 +300,38 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(cur.songs[0].key, "B minor");
   assert.ok(!cur.week);
   const index = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
+  const css = fs.readFileSync(path.join(__dirname, "app.css"), "utf8");
+  const weekFile = JSON.parse(fs.readFileSync(path.join(__dirname, "../week.json"), "utf8"));
   assert.ok(JSON.stringify(cur).indexOf("voice-test/index.html") >= 0);
   assert.ok(index.indexOf("plan.json") >= 0);
+  assert.ok(index.indexOf("week.json") >= 0);
+  assert.ok(index.indexOf("My Curriculum") < 0);
+  assert.ok(index.indexOf("curriculum.json") < 0);
+  assert.ok(index.indexOf("Fredoka") < 0);
+  assert.ok(index.indexOf("The Self Love Bank Game") >= 0);
+  assert.ok(index.indexOf("by The Grateful Deb") >= 0);
+  assert.ok(index.indexOf("Outfit") >= 0);
+  assert.ok(index.indexOf("Plus+Jakarta+Sans") >= 0);
+  assert.ok(css.indexOf("#FFF8EF") >= 0);
+  assert.ok(css.indexOf("#C45A2A") >= 0);
+  assert.ok(css.indexOf("#C9973E") >= 0);
   const bankApp = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
-  assert.ok(bankApp.indexOf("plan.json") < 0);
+  assert.ok(bankApp.indexOf("plan.json") >= 0);
+  assert.ok(bankApp.indexOf("week.json") >= 0);
+  assert.ok(bankApp.indexOf("MUSIC_APP_URL") >= 0);
+  assert.ok(bankApp.indexOf('var MUSIC_APP_URL = ""') >= 0);
   assert.ok(bankApp.indexOf("toLocaleDateString") >= 0);
+  assert.ok(bankApp.indexOf("Nothing written for this week yet") >= 0);
+  assert.ok(Array.isArray(weekFile.days) && weekFile.days.length >= 7);
+  assert.ok(/example/i.test(JSON.stringify(weekFile)));
+  ["Debbie", "Melody", "Forgie"].forEach(function (name) {
+    assert.strictEqual(JSON.stringify(weekFile).indexOf(name), -1, name);
+  });
+  const sw = fs.readFileSync(path.join(__dirname, "sw.js"), "utf8");
+  assert.ok(sw.indexOf("slb-static-v6") >= 0);
+  const manifest = fs.readFileSync(path.join(__dirname, "manifest.webmanifest"), "utf8");
+  assert.ok(manifest.indexOf("The Self Love Bank Game") >= 0);
+  assert.ok(manifest.indexOf("#FFF8EF") >= 0);
 }
 
 console.log("logic.test.js ok (" + count + " tasks)");
