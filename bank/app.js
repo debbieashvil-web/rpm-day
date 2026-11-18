@@ -1,6 +1,7 @@
 /* The Self Love Bank Game. Today comes from plan.json. This Week comes from week.json.
    Taps stay on this phone. MUSIC_APP_URL is the music app link. Leave it blank until that app has an address. */
 var MUSIC_APP_URL = "";
+var MUSIC_DONE_POINTS = 35;
 
 (function () {
   "use strict";
@@ -179,8 +180,7 @@ var MUSIC_APP_URL = "";
   }
   function musicCard() {
     var day = L.dayKey(now());
-    var vocal = SLB.byId["mus-vocals"];
-    var pts = vocal ? vocal.points : 0;
+    var pts = MUSIC_DONE_POINTS;
     var on = L.loggedToday(state, "music-done", day).length > 0;
     var dom = L.domain("music-creativity");
     var html = '<section class="panel"><p class="kicker">Music</p>';
@@ -442,13 +442,11 @@ var MUSIC_APP_URL = "";
       return;
     }
     if (el.hasAttribute("data-music-done")) {
-      var vocal = SLB.byId["mus-vocals"];
-      if (!vocal) return;
       commit(L.toggleTask(state, {
         id: "music-done",
         domainId: "music-creativity",
         label: "Music done",
-        points: vocal.points,
+        points: MUSIC_DONE_POINTS,
         kind: "points",
         cadence: "daily"
       }, { day: day, source: "music-done" }));

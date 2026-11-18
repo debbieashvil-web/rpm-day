@@ -677,6 +677,9 @@
     return { ok: true, state: state };
   }
 
+  /* Live phones store this under localStorage slb.v1, version 1.
+     The ledger is kept. Meters and banked coins are rebuilt from it.
+     A load does not zero a coin or drop an entry. */
   function ensureShape(state) {
     var base = blank();
     if (!state || state.version !== 1 || !Array.isArray(state.entries)) return blank();
