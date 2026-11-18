@@ -1,25 +1,25 @@
 {
- "date": "2026-11-17",
- "title": "Tue Nov 17",
- "tag": "Strong and calm 🌿",
- "result": "A strong, calm day. Hard times are covered, daily musts are done, and the reel promise is kept.",
- "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Every day I keep my word proves I can. 💪",
+ "date": "2026-11-18",
+ "title": "Wed Nov 18",
+ "tag": "Cozy income day ☕",
+ "result": "A cozy, winnable income day where the work feels like play.",
+ "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
  "musts": [
   {
-   "label": "Vocals, before noon if I can",
-   "domainId": "music-creativity"
-  },
-  {
-   "label": "Hour of Power walk",
-   "domainId": "body"
-  },
-  {
-   "label": "Reel filmed and posted",
+   "label": "Income hour, fun part first",
    "domainId": "career"
   },
   {
-   "label": "Ink return (due Wed)",
-   "domainId": "home"
+   "label": "Vocals",
+   "domainId": "music-creativity"
+  },
+  {
+   "label": "Human Garage",
+   "domainId": "body"
+  },
+  {
+   "label": "Bank Game block",
+   "domainId": "career"
   }
  ],
  "sections": [
@@ -30,23 +30,23 @@
    "items": [
     [
      "m1",
-     "Before noon",
-     "Vocals 🎤 (Songbird)"
+     "1:00 PM",
+     "Income hour: mini lesson, flyer repost, parent follow-up 💼 (Teacher's Bell)"
     ],
     [
      "m2",
-     "6:45 AM",
-     "Hour of Power walk 🚶‍♀️ (Ember)"
+     "Today",
+     "Vocals 🎤 (Songbird)"
     ],
     [
      "m3",
-     "10:45 AM",
-     "Reel filmed and posted 🎬 (Teacher's Bell)"
+     "Today",
+     "Human Garage 💪 (Ember)"
     ],
     [
      "m4",
      "2:30 PM",
-     "Ink return 🧾 (Hearth, due Wed)"
+     "Bank Game block 🪙 (Teacher's Bell)"
     ]
    ]
   },
@@ -57,77 +57,62 @@
    "items": [
     [
      "s1",
-     "6:30 AM",
-     "Laundry into the dryer 🧺"
+     "7:40 AM",
+     "Hour of Power walk 🚶‍♀️ (Ember)"
     ],
     [
      "s2",
-     "6:45 AM",
-     "Hour of Power walk 🚶‍♀️"
+     "Morning",
+     "Human Garage, vocals, piano and guitar lesson 🎶"
     ],
     [
      "s3",
-     "7:45 AM",
-     "Human Garage Day 2 + vocals 🎤"
+     "12:30 PM",
+     "Protein lunch 🥚"
     ],
     [
      "s4",
-     "8:30 AM",
-     "Gym 🏋️‍♀️"
+     "1:00 PM",
+     "Income hour ☕ (Teacher's Bell)"
     ],
     [
      "s5",
-     "10:30 AM",
-     "Protein shake 🥤"
+     "2:00 PM",
+     "20 min soft trampoline (Ember)"
     ],
     [
      "s6",
-     "10:45 AM",
-     "Film + post reel (goal 3, at least 1) 🎬"
+     "2:30 PM",
+     "Bank Game block 🪙 (Teacher's Bell)"
     ],
     [
      "s7",
-     "12:30 PM",
-     "Appointment"
+     "3:15 PM",
+     "Grocery run + one phone call 🛒 (Ember, Oak)"
     ],
     [
      "s8",
-     "1:30 PM",
-     "Food + call the doctor's office to move the appointment 📞"
+     "4:15 PM",
+     "Dinner + 10 min UE ideal workday ✍️ (Still Water)"
     ],
     [
      "s9",
-     "2:00 PM",
-     "Ultimate Edge audio 🎧"
+     "5:45 PM",
+     "Guitar lesson 🎸 (Teacher's Bell)"
     ],
     [
      "s10",
-     "2:30 PM",
-     "Whole Foods ink return 🧾"
+     "6:30 PM",
+     "Piano lesson 🎹 (Teacher's Bell)"
     ],
     [
      "s11",
-     "3:30 PM",
-     "Fold laundry 🧺"
+     "After lessons",
+     "Fold laundry + UE audio 🎧 (Hearth)"
     ],
     [
      "s12",
-     "4:30 PM",
-     "Lesson prep 🎹"
-    ],
-    [
-     "s13",
-     "5:00 PM",
-     "Piano lesson 🎹"
-    ],
-    [
-     "s14",
-     "After dinner",
-     "Piano or guitar, or record 🎸"
-    ],
-    [
-     "s15",
-     "Midnight",
+     "11:00 PM",
      "Lights out 😴"
     ]
    ]
@@ -139,7 +124,7 @@
    "items": [
     [
      "l1",
-     "From Wed",
+     "From Thu",
      "Declutter room, 15 min per zone per day 🧹"
     ],
     [
