@@ -1,6 +1,6 @@
 /* The Self Love Bank Game. Today comes from plan.json. This Week comes from week.json.
-   Taps stay on this phone. MUSIC_APP_URL is the music app link. Leave it blank until that app has an address. */
-var MUSIC_APP_URL = "";
+   Taps stay on this phone. MUSIC_APP_URL is the music app link. An empty value stays on this page. */
+var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
 
 (function () {
   "use strict";
