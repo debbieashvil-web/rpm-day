@@ -1,14 +1,10 @@
 {
- "date": "2026-11-18",
- "title": "Wed Nov 18",
- "tag": "Cozy income day ☕",
- "result": "A cozy, winnable income day where the work feels like play.",
+ "date": "2026-11-19",
+ "title": "Thu Nov 19",
+ "tag": "Strong body, warm studio 🎹",
+ "result": "Move my body, show up for my appointments, and teach with joy.",
  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
  "musts": [
-  {
-   "label": "Income hour, fun part first",
-   "domainId": "career"
-  },
   {
    "label": "Vocals",
    "domainId": "music-creativity"
@@ -18,7 +14,11 @@
    "domainId": "body"
   },
   {
-   "label": "Bank Game block",
+   "label": "Upper body gym",
+   "domainId": "body"
+  },
+  {
+   "label": "Teach my lessons",
    "domainId": "career"
   }
  ],
@@ -30,23 +30,23 @@
    "items": [
     [
      "m1",
-     "1:00 PM",
-     "Income hour: mini lesson, flyer repost, parent follow-up 💼 (Teacher's Bell)"
-    ],
-    [
-     "m2",
-     "Today",
+     "Morning",
      "Vocals 🎤 (Songbird)"
     ],
     [
-     "m3",
-     "Today",
+     "m2",
+     "Morning",
      "Human Garage 💪 (Ember)"
     ],
     [
+     "m3",
+     "8:45 AM",
+     "Upper body gym 🏋️‍♀️ (Ember)"
+    ],
+    [
      "m4",
-     "2:30 PM",
-     "Bank Game block 🪙 (Teacher's Bell)"
+     "4:30 PM",
+     "Teach my lessons 🎹 (Teacher's Bell)"
     ]
    ]
   },
@@ -57,63 +57,68 @@
    "items": [
     [
      "s1",
-     "7:40 AM",
+     "7:30 AM",
      "Hour of Power walk 🚶‍♀️ (Ember)"
     ],
     [
      "s2",
-     "Morning",
-     "Human Garage, vocals, piano and guitar lesson 🎶"
+     "8:45 AM",
+     "Upper body gym 🏋️‍♀️ (Ember)"
     ],
     [
      "s3",
-     "12:30 PM",
-     "Protein lunch 🥚"
+     "10:15 AM",
+     "Vocals + Human Garage 🎤 (Songbird, Ember)"
     ],
     [
      "s4",
-     "1:00 PM",
-     "Income hour ☕ (Teacher's Bell)"
+     "11:00 AM",
+     "Appointment 📅 (Still Water)"
     ],
     [
      "s5",
-     "2:00 PM",
-     "20 min soft trampoline (Ember)"
+     "12:30 PM",
+     "Protein lunch 🥚 (Ember)"
     ],
     [
      "s6",
-     "2:30 PM",
-     "Bank Game block 🪙 (Teacher's Bell)"
+     "1:15 PM",
+     "Income hour, fun part first ☕ (Teacher's Bell)"
     ],
     [
      "s7",
-     "3:15 PM",
-     "Grocery run + one phone call 🛒 (Ember, Oak)"
+     "2:30 PM",
+     "Lesson prep 📝 (Teacher's Bell)"
     ],
     [
      "s8",
-     "4:15 PM",
-     "Dinner + 10 min UE ideal workday ✍️ (Still Water)"
+     "3:45 PM",
+     "Appointment (video call) 💻 (Still Water)"
     ],
     [
      "s9",
-     "5:45 PM",
-     "Guitar lesson 🎸 (Teacher's Bell)"
+     "4:30 PM",
+     "Piano lesson 🎹 (Teacher's Bell)"
     ],
     [
      "s10",
-     "6:30 PM",
+     "5:30 PM",
      "Piano lesson 🎹 (Teacher's Bell)"
     ],
     [
      "s11",
-     "After lessons",
-     "Fold laundry + UE audio 🎧 (Hearth)"
+     "6:35 PM",
+     "Lesson 🎶 (Teacher's Bell)"
     ],
     [
      "s12",
+     "After lessons",
+     "Dinner + 15 min piano or guitar 🎸 (Songbird)"
+    ],
+    [
+     "s13",
      "11:00 PM",
-     "Lights out 😴"
+     "Lights out 😴 (Still Water)"
     ]
    ]
   },
@@ -124,13 +129,18 @@
    "items": [
     [
      "l1",
-     "From Thu",
-     "Declutter room, 15 min per zone per day 🧹"
+     "From Fri",
+     "Declutter room, 15 min per zone 🧹 (Hearth)"
     ],
     [
      "l2",
+     "Sun",
+     "Second Bank Game block 🪙 (Teacher's Bell)"
+    ],
+    [
+     "l3",
      "Next Costco trip",
-     "Bottle recycling ♻️"
+     "Bottle recycling ♻️ (Hearth)"
     ]
    ]
   }

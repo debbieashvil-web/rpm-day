@@ -1,7 +1,6 @@
 /* The Self Love Bank Game. Today comes from plan.json. This Week comes from week.json.
    Taps stay on this phone. MUSIC_APP_URL is the music app link. Leave it blank until that app has an address. */
 var MUSIC_APP_URL = "";
-var MUSIC_DONE_POINTS = 35;
 
 (function () {
   "use strict";
@@ -182,15 +181,18 @@ var MUSIC_DONE_POINTS = 35;
   }
   function musicCard() {
     var day = L.dayKey(now());
-    var pts = MUSIC_DONE_POINTS;
-    var on = L.loggedToday(state, "music-done", day).length > 0;
     var dom = L.domain("music-creativity");
-    var html = '<section class="panel"><p class="kicker">Music</p>';
-    html += '<button type="button" class="task has-art' + (on ? " on" : "") + '" data-music-done>';
-    html += miniArt(dom);
-    html += "<b>Music done</b>";
-    html += '<span class="pts">' + (pts ? (on ? "✓ +" + pts : "+" + pts) : "") + "</span>";
-    html += '<span class="tag">' + esc(L.coinLabel(dom)) + "</span></button>";
+    var html = '<section class="panel" data-music-card><p class="kicker">Music</p>';
+    L.MUSIC_TAPS.forEach(function (tap) {
+      var on = L.loggedToday(state, tap.id, day).length > 0;
+      var blocked = !on && !L.musicTapFits(state, tap.id, day);
+      html += '<button type="button" class="task has-art' + (on ? " on" : "") + (blocked ? " full" : "") + '" data-music-tap="' + esc(tap.id) + '">';
+      html += miniArt(dom);
+      html += "<b>" + esc(tap.label) + "</b>";
+      html += '<span class="pts">' + (on ? "✓ +" : "+") + tap.points + "</span>";
+      html += '<span class="tag">' + esc(blocked ? "Music full for today" : L.coinLabel(dom)) + "</span></button>";
+    });
+    if (L.musicCapped(state, day)) html += '<p class="hint" data-music-full>Music full for today</p>';
     if (MUSIC_APP_URL) html += '<a class="applink" href="' + esc(MUSIC_APP_URL) + '">Open music app</a>';
     else html += '<a class="applink" href="#music-app" data-music-app>Open music app</a>';
     html += "</section>";
@@ -466,15 +468,8 @@ var MUSIC_DONE_POINTS = 35;
       });
       return;
     }
-    if (el.hasAttribute("data-music-done")) {
-      commit(L.toggleTask(state, {
-        id: "music-done",
-        domainId: "music-creativity",
-        label: "Music done",
-        points: MUSIC_DONE_POINTS,
-        kind: "points",
-        cadence: "daily"
-      }, { day: day, source: "music-done" }));
+    if (el.hasAttribute("data-music-tap")) {
+      commit(L.toggleMusic(state, el.getAttribute("data-music-tap"), { day: day, source: "music" }));
       return;
     }
     if (el.hasAttribute("data-task")) {

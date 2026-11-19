@@ -226,25 +226,175 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:2026-11-21:s7:") === 0; }).length, 2);
 }
 
-// Music done is 35 Songbird points, once per day, including Saturday.
+// Each music tap is once per day, including Saturday, and a second tap un-taps.
+// A quiet next day leaves the points where they are.
 {
   const s = fresh();
-  const music = {
-    id: "music-done",
-    domainId: "music-creativity",
-    label: "Music done",
-    points: 35,
-    kind: "points"
-  };
-  L.toggleTask(s, music, { day: "2026-11-21" });
+  const sat = new Date(2026, 10, 21, 11, 0, 0);
+  const day = "2026-11-21";
+  assert.strictEqual(L.isMusicBlackout(sat, scoring), false);
+  assert.strictEqual(L.shabbatQuiet(s, sat), false);
+  assert.deepStrictEqual(L.MUSIC_TAPS.map(function (t) { return [t.id, t.label, t.points]; }), [
+    ["music-voice", "Voice", 35],
+    ["music-piano", "Piano", 25],
+    ["music-guitar", "Guitar", 25],
+    ["music-tired-voice", "Tired-day voice", 15]
+  ]);
+  assert.strictEqual(L.MUSIC_CAP, 75);
+  const voice = L.toggleMusic(s, "music-voice", { day: day, at: sat.toISOString() });
+  assert.strictEqual(voice.entry.domainId, "music-creativity");
+  assert.strictEqual(voice.entry.points, 35);
+  assert.strictEqual(L.coinLabel(voice.entry.domainId), "Music & Creativity · The Songbird");
   assert.strictEqual(s.meters["music-creativity"], 35);
-  const again = L.toggleTask(s, music, { day: "2026-11-21" });
-  assert.strictEqual(again.removed, true);
+  const off = L.toggleMusic(s, "music-voice", { day: day });
+  assert.strictEqual(off.removed, true);
   assert.strictEqual(s.meters["music-creativity"], 0);
-  L.toggleTask(s, music, { day: "2026-11-21" });
-  assert.strictEqual(s.meters["music-creativity"], 35);
-  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId === "music-done"; }).length, 1);
+  assert.strictEqual(s.entries.filter(function (e) { return e.taskId === "music-voice" && e.undone; })[0].points, 35);
+  L.toggleMusic(s, "music-voice", { day: day });
+  L.toggleMusic(s, "music-piano", { day: day });
+  L.toggleMusic(s, "music-piano", { day: day });
+  L.toggleMusic(s, "music-piano", { day: day });
+  assert.strictEqual(L.active(s).filter(function (e) { return e.day === day && e.taskId === "music-voice"; }).length, 1);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.day === day && e.taskId === "music-piano"; }).length, 1);
+  assert.strictEqual(L.musicPointsOn(s, day), 60);
+  const next = "2026-11-22";
+  assert.strictEqual(L.musicPointsOn(s, next), 0);
+  assert.strictEqual(s.meters["music-creativity"], 60);
+  L.toggleMusic(s, "music-guitar", { day: next });
+  L.toggleMusic(s, "music-guitar", { day: next });
+  assert.strictEqual(L.loggedToday(s, "music-guitar", next).length, 0);
+  L.toggleMusic(s, "music-guitar", { day: next });
+  assert.strictEqual(L.active(s).filter(function (e) { return e.day === next && e.taskId === "music-guitar"; }).length, 1);
+  assert.strictEqual(L.loggedToday(s, "music-guitar", day).length, 0);
+  const third = "2026-11-23";
+  L.toggleMusic(s, "music-tired-voice", { day: third });
+  L.toggleMusic(s, "music-tired-voice", { day: third });
+  L.toggleMusic(s, "music-tired-voice", { day: third });
+  assert.strictEqual(L.active(s).filter(function (e) { return e.day === third && e.taskId === "music-tired-voice"; }).length, 1);
+  assert.strictEqual(L.musicPointsOn(s, third), 15);
+  assert.strictEqual(s.meters["music-creativity"], 0);
+  assert.strictEqual(s.banked.filter(function (c) { return c.domainId === "music-creativity"; }).length, 1);
   assert.notStrictEqual(35, byId["mus-vocals"].points);
+}
+
+// Tired-day voice replaces Voice that day. The two never both count.
+{
+  const s = fresh();
+  const day = "2026-11-21";
+  L.toggleMusic(s, "music-voice", { day: day });
+  L.toggleMusic(s, "music-piano", { day: day });
+  const tired = L.toggleMusic(s, "music-tired-voice", { day: day });
+  assert.strictEqual(tired.cleared, "music-voice");
+  assert.strictEqual(L.loggedToday(s, "music-voice", day).length, 0);
+  assert.strictEqual(L.loggedToday(s, "music-tired-voice", day).length, 1);
+  assert.strictEqual(L.loggedToday(s, "music-piano", day).length, 1);
+  assert.strictEqual(L.musicPointsOn(s, day), 15 + 25);
+  const back = L.toggleMusic(s, "music-voice", { day: day });
+  assert.strictEqual(back.cleared, "music-tired-voice");
+  assert.strictEqual(L.loggedToday(s, "music-tired-voice", day).length, 0);
+  assert.strictEqual(L.loggedToday(s, "music-voice", day).length, 1);
+  assert.strictEqual(L.musicPointsOn(s, day), 35 + 25);
+  assert.strictEqual(L.active(s).filter(function (e) {
+    return e.day === day && (e.taskId === "music-voice" || e.taskId === "music-tired-voice");
+  }).length, 1);
+}
+
+// Music taps stop at 75 for the day. Voice plus both instruments is 85, so that third tap is refused.
+{
+  const s = fresh();
+  const day = "2026-11-21";
+  L.toggleMusic(s, "music-voice", { day: day });
+  L.toggleMusic(s, "music-piano", { day: day });
+  assert.strictEqual(L.musicPointsOn(s, day), 60);
+  assert.strictEqual(L.musicTapFits(s, "music-guitar", day), false);
+  assert.strictEqual(L.musicCapped(s, day), false);
+  const guitar = L.toggleMusic(s, "music-guitar", { day: day });
+  assert.strictEqual(guitar.capped, true);
+  assert.strictEqual(L.loggedToday(s, "music-guitar", day).length, 0);
+  assert.strictEqual(L.musicPointsOn(s, day), 60);
+  assert.strictEqual(s.meters["music-creativity"], 60);
+  L.toggleMusic(s, "music-piano", { day: day });
+  const guitarOn = L.toggleMusic(s, "music-guitar", { day: day });
+  assert.ok(!guitarOn.capped);
+  assert.strictEqual(L.musicPointsOn(s, day), 60);
+  L.toggleMusic(s, "music-tired-voice", { day: day });
+  L.toggleMusic(s, "music-piano", { day: day });
+  assert.strictEqual(L.musicPointsOn(s, day), 15 + 25 + 25);
+  assert.strictEqual(L.musicCapped(s, day), true);
+  const voiceBlocked = L.toggleMusic(s, "music-voice", { day: day });
+  assert.strictEqual(voiceBlocked.capped, true);
+  assert.strictEqual(L.loggedToday(s, "music-tired-voice", day).length, 1);
+  assert.strictEqual(L.loggedToday(s, "music-voice", day).length, 0);
+  assert.strictEqual(L.musicPointsOn(s, day), 65);
+  assert.strictEqual(s.meters["music-creativity"], 65);
+}
+
+// An older Music done 35 entry is kept as it was, and it still counts.
+{
+  const day = "2026-11-16";
+  const live = {
+    version: 1,
+    scoring: "proposal",
+    meters: {
+      resilience: 0, body: 0, finances: 0, career: 0,
+      "self-care": 0, "music-creativity": 0,
+      "kindness-connection": 0, faith: 0, home: 0
+    },
+    banked: [],
+    entries: [
+      { id: "old-music", group: "gm", at: "2026-11-16T18:00:00.000Z", day: day, domainId: "music-creativity", taskId: "music-done", label: "Music done", points: 35, kind: "points", source: "music-done", coins: 0, shabbosKey: "" },
+      { id: "old-bed", group: "gb", at: "2026-11-16T19:00:00.000Z", day: day, domainId: "home", taskId: "home-bed", label: "Made my bed", points: 10, kind: "points", source: "task", coins: 0, shabbosKey: "" }
+    ],
+    customTasks: [],
+    easyDay: false,
+    easyDayTaskIds: ["sc-daily-care", "sc-teeth", "body-hop-walk", "mus-vocals", "sc-lights-out"],
+    musts: [],
+    practice: [],
+    weekPlans: {},
+    seeds: {},
+    shabbatHold: false,
+    shabbatLifted: ""
+  };
+  const raw = JSON.parse(JSON.stringify(live));
+  const entriesBefore = JSON.parse(JSON.stringify(raw.entries));
+  const loaded = L.ensureShape(raw);
+  assert.strictEqual(loaded, raw);
+  assert.deepStrictEqual(loaded.entries, entriesBefore);
+  assert.strictEqual(loaded.version, 1);
+  assert.strictEqual(loaded.entries[0].id, "old-music");
+  assert.strictEqual(loaded.entries[0].taskId, "music-done");
+  assert.strictEqual(loaded.entries[0].label, "Music done");
+  assert.strictEqual(loaded.entries[0].points, 35);
+  assert.ok(!loaded.entries[0].undone);
+  assert.strictEqual(loaded.meters["music-creativity"], 35);
+  assert.strictEqual(loaded.meters.home, 10);
+  assert.strictEqual(L.musicPointsOn(loaded, day), 35);
+  assert.strictEqual(L.loggedToday(loaded, "music-voice", day).length, 0);
+  L.toggleMusic(loaded, "music-voice", { day: day });
+  assert.strictEqual(L.musicPointsOn(loaded, day), 70);
+  assert.strictEqual(loaded.meters["music-creativity"], 70);
+  const piano = L.toggleMusic(loaded, "music-piano", { day: day });
+  assert.strictEqual(piano.capped, true);
+  assert.strictEqual(L.musicPointsOn(loaded, day), 70);
+  assert.strictEqual(loaded.entries[0].taskId, "music-done");
+  assert.strictEqual(loaded.entries[0].points, 35);
+  assert.strictEqual(loaded.entries[0].label, "Music done");
+  assert.ok(!loaded.entries[0].undone);
+  L.toggleMusic(loaded, "music-voice", { day: day });
+  L.toggleMusic(loaded, "music-tired-voice", { day: day });
+  L.toggleMusic(loaded, "music-piano", { day: day });
+  assert.strictEqual(L.musicPointsOn(loaded, day), 75);
+  assert.strictEqual(L.musicCapped(loaded, day), true);
+  const guitar = L.toggleMusic(loaded, "music-guitar", { day: day });
+  assert.strictEqual(guitar.capped, true);
+  assert.strictEqual(L.musicPointsOn(loaded, day), 75);
+  assert.strictEqual(loaded.meters["music-creativity"], 75);
+  assert.strictEqual(loaded.meters.home, 10);
+  const back = L.importBundle(L.exportBundle(loaded));
+  assert.strictEqual(back.ok, true);
+  assert.strictEqual(back.state.entries[0].taskId, "music-done");
+  assert.strictEqual(back.state.entries[0].points, 35);
+  assert.strictEqual(back.state.meters["music-creativity"], 75);
 }
 
 // A live slb.v1 save keeps its ledger, points, and banked coins.
@@ -377,7 +527,14 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(bankApp.indexOf("week.json") >= 0);
   assert.ok(bankApp.indexOf("MUSIC_APP_URL") >= 0);
   assert.ok(bankApp.indexOf('var MUSIC_APP_URL = ""') >= 0);
-  assert.ok(bankApp.indexOf("var MUSIC_DONE_POINTS = 35") >= 0);
+  assert.ok(bankApp.indexOf("Open music app") >= 0);
+  assert.ok(bankApp.indexOf("data-music-tap") >= 0);
+  assert.ok(bankApp.indexOf("L.MUSIC_TAPS") >= 0);
+  assert.ok(bankApp.indexOf("Music full for today") >= 0);
+  assert.strictEqual(bankApp.indexOf("data-music-done"), -1);
+  assert.strictEqual(bankApp.indexOf("MUSIC_DONE_POINTS"), -1);
+  const browserJs = fs.readFileSync(path.join(__dirname, "browser.js"), "utf8");
+  assert.ok(browserJs.indexOf('var KEY = "slb.v1"') >= 0);
   assert.ok(bankApp.indexOf("toLocaleDateString") >= 0);
   assert.ok(bankApp.indexOf("Nothing written for this week yet") >= 0);
   assert.ok(Array.isArray(weekFile.days) && weekFile.days.length >= 7);
@@ -386,8 +543,9 @@ const ctx = { byId: byId, scoring: scoring };
     assert.strictEqual(JSON.stringify(weekFile).indexOf(name), -1, name);
   });
   const sw = fs.readFileSync(path.join(__dirname, "sw.js"), "utf8");
-  assert.ok(sw.indexOf("slb-static-v7") >= 0);
-  assert.ok(sw.indexOf("slb-static-v6") < 0);
+  assert.ok(sw.indexOf("slb-static-v8") >= 0);
+  assert.strictEqual(sw.indexOf("slb-static-v7"), -1);
+  assert.strictEqual(sw.indexOf("slb-static-v6"), -1);
   assert.ok(sw.indexOf("./sync.js") >= 0);
   const manifest = fs.readFileSync(path.join(__dirname, "manifest.webmanifest"), "utf8");
   assert.ok(manifest.indexOf("The Self Love Bank Game") >= 0);
