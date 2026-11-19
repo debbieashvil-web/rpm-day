@@ -36,6 +36,7 @@
 
   /* Voice, piano, guitar, and tired-day voice. Each once a day.
      Tired-day voice stands in for Voice that day.
+     The tap that would pass 75 is trimmed so the day lands on 75.
      An older Music done entry still counts toward the same daily cap. */
   var MUSIC_CAP = 75;
   var MUSIC_LEGACY_ID = "music-done";
@@ -238,14 +239,32 @@
     return sum;
   }
 
+  /* Points this tap earns today. Already-on taps keep the points they were given.
+     A new tap is cut down to the room left under the cap, after its pair is cleared.
+     Zero means the day is already full. */
+  function musicAward(state, tapId, day) {
+    var tap = musicTap(tapId);
+    if (!tap) return 0;
+    day = day || dayKey(new Date());
+    var on = loggedToday(state, tap.id, day);
+    if (on.length) {
+      var got = 0;
+      on.forEach(function (e) { got += e.points || 0; });
+      return got;
+    }
+    var room = MUSIC_CAP - (musicPointsOn(state, day) - pairPoints(state, tap, day));
+    if (room < 1) return 0;
+    return room < tap.points ? room : tap.points;
+  }
+
   /* True when this tap can be turned on, or is already on so a tap will un-tap it.
-     Turning a tap on counts the points it adds after its pair is cleared. */
+     A tap can turn on whenever any points are left under the cap. */
   function musicTapFits(state, tapId, day) {
     var tap = musicTap(tapId);
     if (!tap) return false;
     day = day || dayKey(new Date());
     if (loggedToday(state, tap.id, day).length) return true;
-    return musicPointsOn(state, day) - pairPoints(state, tap, day) + tap.points <= MUSIC_CAP;
+    return musicAward(state, tapId, day) > 0;
   }
 
   function musicCapped(state, day) {
@@ -270,7 +289,8 @@
       recompute(state);
       return { removed: true, entry: existing[0], dropped: [], points: musicPointsOn(state, day), capped: musicCapped(state, day) };
     }
-    if (!musicTapFits(state, tap.id, day)) {
+    var award = musicAward(state, tap.id, day);
+    if (!(award > 0)) {
       return { capped: true, dropped: [], points: musicPointsOn(state, day) };
     }
     var cleared = "";
@@ -288,11 +308,12 @@
       domainId: "music-creativity",
       taskId: tap.id,
       label: tap.label,
-      points: tap.points,
+      points: award,
       kind: "points",
       source: opts.source || "music"
     });
     res.cleared = cleared;
+    res.trimmed = award < tap.points;
     res.points = musicPointsOn(state, day);
     res.capped = musicCapped(state, day);
     return res;
@@ -805,6 +826,7 @@
     MUSIC_TAPS: MUSIC_TAPS,
     MUSIC_LEGACY_ID: MUSIC_LEGACY_ID,
     musicPointsOn: musicPointsOn,
+    musicAward: musicAward,
     musicTapFits: musicTapFits,
     musicCapped: musicCapped,
     toggleMust: toggleMust,
