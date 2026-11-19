@@ -6,6 +6,10 @@
  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
  "musts": [
   {
+   "label": "Bank Game sync setup",
+   "domainId": "career"
+  },
+  {
    "label": "Vocals",
    "domainId": "music-creativity"
   },
@@ -28,6 +32,11 @@
    "color": "#7C3AED",
    "tint": "#F1E9FF",
    "items": [
+    [
+     "m0",
+     "1:15 PM",
+     "Bank Game sync setup, 10 min 🪙 (Teacher's Bell)"
+    ],
     [
      "m1",
      "Morning",
@@ -81,8 +90,13 @@
      "Protein lunch 🥚 (Ember)"
     ],
     [
-     "s6",
+     "s5b",
      "1:15 PM",
+     "⭐ Bank Game sync setup, 10 min 🪙 (Teacher's Bell)"
+    ],
+    [
+     "s6",
+     "1:30 PM",
      "Income hour, fun part first ☕ (Teacher's Bell)"
     ],
     [
