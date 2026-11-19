@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF4EB">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Music">
+  <title>Music · Today's practice</title>
+  <!-- Fonts: Outfit + Plus Jakarta Sans (fonts/) -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="app-head">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">♪</div>
+        <div>
+          <h1>Music</h1>
+          <p class="sub" id="todayLabel">Today's practice</p>
+        </div>
+      </div>
+      <div class="points-pill" aria-live="polite">
+        <b id="pointsNow">0 / 75</b>
+        <span id="pointsMeta">Songbird points</span>
+      </div>
+    </header>
+
+    <div id="shabbatLight" class="banner light hidden">
+      Shabbat rest — just the morning voice ritual today. No lessons, no pressure.
+    </div>
+    <div id="shabbatFull" class="banner full hidden">
+      Shabbat rest — practice if you want. No points today, and no penalties.
+    </div>
+
+    <!-- 1. Today: Voice -->
+    <section class="card" id="voiceCard" data-section="voice">
+      <p class="kicker teal">Today</p>
+      <h2>Voice <span class="pts" id="voicePts">35 pts</span></h2>
+      <p class="goal">Pick the 5-minute or the full follow-along (about 14–15 min), then check Voice done.</p>
+      <div class="choice" role="group" aria-label="Voice routine length">
+        <button type="button" data-voice-choice="five" aria-pressed="true">5-minute</button>
+        <button type="button" data-voice-choice="full" aria-pressed="false">Full routine</button>
+      </div>
+      <div class="vid">
+        <span class="vid-label" id="voiceVidLabel">5-minute routine</span>
+        <video id="voiceVideo" controls playsinline preload="metadata" src="media/voice_tired_day_v4.mp4"></video>
+      </div>
+      <p class="vid-note" id="voiceNote" hidden>Full routine: about 14–15 minutes. The release step takes about 4–5 min (3:43–5:11 depending on today's pick). Under-jaw holds are about 25 s a side.</p>
+      <button type="button" class="done-btn" id="voiceDone" aria-pressed="false">Voice done</button>
+    </section>
+
+    <!-- 2. Today: Lesson -->
+    <section class="card" id="lessonCard" data-section="lesson">
+      <p class="kicker orange">Today</p>
+      <h2>Lesson 1</h2>
+      <p class="goal">
+        <strong>Half and whole steps</strong>, and the major scale
+        <span class="scale-pattern" aria-label="W W H W W W H">
+          <span>W</span><span>W</span><span>H</span><span>W</span><span>W</span><span>W</span><span>H</span>
+        </span>
+      </p>
+
+      <div class="split">
+        <div class="instrument">
+          <h3>Piano <span class="pts" id="pianoPts">25 pts</span></h3>
+          <div class="vid">
+            <span class="vid-label" id="pianoVidLabel">Lesson 1 · Piano</span>
+            <video id="pianoVideo" controls playsinline preload="metadata" src="media/lesson1_piano_v3.mp4"></video>
+          </div>
+          <button type="button" class="done-btn orange" id="pianoDone" aria-pressed="false">Piano done</button>
+        </div>
+        <div class="instrument">
+          <h3>Guitar <span class="pts" id="guitarPts">25 pts</span></h3>
+          <div class="vid">
+            <span class="vid-label" id="guitarVidLabel">Lesson 1 · Guitar</span>
+            <video id="guitarVideo" controls playsinline preload="metadata" src="media/lesson1_guitar_v3.mp4"></video>
+          </div>
+          <button type="button" class="done-btn orange" id="guitarDone" aria-pressed="false">Guitar done</button>
+        </div>
+      </div>
+
+      <h3 style="margin:16px 0 4px;font-size:1rem;">Lesson checklist</h3>
+      <ul class="checks">
+        <li><label><input type="checkbox" data-check="halfWhole"> Review half steps and whole steps</label></li>
+        <li><label><input type="checkbox" data-check="majorScale"> Practice the major scale pattern W W H W W W H</label></li>
+        <li><label><input type="checkbox" data-check="playAlong"> Play along with today's video</label></li>
+      </ul>
+    </section>
+
+    <!-- 3. Tired-day button -->
+    <button type="button" class="tired-btn" id="tiredBtn" aria-pressed="false">
+      Tired day
+      <small>Swap both cards to the 5-minute versions — still counts</small>
+    </button>
+
+    <!-- 4. This week -->
+    <section class="card" id="weekCard" data-section="week">
+      <p class="kicker gold">This week</p>
+      <h2>Music RPM</h2>
+      <dl class="rpm">
+        <dt>Result</dt>
+        <dd id="rpmResult"></dd>
+        <dt>Purpose</dt>
+        <dd id="rpmPurpose"></dd>
+        <dt>Actions</dt>
+        <dd><ol id="rpmActions"></ol></dd>
+      </dl>
+    </section>
+
+    <section class="card" id="songCard" data-section="song">
+      <p class="kicker gold">This week</p>
+      <h2 id="songTitle">This week's song</h2>
+      <p class="goal" id="songFocus">One small focus for the week.</p>
+      <div class="song-meta">
+        <span class="chip" id="songKey">Key and chords go here</span>
+        <span class="chip" id="songStatus">In progress</span>
+      </div>
+    </section>
+
+    <!-- 5. Collapsed: curriculum, theory library, voice test history -->
+    <details class="fold" id="curriculumFold">
+      <summary>Full curriculum</summary>
+      <div class="fold-body" id="curriculumMount"></div>
+    </details>
+
+    <details class="fold" id="libraryFold">
+      <summary>Theory video library</summary>
+      <div class="fold-body" id="libraryMount"></div>
+    </details>
+
+    <details class="fold" id="testsFold">
+      <summary>Voice test history</summary>
+      <div class="fold-body">
+        <div class="empty" id="voiceTestEmpty">
+          No tests saved yet. Weekly voice tests will show up here
+          (25 Songbird points when one is logged).
+        </div>
+      </div>
+    </details>
+
+    <p class="foot">Gentle pressure only. Keep every sound easy.</p>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
