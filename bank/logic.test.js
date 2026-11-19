@@ -638,6 +638,8 @@ const ctx = { byId: byId, scoring: scoring };
   const sw = fs.readFileSync(path.join(__dirname, "sw.js"), "utf8");
   assert.ok(sw.indexOf("slb-static-v9") >= 0);
   assert.strictEqual(sw.indexOf("slb-static-v8"), -1);
+  assert.strictEqual(sw.indexOf("slb-static-v7"), -1);
+  assert.strictEqual(sw.indexOf("slb-static-v6"), -1);
   assert.ok(sw.indexOf("./sync.js") >= 0);
   const manifest = fs.readFileSync(path.join(__dirname, "manifest.webmanifest"), "utf8");
   assert.ok(manifest.indexOf("The Self Love Bank Game") >= 0);
@@ -649,6 +651,7 @@ const ctx = { byId: byId, scoring: scoring };
   const syncSrc = fs.readFileSync(path.join(__dirname, "sync.js"), "utf8");
   const appSrc = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  const rootHtml = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
   const sql = fs.readFileSync(path.join(__dirname, "../docs/sync-setup.sql"), "utf8");
   const guide = fs.readFileSync(path.join(__dirname, "../docs/sync-setup.md"), "utf8");
   assert.ok(/var SLB_SUPABASE = \{ url: "", anonKey: "" \}/.test(syncSrc));
@@ -657,7 +660,14 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(Sync.configured(), false);
   assert.strictEqual(Sync.LEDGER_KEY, "slb.v1");
   assert.ok(html.indexOf('src="sync.js"') >= 0);
+  assert.ok(rootHtml.indexOf('src="bank/sync.js"') >= 0);
   assert.ok(appSrc.indexOf("Sync across devices") >= 0);
+  assert.strictEqual(Sync.CDN_INTEGRITY, "sha384-2DeuFKyqIlpZfFmj+jl/+IbM3DwDM4vGKsvK0fI32E0ZDt24W33hB6pka4RAdbz2");
+  assert.ok(syncSrc.indexOf("script.integrity = CDN_INTEGRITY") >= 0);
+  assert.ok(syncSrc.indexOf('script.crossOrigin = "anonymous"') >= 0);
+  assert.ok(syncSrc.indexOf("@supabase/supabase-js@2.119.1/dist/umd/supabase.js") >= 0);
+  assert.ok(guide.indexOf('turn off "Allow new users to sign up"') >= 0);
+  assert.ok(guide.indexOf("Custom task names, practice notes, and week plans stay on the device.") >= 0);
   assert.ok(sql.indexOf("enable row level security") >= 0);
   assert.ok(sql.indexOf("auth.uid() = user_id") >= 0);
   assert.ok(sql.indexOf("for select") >= 0);
@@ -942,47 +952,66 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
   const storage = memoryStorage({ "slb.v1": raw, "slb.sync.optin": "1" });
   const localEntries = JSON.parse(raw).entries;
   let saves = 0;
-  const client = {
-    auth: {
-      getSession: function () {
-        return Promise.resolve({
-          data: { session: { user: { id: "11111111-1111-4111-8111-111111111111" } } },
-          error: null
-        });
-      }
-    },
-    from: function () {
-      return {
-        select: function () {
-          return {
-            order: function () {
-              return Promise.resolve({
-                data: localEntries.map(function (entry) { return { entry_id: entry.id, entry: entry }; }),
-                error: null
-              });
-            }
-          };
-        },
-        upsert: function (rows) {
-          assert.strictEqual(rows.length, localEntries.length);
-          return Promise.resolve({ error: null });
-        }
-      };
-    }
-  };
-  syncChecks.push(Sync.syncLedger({
+  let phase = "same";
+  const upserts = [];
+  const deps = {
     config: { url: "https://example.supabase.co", anonKey: "public-anon-key" },
     storage: storage,
     logic: L,
-    client: client,
-    loadState: function () { return JSON.parse(raw); },
+    client: {
+      auth: {
+        getSession: function () {
+          return Promise.resolve({
+            data: { session: { user: { id: "11111111-1111-4111-8111-111111111111" } } },
+            error: null
+          });
+        }
+      },
+      from: function () {
+        return {
+          select: function () {
+            return {
+              order: function () {
+                return Promise.resolve({
+                  data: localEntries.map(function (entry) { return { entry_id: entry.id, entry: entry }; }),
+                  error: null
+                });
+              }
+            };
+          },
+          upsert: function (rows) {
+            upserts.push(rows.map(function (row) { return row.entry_id; }));
+            return Promise.resolve({ error: null });
+          }
+        };
+      }
+    },
+    loadState: function () {
+      const state = JSON.parse(raw);
+      if (phase === "untap") state.entries[1].undone = true;
+      return state;
+    },
     saveState: function () { saves += 1; }
-  }).then(function (res) {
+  };
+  syncChecks.push(Sync.syncLedger(deps).then(function (res) {
     assert.strictEqual(res.ran, true);
     assert.strictEqual(res.changed, false);
+    assert.strictEqual(res.pushed, 2);
+    assert.deepStrictEqual(upserts, [["a", "b"]]);
     assert.strictEqual(saves, 0);
     assert.strictEqual(storage.data["slb.v1"], raw);
-    assert.deepStrictEqual(storage.sets, []);
+    assert.ok(storage.sets.indexOf("slb.v1") < 0);
+    return Sync.syncLedger(deps);
+  }).then(function (res) {
+    assert.strictEqual(res.pushed, 0);
+    assert.deepStrictEqual(upserts, [["a", "b"]]);
+    phase = "untap";
+    return Sync.syncLedger(deps);
+  }).then(function (res) {
+    assert.strictEqual(res.pushed, 1);
+    assert.deepStrictEqual(upserts[1], ["b"]);
+    assert.strictEqual(saves, 0);
+    assert.strictEqual(storage.data["slb.v1"], raw);
   }));
 }
 
@@ -1034,6 +1063,71 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
     assert.strictEqual(saved.entries[0].points, 10);
     assert.strictEqual(saved.meters.home, 40);
     assert.strictEqual(saved.banked.length, 0);
+  }));
+}
+
+{
+  const rawLedger = liveLedger();
+  rawLedger.entries.push({
+    id: "custom-entry",
+    group: "g-custom",
+    at: "2026-11-17T16:00:00.000Z",
+    day: "2026-11-17",
+    domainId: "home",
+    taskId: "custom-plant",
+    label: "PrivateCustomNameXYZ",
+    points: 5,
+    kind: "points",
+    source: "task",
+    coins: 0,
+    shabbosKey: ""
+  });
+  const raw = JSON.stringify(rawLedger);
+  const storage = memoryStorage({ "slb.v1": raw, "slb.sync.optin": "1" });
+  let payload = [];
+  const held = JSON.parse(raw);
+  syncChecks.push(Sync.syncLedger({
+    config: { url: "https://example.supabase.co", anonKey: "public-anon-key" },
+    storage: storage,
+    logic: L,
+    loadState: function () { return held; },
+    saveState: function () { throw new Error("save"); },
+    client: {
+      auth: {
+        getSession: function () {
+          return Promise.resolve({
+            data: { session: { user: { id: "11111111-1111-4111-8111-111111111111" } } },
+            error: null
+          });
+        }
+      },
+      from: function () {
+        return {
+          select: function () {
+            return { order: function () { return Promise.resolve({ data: [], error: null }); } };
+          },
+          upsert: function (rows) {
+            payload = payload.concat(rows);
+            return Promise.resolve({ error: null });
+          }
+        };
+      }
+    }
+  }).then(function (res) {
+    assert.strictEqual(res.ran, true);
+    const body = JSON.stringify(payload);
+    assert.strictEqual(body.indexOf("PrivateCustomNameXYZ"), -1);
+    const custom = payload.filter(function (row) { return row.entry_id === "custom-entry"; })[0];
+    const builtin = payload.filter(function (row) { return row.entry_id === "a"; })[0];
+    assert.ok(custom);
+    assert.ok(!Object.prototype.hasOwnProperty.call(custom.entry, "label"));
+    assert.strictEqual(custom.entry.taskId, "custom-plant");
+    assert.strictEqual(custom.entry.domainId, "home");
+    assert.strictEqual(custom.entry.points, 5);
+    assert.strictEqual(builtin.entry.taskId, "home-bed");
+    assert.strictEqual(builtin.entry.label, "Made the bed");
+    assert.strictEqual(held.entries.filter(function (e) { return e.id === "custom-entry"; })[0].label, "PrivateCustomNameXYZ");
+    assert.strictEqual(storage.data["slb.v1"], raw);
   }));
 }
 

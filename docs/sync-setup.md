@@ -8,7 +8,7 @@ Use a Supabase project on the **free** plan. Do not upgrade the project, add pai
 
 1. Create a project on the Supabase free plan. Skip paid add-ons if the form offers them.
 2. Open the SQL editor and run `docs/sync-setup.sql`. That creates `ledger_entries` and turns on row-level security. Each signed-in account can read and write only its own rows. Anonymous visitors cannot. Rows are not deleted: an untap is stored on the row.
-3. Open Authentication and leave the Email provider on. Leave anonymous sign-ins off. Under URL configuration, set Site URL to the address of the bank page, and add that same address to Redirect URLs.
+3. Open Authentication and leave the Email provider on. Leave anonymous sign-ins off. Under URL configuration, set Site URL to the address of the page you open, and add both the Today page and the bank page to Redirect URLs.
 4. Open Project Settings → API. Copy the project URL and the **anon** public key. Do not copy the `service_role` key, and do not put that key in the app or in this repo. The anon key is fine to ship. Row-level security is what keeps rows private.
 5. In `bank/sync.js`, fill in the single `SLB_SUPABASE` constant:
 
@@ -18,7 +18,9 @@ Use a Supabase project on the **free** plan. Do not upgrade the project, add pai
 
    Leave both strings empty to keep sync off.
 
-6. On the phone, open the Bank tab, tap **Sync across devices**, enter an email, and open the link on that same phone. Repeat on the laptop with the same email, and open that link on the laptop. Each device signs in once. After that, taps upload when you are online.
+6. On one device, open the Bank tab, tap **Sync across devices**, enter an email, and open the link on that same device. That creates the account.
+7. In Supabase Authentication settings, turn off "Allow new users to sign up".
+8. On the other device, tap **Sync across devices**, use the same email, and open that link on that device. The account already exists, so this signs in. After that, taps from Today or the Bank tab upload when you are online.
 
 ## How a sync combines the two devices
 
