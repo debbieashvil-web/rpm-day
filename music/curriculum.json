@@ -1,0 +1,168 @@
+{
+  "updated": "2026-11-16",
+  "source": "Music practice curriculum.",
+  "week": {
+    "result": "Show up for the voice routine most days, and finish Lesson 1 on piano and guitar.",
+    "purpose": "Build ease in the voice, and get a clear map of half steps, whole steps, and the major scale.",
+    "actions": [
+      "Do today's voice routine (5-minute or full).",
+      "Follow the Lesson 1 piano video.",
+      "Follow the Lesson 1 guitar video."
+    ]
+  },
+  "currentSong": {
+    "title": "This week's song",
+    "key": "Key and chords go here",
+    "focus": "One small focus for the week — breath, ease, or a tricky spot.",
+    "status": "In progress"
+  },
+  "cards": [
+    {
+      "id": "voice",
+      "name": "Voice",
+      "emoji": "🎤",
+      "now": "Daily voice routine: Regulate → Release → Rebuild",
+      "next": "Add a song phrase with mixed vowels, same ease",
+      "skills": [
+        {
+          "id": "v1",
+          "label": "Did the routine 5 days this week"
+        },
+        {
+          "id": "v2",
+          "label": "Hiss 30 seconds steady"
+        },
+        {
+          "id": "v3",
+          "label": "Easy lip trill from G3 to C5"
+        },
+        {
+          "id": "v4",
+          "label": "1-5-1 within 15 cents"
+        },
+        {
+          "id": "v5",
+          "label": "Line ending strong on one breath"
+        }
+      ],
+      "routine": {
+        "total": "about 14–15",
+        "credit": "Release exercises from @thesomaticscientist. Gentle pressure only, never push through pain.",
+        "steps": [
+          {
+            "n": 1,
+            "title": "Regulate",
+            "min": 2
+          },
+          {
+            "n": 2,
+            "title": "Release",
+            "min": "4–5",
+            "note": "About 4–5 min (3:43–5:11 depending on today's pick). Under-jaw holds about 25 s a side."
+          },
+          {
+            "n": 3,
+            "title": "Breath control",
+            "min": 2
+          },
+          {
+            "n": 4,
+            "title": "Warm the sound",
+            "min": 3
+          },
+          {
+            "n": 5,
+            "title": "Rebuild",
+            "min": 3
+          },
+          {
+            "n": 6,
+            "title": "Apply",
+            "min": 2
+          }
+        ],
+        "totalNote": "Full routine runs about 14–15 minutes (13:47–15:15 depending on today's pick)."
+      }
+    },
+    {
+      "id": "piano",
+      "name": "Piano",
+      "emoji": "🎹",
+      "now": "Treble and bass clef notes",
+      "next": "Major scale W W H W W W H: C, G, D, F",
+      "skills": [
+        {
+          "id": "p1",
+          "label": "Musical alphabet A–G, forward and backward fast"
+        },
+        {
+          "id": "p2",
+          "label": "Treble clef notes"
+        },
+        {
+          "id": "p3",
+          "label": "Bass clef notes"
+        },
+        {
+          "id": "p4",
+          "label": "Name 20 clef notes in under 30 seconds"
+        },
+        {
+          "id": "p5",
+          "label": "Half & whole steps, sharps & flats (find C#, Bb)"
+        },
+        {
+          "id": "p6",
+          "label": "Count note values out loud: “1 & 2 &”"
+        }
+      ]
+    },
+    {
+      "id": "guitar",
+      "name": "Guitar",
+      "emoji": "🎸",
+      "now": "Fretboard notes on the low E & A strings",
+      "next": "G major scale, one octave (frets 2-2-1-2-2-2-1)",
+      "skills": [
+        {
+          "id": "g1",
+          "label": "Musical alphabet, find each letter on the low E string"
+        },
+        {
+          "id": "g2",
+          "label": "Strings E A D G B E, half step per fret"
+        },
+        {
+          "id": "g3",
+          "label": "Name any note on low E, frets 0–12"
+        },
+        {
+          "id": "g4",
+          "label": "Name any note on A, frets 0–12"
+        },
+        {
+          "id": "g5",
+          "label": "Half & whole steps on one string (C#, Bb)"
+        },
+        {
+          "id": "g6",
+          "label": "Count a strum pattern out loud: “1 & 2 &”"
+        }
+      ]
+    }
+  ],
+  "theoryLibrary": [
+    {
+      "id": "l1-piano",
+      "title": "Lesson 1 · Piano",
+      "blurb": "Half and whole steps, and the major scale, at the keyboard.",
+      "src": "media/lesson1_piano_v3.mp4"
+    },
+    {
+      "id": "l1-guitar",
+      "title": "Lesson 1 · Guitar",
+      "blurb": "Half and whole steps, and the major scale, on the guitar.",
+      "src": "media/lesson1_guitar_v3.mp4"
+    }
+  ]
+}
