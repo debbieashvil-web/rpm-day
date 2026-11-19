@@ -62,6 +62,15 @@
     return dom.name + " · " + dom.coin;
   }
 
+  /* A custom name stays on the device that typed it. Another device still needs a label. */
+  function entryLabel(entry) {
+    var label = entry && entry.label != null ? String(entry.label).trim() : "";
+    if (label) return label;
+    var dom = entry && domain(entry.domainId);
+    var name = dom && dom.name ? String(dom.name).split("&")[0].trim() : "";
+    return name ? name + " task" : "Task";
+  }
+
   function dayKey(d) {
     var dt = d instanceof Date ? d : new Date();
     return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
@@ -836,6 +845,7 @@
     TRACKS: TRACKS,
     domain: domain,
     coinLabel: coinLabel,
+    entryLabel: entryLabel,
     domainsInLabel: domainsInLabel,
     catalogPoints: catalogPoints,
     weekItemId: weekItemId,

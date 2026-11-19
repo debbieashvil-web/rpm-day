@@ -28,4 +28,4 @@ The browser keeps `slb.v1` in local storage. That copy is the offline record. Sy
 
 Each tap has an id. A sync keeps every id from both devices and keeps a shared id only once, so the same tap is not counted twice. Untapping does not remove the row. It marks the entry undone, and that mark wins if the other device still has the tap. Coins are counted again from the combined list.
 
-Custom task names, practice notes, and week plans stay on the device. The taps themselves, and the coins counted from them, are what line up.
+Names of built-in tasks and daily plan items sync with the taps. Only custom task names stay on the device. Practice notes and week plans stay on the device too. The taps themselves, and the coins counted from them, are what line up.

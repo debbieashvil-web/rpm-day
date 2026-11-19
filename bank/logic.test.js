@@ -667,7 +667,12 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(syncSrc.indexOf('script.crossOrigin = "anonymous"') >= 0);
   assert.ok(syncSrc.indexOf("@supabase/supabase-js@2.119.1/dist/umd/supabase.js") >= 0);
   assert.ok(guide.indexOf('turn off "Allow new users to sign up"') >= 0);
-  assert.ok(guide.indexOf("Custom task names, practice notes, and week plans stay on the device.") >= 0);
+  assert.ok(guide.indexOf("Names of built-in tasks and daily plan items sync with the taps.") >= 0);
+  assert.ok(guide.indexOf("Only custom task names stay on the device.") >= 0);
+  assert.strictEqual(L.entryLabel({ domainId: "kindness-connection", label: "" }), "Kindness task");
+  assert.strictEqual(L.entryLabel({ domainId: "kindness-connection", label: "A kind note" }), "A kind note");
+  assert.strictEqual(L.entryLabel({ domainId: "music-creativity" }), "Music task");
+  assert.ok(appSrc.indexOf("L.entryLabel") >= 0);
   assert.ok(sql.indexOf("enable row level security") >= 0);
   assert.ok(sql.indexOf("auth.uid() = user_id") >= 0);
   assert.ok(sql.indexOf("for select") >= 0);
@@ -934,7 +939,7 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
     assert.strictEqual(saved.meters.home, 5);
     assert.strictEqual(saved.banked.length, 1);
     const pushedIds = pushed.map(function (row) { return row.entry_id; });
-    assert.deepStrictEqual(pushedIds, ["a", "b", "c"]);
+    assert.deepStrictEqual(pushedIds, ["a"]);
     pushed.forEach(function (row) {
       assert.strictEqual(row.user_id, "11111111-1111-4111-8111-111111111111");
     });
@@ -996,20 +1001,20 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
   syncChecks.push(Sync.syncLedger(deps).then(function (res) {
     assert.strictEqual(res.ran, true);
     assert.strictEqual(res.changed, false);
-    assert.strictEqual(res.pushed, 2);
-    assert.deepStrictEqual(upserts, [["a", "b"]]);
+    assert.strictEqual(res.pushed, 0);
+    assert.deepStrictEqual(upserts, []);
     assert.strictEqual(saves, 0);
     assert.strictEqual(storage.data["slb.v1"], raw);
     assert.ok(storage.sets.indexOf("slb.v1") < 0);
     return Sync.syncLedger(deps);
   }).then(function (res) {
     assert.strictEqual(res.pushed, 0);
-    assert.deepStrictEqual(upserts, [["a", "b"]]);
+    assert.deepStrictEqual(upserts, []);
     phase = "untap";
     return Sync.syncLedger(deps);
   }).then(function (res) {
     assert.strictEqual(res.pushed, 1);
-    assert.deepStrictEqual(upserts[1], ["b"]);
+    assert.deepStrictEqual(upserts, [["b"]]);
     assert.strictEqual(saves, 0);
     assert.strictEqual(storage.data["slb.v1"], raw);
   }));
@@ -1039,8 +1044,7 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
           };
         },
         upsert: function (rows) {
-          const row = rows.filter(function (r) { return r.entry_id === "a"; })[0];
-          assert.strictEqual(row.entry.undone, true);
+          rows.forEach(function (row) { assert.notStrictEqual(row.entry_id, "a"); });
           return Promise.resolve({ error: null });
         }
       };
@@ -1058,6 +1062,7 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
     }
   }).then(function (res) {
     assert.strictEqual(res.ran, true);
+    assert.strictEqual(res.pushed, 1);
     assert.strictEqual(saved.entries.length, 2);
     assert.strictEqual(saved.entries[0].undone, true);
     assert.strictEqual(saved.entries[0].points, 10);
@@ -1128,6 +1133,21 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
     assert.strictEqual(builtin.entry.label, "Made the bed");
     assert.strictEqual(held.entries.filter(function (e) { return e.id === "custom-entry"; })[0].label, "PrivateCustomNameXYZ");
     assert.strictEqual(storage.data["slb.v1"], raw);
+  }));
+}
+
+{
+  const raw = JSON.stringify(liveLedger());
+  const storage = memoryStorage({
+    "slb.v1": raw,
+    "slb.sync.optin": "1",
+    "slb.sync.sent": "{\"a\":\"0\"}"
+  });
+  Sync.attach({ storage: storage });
+  syncChecks.push(Sync.turnOff().then(function () {
+    assert.strictEqual(storage.data["slb.v1"], raw);
+    assert.strictEqual(Object.prototype.hasOwnProperty.call(storage.data, Sync.OPT_KEY), false);
+    assert.strictEqual(Object.prototype.hasOwnProperty.call(storage.data, Sync.SENT_KEY), false);
   }));
 }
 

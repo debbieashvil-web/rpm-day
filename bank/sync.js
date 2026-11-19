@@ -249,7 +249,12 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
             if (typeof logic.recompute === "function") logic.recompute(state);
             deps.saveState(state);
           }
-          var pending = entriesToUpload(merged, sentMap(storage));
+          var known = sentMap(storage);
+          (remote || []).forEach(function (entry) {
+            if (!entry || entry.id == null || entry.id === "") return;
+            known[String(entry.id)] = entrySig(entry);
+          });
+          var pending = entriesToUpload(merged, known);
           return pushEntries(client, user.id, pending).then(function () {
             rememberSent(storage, merged);
             if (deps.onStatus) deps.onStatus("Synced.");
@@ -371,7 +376,10 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
 
   function turnOff() {
     try {
-      if (runtime.storage && typeof runtime.storage.removeItem === "function") runtime.storage.removeItem(OPT_KEY);
+      if (runtime.storage && typeof runtime.storage.removeItem === "function") {
+        runtime.storage.removeItem(OPT_KEY);
+        runtime.storage.removeItem(SENT_KEY);
+      }
     } catch (e) {}
     if (runtime.onSession) runtime.onSession(false);
     if (!liveClient || !liveClient.auth || typeof liveClient.auth.signOut !== "function") {
