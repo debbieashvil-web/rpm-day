@@ -141,7 +141,7 @@ var MUSIC_APP_URL = "";
     var undo = $("undo");
     if (last) {
       undo.hidden = false;
-      undo.innerHTML = '<button type="button" data-undo>Undo · ' + esc(last.label) + "</button>";
+      undo.innerHTML = '<button type="button" data-undo>Undo · ' + esc(L.entryLabel(last)) + "</button>";
     } else undo.hidden = true;
   }
 
