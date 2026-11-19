@@ -795,6 +795,40 @@
     return state;
   }
 
+  function cloneEntry(entry) {
+    var copy = {};
+    Object.keys(entry).forEach(function (k) { copy[k] = entry[k]; });
+    return copy;
+  }
+
+  /* Union by entry id. Local order stays. Entries that exist on only one
+     side are kept. The same id is kept once. An untap (undone) is a tombstone:
+     if either copy is undone, the kept row stays undone and is not dropped. */
+  function mergeEntries(localEntries, remoteEntries) {
+    var seen = Object.create(null);
+    var out = [];
+    function absorb(list) {
+      if (!Array.isArray(list)) return;
+      for (var i = 0; i < list.length; i++) {
+        var entry = list[i];
+        if (!entry || typeof entry !== "object" || Array.isArray(entry)) continue;
+        if (entry.id == null || entry.id === "") continue;
+        var key = String(entry.id);
+        var have = seen[key];
+        if (!have) {
+          have = cloneEntry(entry);
+          seen[key] = have;
+          out.push(have);
+        } else if (entry.undone) {
+          have.undone = true;
+        }
+      }
+    }
+    absorb(localEntries);
+    absorb(remoteEntries);
+    return out;
+  }
+
   return {
     DOMAINS: DOMAINS,
     EASY_DEFAULT: EASY_DEFAULT,
@@ -850,6 +884,7 @@
     exportBundle: exportBundle,
     importBundle: importBundle,
     ensureShape: ensureShape,
+    mergeEntries: mergeEntries,
     active: active
   };
 });

@@ -6,6 +6,7 @@ var ASSETS = [
   "./app.css",
   "./app.js",
   "./logic.js",
+  "./sync.js",
   "./browser.js",
   "./songbird.js",
   "./coins.js",

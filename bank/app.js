@@ -18,6 +18,7 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     customOpen: false,
     customDraft: { label: "", points: "10", domainId: "home", repeat: false }
   };
+  var syncUi = { open: false, email: "", status: "", signedIn: false, busy: false };
   var dropQ = [];
   var dropping = false;
 
@@ -124,6 +125,7 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     SLB.save(state);
     render();
     if (result && result.dropped && result.dropped.length) playDrops(result.dropped);
+    if (window.SLBSync) SLBSync.afterLocalChange();
   }
   function render() {
     var titles = { today: "Today", bank: "Bank", week: "This Week" };
@@ -373,7 +375,30 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
       html += "</div>";
     }
     html += "</section>";
+    html += syncBox();
     html += phoneBox();
+    return html;
+  }
+
+  function syncBox() {
+    var ready = window.SLBSync && SLBSync.configured();
+    var html = '<section class="panel syncbox"><p class="kicker">Sync</p>';
+    html += '<button type="button" class="ghost" data-sync-open aria-expanded="' + (syncUi.open ? "true" : "false") + '">Sync across devices</button>';
+    if (syncUi.open) {
+      if (!ready) {
+        html += '<p class="hint">This copy has no cloud address yet, so taps stay on this device.</p>';
+      } else if (!syncUi.signedIn) {
+        html += '<p class="hint">Use the same email on each device. Taps are combined, and a tap already counted stays counted once.</p>';
+        html += '<input class="field" type="email" autocomplete="email" inputmode="email" data-sync-email maxlength="120" placeholder="Email" value="' + esc(syncUi.email) + '" aria-label="Email">';
+        html += '<button type="button" class="stamp" data-sync-send' + (syncUi.busy ? " disabled" : "") + ">Email me a sign-in link</button>";
+      } else {
+        html += '<p class="hint">Signed in on this device. An untap stays untapped on the other one too.</p>';
+        html += '<button type="button" class="stamp" data-sync-now' + (syncUi.busy ? " disabled" : "") + ">Sync now</button>";
+        html += '<button type="button" class="ghost" data-sync-off>Turn sync off</button>';
+      }
+      if (syncUi.status) html += '<p class="hint" id="syncStatus">' + esc(syncUi.status) + "</p>";
+    }
+    html += "</section>";
     return html;
   }
 
@@ -495,6 +520,51 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
       }
       return;
     }
+    if (el.hasAttribute("data-sync-open")) {
+      syncUi.open = !syncUi.open;
+      render();
+      return;
+    }
+    if (el.hasAttribute("data-sync-send")) {
+      if (!window.SLBSync || !SLBSync.configured() || syncUi.busy) return;
+      var emailBox = document.querySelector("[data-sync-email]");
+      if (emailBox) syncUi.email = emailBox.value;
+      syncUi.busy = true;
+      syncUi.status = "Sending a sign-in link…";
+      render();
+      SLBSync.sendLink(syncUi.email).then(function (res) {
+        syncUi.busy = false;
+        if (res && res.ok) syncUi.status = "Link sent. Open it on this device.";
+        else if (res && res.reason === "email") syncUi.status = "Enter an email address.";
+        else syncUi.status = "Could not send the link.";
+        render();
+      });
+      return;
+    }
+    if (el.hasAttribute("data-sync-now")) {
+      if (!window.SLBSync || syncUi.busy) return;
+      syncUi.busy = true;
+      syncUi.status = "Syncing…";
+      render();
+      SLBSync.afterLocalChange().then(function (res) {
+        syncUi.busy = false;
+        if (res && res.needsAuth) syncUi.status = "Sign in to sync.";
+        else if (!res || (res.ran === false && !res.queued)) syncUi.status = "Could not sync. Taps on this device are still here.";
+        render();
+      });
+      return;
+    }
+    if (el.hasAttribute("data-sync-off")) {
+      if (!window.SLBSync || syncUi.busy) return;
+      syncUi.busy = true;
+      SLBSync.turnOff().then(function () {
+        syncUi.busy = false;
+        syncUi.signedIn = false;
+        syncUi.status = "Sync is off. Taps stay on this device.";
+        render();
+      });
+      return;
+    }
     if (el.hasAttribute("data-export")) {
       var blob = new Blob([JSON.stringify(L.exportBundle(state), null, 2)], { type: "application/json" });
       var a = document.createElement("a");
@@ -523,6 +593,7 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     var t = ev.target;
     if (t.hasAttribute("data-custom-label")) ui.customDraft.label = t.value;
     if (t.hasAttribute("data-custom-points")) ui.customDraft.points = t.value;
+    if (t.hasAttribute("data-sync-email")) syncUi.email = t.value;
   }
   function onChange(ev) {
     if (ev.target.hasAttribute("data-custom-repeat")) ui.customDraft.repeat = ev.target.checked;
@@ -577,6 +648,34 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
   }).then(function () {
     if (!ui.domainId) ui.domainId = fullest();
     render();
+    if (window.SLBSync) {
+      SLBSync.attach({
+        storage: window.localStorage,
+        logic: SLBLogic,
+        loadState: function () {
+          var raw = localStorage.getItem(SLB.KEY);
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.entries)) throw new Error("ledger");
+          }
+          return SLB.load();
+        },
+        saveState: function (next) {
+          state = next;
+          SLB.save(state);
+          render();
+        },
+        onStatus: function (text) {
+          syncUi.status = text || "";
+          if (ui.tab === "bank" && syncUi.open) render();
+        },
+        onSession: function (on) {
+          syncUi.signedIn = !!on;
+          if (ui.tab === "bank" && syncUi.open) render();
+        }
+      });
+      SLBSync.boot();
+    }
     var host = location.hostname;
     if (SW_URL && "serviceWorker" in navigator && host !== "localhost" && host !== "127.0.0.1") {
       navigator.serviceWorker.register(SW_URL).catch(function () {});
