@@ -199,6 +199,7 @@ main { flex: 1; padding: 6px 18px 22px; }
   border-color: var(--gold);
   box-shadow: inset 3px 0 0 var(--gold);
 }
+.task.full .tag { color: var(--accent); font-weight: 600; }
 .task .tag { grid-column: 1; font-size: 13px; color: var(--muted-2); line-height: 1.35; }
 .task.has-art { grid-template-columns: 44px 1fr auto; }
 .task.has-art .miniwrap { grid-row: 1 / span 2; align-self: center; }

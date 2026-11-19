@@ -34,6 +34,18 @@
 
   var TRACKS = { voice: "Voice", piano: "Piano", guitar: "Guitar", book1: "Book 1" };
 
+  /* Voice, piano, guitar, and tired-day voice. Each once a day.
+     Tired-day voice stands in for Voice that day.
+     An older Music done entry still counts toward the same daily cap. */
+  var MUSIC_CAP = 75;
+  var MUSIC_LEGACY_ID = "music-done";
+  var MUSIC_TAPS = [
+    { id: "music-voice", label: "Voice", points: 35, pair: "music-tired-voice" },
+    { id: "music-piano", label: "Piano", points: 25 },
+    { id: "music-guitar", label: "Guitar", points: 25 },
+    { id: "music-tired-voice", label: "Tired-day voice", points: 15, pair: "music-voice" }
+  ];
+
   function uid() {
     return Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4);
   }
@@ -202,6 +214,88 @@
       return { removed: true, entry: existing[0], dropped: [] };
     }
     return creditTask(state, task, opts);
+  }
+
+  function musicTap(id) {
+    for (var i = 0; i < MUSIC_TAPS.length; i++) if (MUSIC_TAPS[i].id === id) return MUSIC_TAPS[i];
+    return null;
+  }
+
+  function musicPointsOn(state, day) {
+    var sum = 0;
+    active(state).forEach(function (e) {
+      if (e.day !== day) return;
+      if (e.taskId !== MUSIC_LEGACY_ID && !musicTap(e.taskId)) return;
+      sum += e.points || 0;
+    });
+    return sum;
+  }
+
+  function pairPoints(state, tap, day) {
+    if (!tap || !tap.pair) return 0;
+    var sum = 0;
+    loggedToday(state, tap.pair, day).forEach(function (e) { sum += e.points || 0; });
+    return sum;
+  }
+
+  /* True when this tap can be turned on, or is already on so a tap will un-tap it.
+     Turning a tap on counts the points it adds after its pair is cleared. */
+  function musicTapFits(state, tapId, day) {
+    var tap = musicTap(tapId);
+    if (!tap) return false;
+    day = day || dayKey(new Date());
+    if (loggedToday(state, tap.id, day).length) return true;
+    return musicPointsOn(state, day) - pairPoints(state, tap, day) + tap.points <= MUSIC_CAP;
+  }
+
+  function musicCapped(state, day) {
+    day = day || dayKey(new Date());
+    if (musicPointsOn(state, day) >= MUSIC_CAP) return true;
+    for (var i = 0; i < MUSIC_TAPS.length; i++) {
+      var tap = MUSIC_TAPS[i];
+      if (loggedToday(state, tap.id, day).length) continue;
+      if (musicTapFits(state, tap.id, day)) return false;
+    }
+    return musicPointsOn(state, day) > 0;
+  }
+
+  function toggleMusic(state, tapId, opts) {
+    opts = opts || {};
+    var tap = musicTap(tapId);
+    var day = opts.day || dayKey(new Date());
+    if (!tap) return { error: "tap", dropped: [] };
+    var existing = loggedToday(state, tap.id, day);
+    if (existing.length) {
+      existing.forEach(function (e) { e.undone = true; });
+      recompute(state);
+      return { removed: true, entry: existing[0], dropped: [], points: musicPointsOn(state, day), capped: musicCapped(state, day) };
+    }
+    if (!musicTapFits(state, tap.id, day)) {
+      return { capped: true, dropped: [], points: musicPointsOn(state, day) };
+    }
+    var cleared = "";
+    if (tap.pair) {
+      var pairEntries = loggedToday(state, tap.pair, day);
+      if (pairEntries.length) {
+        pairEntries.forEach(function (e) { e.undone = true; });
+        cleared = tap.pair;
+      }
+    }
+    var res = creditRaw(state, {
+      group: opts.group,
+      at: opts.at,
+      day: day,
+      domainId: "music-creativity",
+      taskId: tap.id,
+      label: tap.label,
+      points: tap.points,
+      kind: "points",
+      source: opts.source || "music"
+    });
+    res.cleared = cleared;
+    res.points = musicPointsOn(state, day);
+    res.capped = musicCapped(state, day);
+    return res;
   }
 
   function toggleMust(state, task, opts) {
@@ -706,6 +800,13 @@
     creditRaw: creditRaw,
     creditTask: creditTask,
     toggleTask: toggleTask,
+    toggleMusic: toggleMusic,
+    MUSIC_CAP: MUSIC_CAP,
+    MUSIC_TAPS: MUSIC_TAPS,
+    MUSIC_LEGACY_ID: MUSIC_LEGACY_ID,
+    musicPointsOn: musicPointsOn,
+    musicTapFits: musicTapFits,
+    musicCapped: musicCapped,
     toggleMust: toggleMust,
     undoLast: undoLast,
     undoLatestForTask: undoLatestForTask,
