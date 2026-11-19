@@ -109,6 +109,7 @@ main { flex: 1; padding: 6px 18px 22px; }
   padding: 18px 16px 16px;
   margin: 0 0 16px;
 }
+.syncbox .hint { margin-top: 8px; }
 .kicker {
   margin: 0 0 8px;
   font-family: var(--head);
