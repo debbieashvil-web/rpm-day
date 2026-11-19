@@ -2,7 +2,7 @@
  "date": "2026-11-19",
  "title": "Thu Nov 19",
  "tag": "Strong body, warm studio 🎹",
- "result": "Move my body, show up for my appointments, and teach with joy.",
+ "result": "Rest-smart day: easy gym, show up for my appointments, and teach with joy.",
  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
  "musts": [
   {
@@ -18,7 +18,7 @@
    "domainId": "body"
   },
   {
-   "label": "Upper body gym",
+   "label": "Upper body gym (light)",
    "domainId": "body"
   },
   {
@@ -50,11 +50,11 @@
     [
      "m3",
      "8:45 AM",
-     "Upper body gym 🏋️‍♀️ (Ember)"
+     "Upper body gym, light today 🏋️‍♀️ (Ember)"
     ],
     [
      "m4",
-     "4:30 PM",
+     "5:30 PM",
      "Teach my lessons 🎹 (Teacher's Bell)"
     ]
    ]
@@ -66,13 +66,13 @@
    "items": [
     [
      "s1",
-     "7:30 AM",
-     "Hour of Power walk 🚶‍♀️ (Ember)"
+     "6:49 AM",
+     "Hour of Power walk ✅ (Ember)"
     ],
     [
      "s2",
      "8:45 AM",
-     "Upper body gym 🏋️‍♀️ (Ember)"
+     "Upper body gym, light today 🏋️‍♀️ (Ember)"
     ],
     [
      "s3",
@@ -108,11 +108,6 @@
      "s8",
      "3:45 PM",
      "Appointment (video call) 💻 (Still Water)"
-    ],
-    [
-     "s9",
-     "4:30 PM",
-     "Piano lesson 🎹 (Teacher's Bell)"
     ],
     [
      "s10",
