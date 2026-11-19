@@ -36,7 +36,8 @@
 
   /* Voice, piano, guitar, and tired-day voice. Each once a day.
      Tired-day voice stands in for Voice that day.
-     The tap that would pass 75 is trimmed so the day lands on 75.
+     Each tap stores its full points. The 75 cap is applied when the day is
+     totaled, in tap order, after any older Music done entry.
      An older Music done entry still counts toward the same daily cap. */
   var MUSIC_CAP = 75;
   var MUSIC_LEGACY_ID = "music-done";
@@ -104,6 +105,7 @@
     var meters = {};
     DOMAINS.forEach(function (d) { meters[d.id] = 0; });
     var banked = [];
+    var musicDays = {};
     active(state).forEach(function (e) {
       var dom = domain(e.domainId);
       if (!dom) return;
@@ -122,7 +124,8 @@
         }
         return;
       }
-      var left = e.points || 0;
+      var left = musicCounted(state, e, musicDays);
+      if (left == null) left = e.points || 0;
       if (left <= 0) return;
       var meter = meters[e.domainId] || 0;
       var fill = dom.fill;
@@ -222,39 +225,72 @@
     return null;
   }
 
+  /* Full points for the taps that are on, then cut to the room left under 75.
+     Older Music done entries count first and are not rewritten.
+     extra.addTapId pretends that tap is on and its pair is off. */
+  function musicLayout(state, day, extra) {
+    var room = MUSIC_CAP;
+    var byTap = {};
+    var entryId = {};
+    var addTap = extra && extra.addTapId ? musicTap(extra.addTapId) : null;
+    active(state).forEach(function (e) {
+      if (e.day !== day || e.taskId !== MUSIC_LEGACY_ID) return;
+      room -= e.points || 0;
+    });
+    for (var i = 0; i < MUSIC_TAPS.length; i++) {
+      var t = MUSIC_TAPS[i];
+      var ons = loggedToday(state, t.id, day);
+      var on = ons.length > 0;
+      if (addTap && addTap.id === t.id) on = true;
+      if (addTap && addTap.pair === t.id) on = false;
+      if (!on) continue;
+      var give = room > 0 ? Math.min(t.points, room) : 0;
+      byTap[t.id] = give;
+      if (ons.length) entryId[t.id] = ons[0].id;
+      room -= give;
+    }
+    return { byTap: byTap, entryId: entryId };
+  }
+
+  /* Effective points for a music tap entry, or null when this entry is not one.
+     The stored points stay at the full tap value. */
+  function musicCounted(state, entry, cache) {
+    if (!entry || !musicTap(entry.taskId)) return null;
+    if (!cache[entry.day]) cache[entry.day] = musicLayout(state, entry.day);
+    var layout = cache[entry.day];
+    if (layout.entryId[entry.taskId] !== entry.id) return 0;
+    return layout.byTap[entry.taskId] || 0;
+  }
+
   function musicPointsOn(state, day) {
     var sum = 0;
     active(state).forEach(function (e) {
-      if (e.day !== day) return;
-      if (e.taskId !== MUSIC_LEGACY_ID && !musicTap(e.taskId)) return;
+      if (e.day !== day || e.taskId !== MUSIC_LEGACY_ID) return;
       sum += e.points || 0;
     });
+    var layout = musicLayout(state, day);
+    for (var i = 0; i < MUSIC_TAPS.length; i++) {
+      var id = MUSIC_TAPS[i].id;
+      if (layout.byTap[id]) sum += layout.byTap[id];
+    }
     return sum;
   }
 
-  function pairPoints(state, tap, day) {
-    if (!tap || !tap.pair) return 0;
-    var sum = 0;
-    loggedToday(state, tap.pair, day).forEach(function (e) { sum += e.points || 0; });
-    return sum;
-  }
-
-  /* Points this tap earns today. Already-on taps keep the points they were given.
-     A new tap is cut down to the room left under the cap, after its pair is cleared.
+  /* Points this tap earns from the taps that would be on.
+     Already-on taps are retotaled with the rest of the day, not frozen.
      Zero means the day is already full. */
   function musicAward(state, tapId, day) {
     var tap = musicTap(tapId);
     if (!tap) return 0;
     day = day || dayKey(new Date());
-    var on = loggedToday(state, tap.id, day);
-    if (on.length) {
-      var got = 0;
-      on.forEach(function (e) { got += e.points || 0; });
-      return got;
+    if (loggedToday(state, tap.id, day).length) {
+      return musicLayout(state, day).byTap[tap.id] || 0;
     }
-    var room = MUSIC_CAP - (musicPointsOn(state, day) - pairPoints(state, tap, day));
-    if (room < 1) return 0;
-    return room < tap.points ? room : tap.points;
+    /* A day already at 75 takes no new tap. Swapping Voice and Tired-day voice
+       still retotals, because that tap replaces its pair. */
+    var swapping = tap.pair && loggedToday(state, tap.pair, day).length > 0;
+    if (!swapping && musicPointsOn(state, day) >= MUSIC_CAP) return 0;
+    return musicLayout(state, day, { addTapId: tap.id }).byTap[tap.id] || 0;
   }
 
   /* True when this tap can be turned on, or is already on so a tap will un-tap it.
@@ -308,7 +344,7 @@
       domainId: "music-creativity",
       taskId: tap.id,
       label: tap.label,
-      points: award,
+      points: tap.points,
       kind: "points",
       source: opts.source || "music"
     });
