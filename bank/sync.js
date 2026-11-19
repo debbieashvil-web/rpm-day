@@ -16,8 +16,10 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
 
   var LEDGER_KEY = "slb.v1";
   var OPT_KEY = "slb.sync.optin";
+  var SENT_KEY = "slb.sync.sent";
   var TABLE = "ledger_entries";
   var CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.1/dist/umd/supabase.js";
+  var CDN_INTEGRITY = "sha384-2DeuFKyqIlpZfFmj+jl/+IbM3DwDM4vGKsvK0fI32E0ZDt24W33hB6pka4RAdbz2";
   var libraryPromise = null;
   var liveClient = null;
   var listening = false;
@@ -85,6 +87,8 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
       }
       var script = document.createElement("script");
       script.src = CDN;
+      script.integrity = CDN_INTEGRITY;
+      script.crossOrigin = "anonymous";
       script.async = true;
       script.onload = function () {
         var loaded = globalScope();
@@ -141,6 +145,54 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
     });
   }
 
+  /* A name typed for a custom task stays on this device.
+     The upload keeps that task's id, domain, and points, and drops the name.
+     Built-in tasks keep their catalog labels. */
+  function entryForUpload(entry) {
+    var copy = JSON.parse(JSON.stringify(entry));
+    var taskId = copy.taskId != null ? String(copy.taskId) : "";
+    if (taskId.indexOf("custom-") === 0) delete copy.label;
+    return copy;
+  }
+
+  function entrySig(entry) {
+    return entry && entry.undone ? "1" : "0";
+  }
+
+  function sentMap(storage) {
+    if (!storage || typeof storage.getItem !== "function") return {};
+    try {
+      var raw = storage.getItem(SENT_KEY);
+      if (!raw) return {};
+      var parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+      return parsed;
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function entriesToUpload(entries, sent) {
+    var out = [];
+    (entries || []).forEach(function (entry) {
+      if (!entry || entry.id == null || entry.id === "") return;
+      if (sent[String(entry.id)] === entrySig(entry)) return;
+      out.push(entry);
+    });
+    return out;
+  }
+
+  function rememberSent(storage, entries) {
+    if (!storage || typeof storage.setItem !== "function") return;
+    var map = {};
+    (entries || []).forEach(function (entry) {
+      if (!entry || entry.id == null || entry.id === "") return;
+      map[String(entry.id)] = entrySig(entry);
+    });
+    try { storage.setItem(SENT_KEY, JSON.stringify(map)); }
+    catch (e) {}
+  }
+
   function pushEntries(client, userId, entries) {
     var rows = [];
     (entries || []).forEach(function (entry) {
@@ -148,7 +200,7 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
       rows.push({
         user_id: userId,
         entry_id: String(entry.id),
-        entry: JSON.parse(JSON.stringify(entry))
+        entry: entryForUpload(entry)
       });
     });
     if (!rows.length) return Promise.resolve();
@@ -197,9 +249,11 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
             if (typeof logic.recompute === "function") logic.recompute(state);
             deps.saveState(state);
           }
-          return pushEntries(client, user.id, merged).then(function () {
+          var pending = entriesToUpload(merged, sentMap(storage));
+          return pushEntries(client, user.id, pending).then(function () {
+            rememberSent(storage, merged);
             if (deps.onStatus) deps.onStatus("Synced.");
-            return { ran: true, changed: changed, count: merged.length };
+            return { ran: true, changed: changed, count: merged.length, pushed: pending.length };
           });
         });
       });
@@ -334,8 +388,10 @@ var SLB_SUPABASE = { url: "", anonKey: "" };
     CONFIG: CONFIG,
     LEDGER_KEY: LEDGER_KEY,
     OPT_KEY: OPT_KEY,
+    SENT_KEY: SENT_KEY,
     TABLE: TABLE,
     CDN: CDN,
+    CDN_INTEGRITY: CDN_INTEGRITY,
     configured: configured,
     shouldSync: shouldSync,
     attach: attach,
