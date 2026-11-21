@@ -1,32 +1,24 @@
 {
- "date": "2026-11-20",
- "title": "Fri Nov 20",
- "tag": "Lower body, a walk, create, then Shabbos 🕯️",
- "result": "Move strong but light, make something, earn a little, and walk into Shabbos calm.",
- "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
+ "date": "2026-11-21",
+ "title": "Sat Nov 21",
+ "tag": "Shabbos light day 🕯️",
+ "result": "Rest, connect, and collect a few cozy wins.",
+ "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Rest is part of how I win. 💛",
  "musts": [
   {
-   "label": "Vocals",
-   "domainId": "music-creativity"
-  },
-  {
-   "label": "Human Garage ✅",
+   "label": "Hour of Power",
    "domainId": "body"
   },
   {
-   "label": "Lower-body gym, go lighter",
+   "label": "Human Garage",
    "domainId": "body"
   },
   {
-   "label": "Income hour",
-   "domainId": "career"
-  },
-  {
-   "label": "Creative block: record a video or music, 45 min",
+   "label": "Vocals, gentle",
    "domainId": "music-creativity"
   },
   {
-   "label": "Shabbos prep",
+   "label": "Keep Shabbos 🕯️",
    "domainId": "faith"
   }
  ],
@@ -38,33 +30,23 @@
    "items": [
     [
      "m0",
-     "Late morning",
-     "Vocals 🎤 (Songbird)"
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
     ],
     [
      "m1",
-     "Done ✅",
+     "Morning",
      "Human Garage 💪 (Ember)"
     ],
     [
      "m2",
-     "8:00 AM",
-     "Lower-body gym, a couple reps in the tank 🏋️‍♀️ (Ember)"
+     "Anytime",
+     "Vocals, gentle 🎤 (Songbird)"
     ],
     [
      "m3",
-     "12:30 PM",
-     "Income hour, fun part first ☕ (Teacher's Bell)"
-    ],
-    [
-     "m4",
-     "1:30 PM",
-     "Creative block: record a video or music, 45 min 🎬 (Songbird)"
-    ],
-    [
-     "m5",
-     "Before 4:15 PM",
-     "Shabbos prep 🕯️ (Candlelight)"
+     "All day",
+     "Keep Shabbos: rest and recharge 🕯️ (Candlelight)"
     ]
    ]
   },
@@ -75,51 +57,46 @@
    "items": [
     [
      "s0",
-     "Early",
-     "Human Garage ✅ (Ember)"
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
     ],
     [
      "s1",
-     "8:00 AM",
-     "Lower-body gym, lighter; optional 10-15 min easy bike 🏋️‍♀️ (Ember)"
+     "Morning",
+     "Human Garage 💪 (Ember)"
     ],
     [
      "s2",
-     "~9:00 AM",
-     "Hour of Power walk with a friend at the lake 🌅 (Ember, Warm Bread)"
+     "Late morning",
+     "Shabbos meal with family 🍞 (Warm Bread, Candlelight)"
     ],
     [
      "s3",
-     "11:00 AM",
-     "Vocals 🎤 (Songbird)"
+     "Afternoon",
+     "Rest or a nap when my body asks 😌 (Still Water)"
     ],
     [
      "s4",
-     "12:00 PM",
-     "Protein lunch 🥚 (Ember)"
+     "Afternoon",
+     "10 minutes of Torah learning or a gratitude list 📖 (Candlelight)"
     ],
     [
      "s5",
-     "12:30 PM",
-     "⭐ Income hour, starting with Bank Game sync setup, 10 min 🪙 (Teacher's Bell)"
+     "Afternoon",
+     "Time with a friend or family member 💛 (Warm Bread)"
     ],
     [
      "s6",
-     "1:30 PM",
-     "⭐ Creative block, 45 min: one-take video or music 🎬 (Songbird)"
+     "5:16 PM",
+     "Havdalah 🕯️ (Candlelight)"
     ],
     [
      "s7",
-     "2:15 PM",
-     "Shabbos prep: cook, tidy, move salmon to fridge 🕯️ (Candlelight, Hearth)"
+     "Evening",
+     "Light catch-up: one small win, then relax ☕ (Teacher's Bell)"
     ],
     [
      "s8",
-     "4:15 PM",
-     "Light candles and rest 🕯️ (Candlelight)"
-    ],
-    [
-     "s9",
      "11:30 PM",
      "Lights out 😴 (Still Water)"
     ]
@@ -132,18 +109,18 @@
    "items": [
     [
      "l1",
-     "Sat",
-     "Light day: Hour of Power, rest, a few cozy wins 🕯️ (Candlelight)"
-    ],
-    [
-     "l2",
      "Sun",
      "Gym + lessons + meal prep hour 🍗 (Ember, Teacher's Bell)"
     ],
     [
+     "l2",
+     "Sun",
+     "Creative block moved from Friday: record a video or music 🎬 (Songbird)"
+    ],
+    [
      "l3",
      "Sun",
-     "Weekly planning with a simplify pass 🗺️ (Teacher's Bell)"
+     "Weekly planning with a first-principles pass 🗺️ (Teacher's Bell)"
     ]
    ]
   }
