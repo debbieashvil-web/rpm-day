@@ -86,13 +86,17 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
       return L.domainsInLabel(inner).length ? "" : full;
     }).replace(/\s{2,}/g, " ").trim();
   }
+  function itemDomains(item) {
+    if (String(item && item.id || "").indexOf("wk-") === 0) return L.weekItemAward(item);
+    return awardsFor(item.label, item.domainId);
+  }
   function itemDone(day, item) {
-    if (awardsFor(item.label, item.domainId).length) return L.planItemOn(state, day, item.id);
+    if (itemDomains(item).length) return L.planItemOn(state, day, item.id);
     var bag = readChecks()[day] || {};
     return !!bag[item.id];
   }
   function toggleItem(day, item) {
-    var domains = awardsFor(item.label, item.domainId);
+    var domains = itemDomains(item);
     if (domains.length) {
       commit(L.togglePlanItem(state, { id: item.id, day: day, label: showLabel(item.label), domains: domains }));
       return;
@@ -162,7 +166,7 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     return rows;
   }
   function planButton(item, day) {
-    var domains = awardsFor(item.label, item.domainId);
+    var domains = itemDomains(item);
     var on = itemDone(day, item);
     var pts = 0;
     domains.forEach(function (d) { pts += d.points; });
@@ -259,7 +263,7 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     var mustDay = week.date || (week.days && week.days[0] && week.days[0].date) || L.dayKey(now());
     var musts = [];
     (week.musts || []).forEach(function (m, i) {
-      if (m && m.label) musts.push({ id: "must-" + i, time: "", label: m.label, domainId: m.domainId || "" });
+      if (m && m.label) musts.push({ id: L.weekItemId("must-" + i), time: "", label: m.label, domainId: m.domainId || "" });
     });
     if (musts.length) {
       html += '<section class="panel"><p class="kicker">Musts</p>';
@@ -267,10 +271,21 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
       html += "</section>";
     }
     (week.days || []).forEach(function (d) {
-      html += '<section class="panel"><p class="kicker">' + esc(d.title || "Day") + "</p>";
+      var dayKey = d.date || mustDay;
+      html += '<section class="panel"><p class="kicker">' + esc(d.title || d.dayName || "Day") + "</p>";
       if (d.date) html += '<p class="daydate">' + esc(prettyDate(d.date)) + "</p>";
+      var dayMusts = [];
+      (d.musts || []).forEach(function (m) {
+        if (!m || !m.label || L.weekMustAward(m).length) return;
+        dayMusts.push(m.label);
+      });
+      if (dayMusts.length) {
+        html += '<p class="kicker">Musts</p><ul class="weekmusts">';
+        dayMusts.forEach(function (label) { html += "<li>" + esc(label) + "</li>"; });
+        html += "</ul>";
+      }
       (d.items || []).forEach(function (it) {
-        html += planButton({ id: it[0], time: it[1] || "", label: it[2] || "", domainId: "" }, d.date || mustDay);
+        html += planButton({ id: L.weekItemId(it[0]), time: it[1] || "", label: it[2] || "", domainId: "" }, dayKey);
       });
       html += "</section>";
     });

@@ -504,6 +504,18 @@
     return 0;
   }
 
+  function weekItemId(id) {
+    return "wk-" + String(id == null ? "" : id);
+  }
+
+  function weekMustAward() {
+    return [];
+  }
+
+  function weekItemAward() {
+    return [];
+  }
+
   function planItemOn(state, day, itemId) {
     var prefix = "plan:" + day + ":" + itemId + ":";
     return active(state).some(function (e) {
@@ -516,6 +528,7 @@
     var day = spec.day || dayKey(new Date());
     var itemId = String(spec.id || "");
     if (!itemId) return { error: "item", dropped: [] };
+    if (itemId.indexOf("wk-") === 0) return { skipped: true, dropped: [] };
     var prefix = "plan:" + day + ":" + itemId + ":";
     var existing = active(state).filter(function (e) {
       return e.taskId && e.taskId.indexOf(prefix) === 0;
@@ -791,6 +804,9 @@
     coinLabel: coinLabel,
     domainsInLabel: domainsInLabel,
     catalogPoints: catalogPoints,
+    weekItemId: weekItemId,
+    weekMustAward: weekMustAward,
+    weekItemAward: weekItemAward,
     planItemOn: planItemOn,
     togglePlanItem: togglePlanItem,
     dayKey: dayKey,

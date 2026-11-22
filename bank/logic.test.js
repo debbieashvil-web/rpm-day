@@ -225,6 +225,68 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:2026-11-21:s7:") === 0; }).length, 2);
 }
 
+// Today's s5 and This Week's s5 share a date, and their done-state stays apart.
+{
+  const s = fresh();
+  const day = "2026-11-22";
+  const domains = [{ domainId: "music-creativity", points: 25, label: "Music & Creativity · The Songbird" }];
+  assert.strictEqual(L.weekItemId("s5"), "wk-s5");
+  assert.notStrictEqual(L.weekItemId("s5"), "s5");
+  L.togglePlanItem(s, { id: "s5", day: day, label: "Vocals", domains: domains });
+  assert.strictEqual(L.planItemOn(s, day, "s5"), true);
+  assert.strictEqual(L.planItemOn(s, day, L.weekItemId("s5")), false);
+  assert.strictEqual(s.meters["music-creativity"], 25);
+  const res = L.togglePlanItem(s, {
+    id: L.weekItemId("s5"),
+    day: day,
+    label: "Lesson",
+    domains: [{ domainId: "career", points: 20, label: "Career · The Teacher's Bell" }]
+  });
+  assert.deepStrictEqual(res.dropped, []);
+  assert.strictEqual(L.planItemOn(s, day, "s5"), true);
+  assert.strictEqual(L.planItemOn(s, day, "wk-s5"), false);
+  assert.strictEqual(s.meters["music-creativity"], 25);
+  assert.strictEqual(s.meters.career || 0, 0);
+  assert.strictEqual(s.banked.length, 0);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:" + day + ":s5:") === 0; }).length, 1);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:" + day + ":wk-s5:") === 0; }).length, 0);
+}
+
+// A This Week row keeps its own id and awards nothing, even if a coin is offered.
+{
+  const s = fresh();
+  const day = "2026-11-22";
+  const award = L.weekItemAward({ id: "s5", label: "Lesson 🎹 (Teacher's Bell)", domainId: "career" });
+  assert.deepStrictEqual(award, []);
+  const res = L.togglePlanItem(s, {
+    id: L.weekItemId("s5"),
+    day: day,
+    label: "Lesson 12:30 PM",
+    domains: [{ domainId: "career", points: 20, label: "Career · The Teacher's Bell" }]
+  });
+  assert.deepStrictEqual(res.dropped, []);
+  assert.deepStrictEqual(award, []);
+  assert.strictEqual(s.meters.career || 0, 0);
+  assert.strictEqual(s.banked.length, 0);
+  assert.strictEqual(L.planItemOn(s, day, "wk-s5"), false);
+  assert.strictEqual(JSON.stringify(s.meters), JSON.stringify(L.blank().meters));
+}
+
+// A must on This Week awards nothing, even when it names a coin.
+{
+  const s = fresh();
+  const day = "2026-11-22";
+  const must = { label: "Vocals", domainId: "music-creativity", coin: "Songbird" };
+  const award = L.weekMustAward(must);
+  assert.deepStrictEqual(award, []);
+  const res = L.togglePlanItem(s, { id: L.weekItemId("day-must-0"), day: day, label: must.label, domains: award });
+  assert.strictEqual(res.skipped, true);
+  assert.strictEqual(res.dropped.length, 0);
+  assert.strictEqual(L.planItemOn(s, day, L.weekItemId("day-must-0")), false);
+  assert.strictEqual(s.meters["music-creativity"] || 0, 0);
+  assert.strictEqual(s.banked.length, 0);
+}
+
 // Each music tap is once per day, including Saturday, and a second tap un-taps.
 // A quiet next day leaves the points where they are.
 {
@@ -536,14 +598,45 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(browserJs.indexOf('var KEY = "slb.v1"') >= 0);
   assert.ok(bankApp.indexOf("toLocaleDateString") >= 0);
   assert.ok(bankApp.indexOf("Nothing written for this week yet") >= 0);
-  assert.ok(Array.isArray(weekFile.days) && weekFile.days.length >= 7);
-  assert.ok(/example/i.test(JSON.stringify(weekFile)));
+  assert.ok(bankApp.indexOf("d.title || d.dayName") >= 0);
+  assert.ok(bankApp.indexOf("week.musts") >= 0);
+  assert.ok(bankApp.indexOf("d.musts") >= 0);
+  assert.ok(bankApp.indexOf("L.weekItemId") >= 0);
+  assert.ok(bankApp.indexOf("L.weekItemAward") >= 0);
+  assert.ok(bankApp.indexOf("L.weekMustAward") >= 0);
+  assert.ok(bankApp.indexOf("weekmusts") >= 0);
+  const renderWeekSrc = bankApp.slice(bankApp.indexOf("function renderWeek"), bankApp.indexOf("function taskButton"));
+  const dayMustSrc = renderWeekSrc.slice(renderWeekSrc.indexOf("d.musts"), renderWeekSrc.indexOf("d.items"));
+  assert.ok(dayMustSrc.indexOf("L.weekMustAward") >= 0);
+  assert.ok(dayMustSrc.indexOf("weekmusts") >= 0);
+  assert.strictEqual(dayMustSrc.indexOf("planButton"), -1);
+  assert.strictEqual(dayMustSrc.indexOf("data-plan-item"), -1);
+  assert.ok(renderWeekSrc.indexOf("L.weekItemId(it[0])") >= 0);
+  assert.strictEqual(weekFile.weekOf, "2026-11-22");
+  assert.strictEqual(weekFile.title, "Week of Nov 22");
+  assert.ok(weekFile.result && weekFile.why);
+  assert.ok(Array.isArray(weekFile.days) && weekFile.days.length === 7);
+  ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].forEach(function (name, i) {
+    var day = weekFile.days[i];
+    var expected = "2026-11-" + String(22 + i);
+    assert.strictEqual(day.date, expected, name);
+    assert.strictEqual(day.dayName, name);
+    assert.ok(Array.isArray(day.musts) && day.musts.length > 0, name + " musts");
+    assert.ok(Array.isArray(day.items) && day.items.length > 0, name + " items");
+    day.musts.forEach(function (m) {
+      assert.ok(m && m.label && m.domainId, name + " must");
+    });
+    day.items.forEach(function (it) {
+      assert.ok(Array.isArray(it) && it.length >= 3 && it[0] && it[2], name + " item");
+    });
+  });
+  assert.strictEqual(/example/i.test(JSON.stringify(weekFile)), false);
   ["Debbie", "Melody", "Forgie"].forEach(function (name) {
     assert.strictEqual(JSON.stringify(weekFile).indexOf(name), -1, name);
   });
   const sw = fs.readFileSync(path.join(__dirname, "sw.js"), "utf8");
-  assert.ok(sw.indexOf("slb-static-v8") >= 0);
-  assert.strictEqual(sw.indexOf("slb-static-v7"), -1);
+  assert.ok(sw.indexOf("slb-static-v9") >= 0);
+  assert.strictEqual(sw.indexOf("slb-static-v8"), -1);
   const manifest = fs.readFileSync(path.join(__dirname, "manifest.webmanifest"), "utf8");
   assert.ok(manifest.indexOf("The Self Love Bank Game") >= 0);
   assert.ok(manifest.indexOf("#FFF8EF") >= 0);
