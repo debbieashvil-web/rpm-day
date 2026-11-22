@@ -183,11 +183,14 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     var html = '<section class="panel" data-music-card><p class="kicker">Music</p>';
     L.MUSIC_TAPS.forEach(function (tap) {
       var on = L.loggedToday(state, tap.id, day).length > 0;
-      var blocked = !on && !L.musicTapFits(state, tap.id, day);
+      var award = L.musicAward(state, tap.id, day);
+      var blocked = !on && !(award > 0);
+      var shown = blocked ? tap.points : award;
+      var trimmed = !blocked && shown < tap.points;
       html += '<button type="button" class="task has-art' + (on ? " on" : "") + (blocked ? " full" : "") + '" data-music-tap="' + esc(tap.id) + '">';
       html += miniArt(dom);
       html += "<b>" + esc(tap.label) + "</b>";
-      html += '<span class="pts">' + (on ? "✓ +" : "+") + tap.points + "</span>";
+      html += '<span class="pts">' + (on ? "✓ +" : "+") + shown + (trimmed ? " (cap)" : "") + "</span>";
       html += '<span class="tag">' + esc(blocked ? "Music full for today" : L.coinLabel(dom)) + "</span></button>";
     });
     if (L.musicCapped(state, day)) html += '<p class="hint" data-music-full>Music full for today</p>';

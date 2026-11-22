@@ -298,34 +298,100 @@ const ctx = { byId: byId, scoring: scoring };
   }).length, 1);
 }
 
-// Music taps stop at 75 for the day. Voice plus both instruments is 85, so that third tap is refused.
+// Voice 35 + Piano 25 + Guitar 25 earns 75. Guitar keeps its full 25 on the
+// entry, and the cap is applied when the day is totaled.
+{
+  const s = fresh();
+  const day = "2026-11-21";
+  const voice = L.toggleMusic(s, "music-voice", { day: day });
+  const piano = L.toggleMusic(s, "music-piano", { day: day });
+  assert.strictEqual(voice.trimmed, false);
+  assert.strictEqual(piano.trimmed, false);
+  assert.strictEqual(voice.entry.points, 35);
+  assert.strictEqual(piano.entry.points, 25);
+  assert.strictEqual(L.musicPointsOn(s, day), 60);
+  assert.strictEqual(L.musicAward(s, "music-guitar", day), 15);
+  assert.strictEqual(L.musicTapFits(s, "music-guitar", day), true);
+  assert.strictEqual(L.musicCapped(s, day), false);
+  const guitar = L.toggleMusic(s, "music-guitar", { day: day });
+  assert.ok(guitar.entry);
+  assert.strictEqual(guitar.capped, true);
+  assert.strictEqual(guitar.trimmed, true);
+  assert.strictEqual(guitar.entry.label, "Guitar");
+  assert.strictEqual(guitar.entry.points, 25);
+  assert.strictEqual(L.loggedToday(s, "music-guitar", day).length, 1);
+  assert.strictEqual(L.musicPointsOn(s, day), 75);
+  assert.strictEqual(s.meters["music-creativity"], 75);
+  assert.strictEqual(L.musicAward(s, "music-guitar", day), 15);
+  assert.strictEqual(L.musicCapped(s, day), true);
+}
+
+// Untapping the trimmed tap leaves Voice and Piano at their full points.
 {
   const s = fresh();
   const day = "2026-11-21";
   L.toggleMusic(s, "music-voice", { day: day });
   L.toggleMusic(s, "music-piano", { day: day });
-  assert.strictEqual(L.musicPointsOn(s, day), 60);
-  assert.strictEqual(L.musicTapFits(s, "music-guitar", day), false);
-  assert.strictEqual(L.musicCapped(s, day), false);
-  const guitar = L.toggleMusic(s, "music-guitar", { day: day });
-  assert.strictEqual(guitar.capped, true);
+  L.toggleMusic(s, "music-guitar", { day: day });
+  assert.strictEqual(L.musicPointsOn(s, day), 75);
+  const off = L.toggleMusic(s, "music-guitar", { day: day });
+  assert.strictEqual(off.removed, true);
+  assert.strictEqual(off.entry.points, 25);
   assert.strictEqual(L.loggedToday(s, "music-guitar", day).length, 0);
+  assert.strictEqual(L.musicAward(s, "music-voice", day), 35);
+  assert.strictEqual(L.musicAward(s, "music-piano", day), 25);
   assert.strictEqual(L.musicPointsOn(s, day), 60);
   assert.strictEqual(s.meters["music-creativity"], 60);
+  assert.strictEqual(L.musicCapped(s, day), false);
+  assert.strictEqual(L.musicAward(s, "music-guitar", day), 15);
+  assert.strictEqual(s.banked.filter(function (c) { return c.domainId === "music-creativity"; }).length, 0);
+}
+
+// Untapping Piano, the middle tap, gives Guitar its full 25 back. Total is 60.
+{
+  const s = fresh();
+  const day = "2026-11-21";
+  L.toggleMusic(s, "music-voice", { day: day });
   L.toggleMusic(s, "music-piano", { day: day });
-  const guitarOn = L.toggleMusic(s, "music-guitar", { day: day });
-  assert.ok(!guitarOn.capped);
+  L.toggleMusic(s, "music-guitar", { day: day });
+  assert.strictEqual(L.musicAward(s, "music-guitar", day), 15);
+  assert.strictEqual(L.musicPointsOn(s, day), 75);
+  const off = L.toggleMusic(s, "music-piano", { day: day });
+  assert.strictEqual(off.removed, true);
+  assert.strictEqual(L.loggedToday(s, "music-piano", day).length, 0);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId === "music-guitar"; })[0].points, 25);
+  assert.strictEqual(L.musicAward(s, "music-voice", day), 35);
+  assert.strictEqual(L.musicAward(s, "music-guitar", day), 25);
   assert.strictEqual(L.musicPointsOn(s, day), 60);
-  L.toggleMusic(s, "music-tired-voice", { day: day });
+  assert.strictEqual(s.meters["music-creativity"], 60);
+  assert.strictEqual(L.musicCapped(s, day), false);
+}
+
+// From a full 75, Tired-day voice replaces Voice and the day is retotaled to 65.
+// Guitar is no longer trimmed.
+{
+  const s = fresh();
+  const day = "2026-11-21";
+  L.toggleMusic(s, "music-voice", { day: day });
   L.toggleMusic(s, "music-piano", { day: day });
-  assert.strictEqual(L.musicPointsOn(s, day), 15 + 25 + 25);
-  assert.strictEqual(L.musicCapped(s, day), true);
-  const voiceBlocked = L.toggleMusic(s, "music-voice", { day: day });
-  assert.strictEqual(voiceBlocked.capped, true);
-  assert.strictEqual(L.loggedToday(s, "music-tired-voice", day).length, 1);
+  L.toggleMusic(s, "music-guitar", { day: day });
+  assert.strictEqual(L.musicPointsOn(s, day), 75);
+  assert.strictEqual(L.musicAward(s, "music-tired-voice", day), 15);
+  const tired = L.toggleMusic(s, "music-tired-voice", { day: day });
+  assert.ok(!tired.capped);
+  assert.strictEqual(tired.trimmed, false);
+  assert.strictEqual(tired.cleared, "music-voice");
+  assert.strictEqual(tired.entry.points, 15);
   assert.strictEqual(L.loggedToday(s, "music-voice", day).length, 0);
+  assert.strictEqual(L.loggedToday(s, "music-tired-voice", day).length, 1);
+  assert.strictEqual(L.loggedToday(s, "music-piano", day).length, 1);
+  assert.strictEqual(L.loggedToday(s, "music-guitar", day).length, 1);
+  assert.strictEqual(L.musicAward(s, "music-piano", day), 25);
+  assert.strictEqual(L.musicAward(s, "music-guitar", day), 25);
+  assert.strictEqual(L.musicAward(s, "music-tired-voice", day), 15);
   assert.strictEqual(L.musicPointsOn(s, day), 65);
   assert.strictEqual(s.meters["music-creativity"], 65);
+  assert.strictEqual(L.musicCapped(s, day), false);
 }
 
 // An older Music done 35 entry is kept as it was, and it still counts.
@@ -372,23 +438,41 @@ const ctx = { byId: byId, scoring: scoring };
   L.toggleMusic(loaded, "music-voice", { day: day });
   assert.strictEqual(L.musicPointsOn(loaded, day), 70);
   assert.strictEqual(loaded.meters["music-creativity"], 70);
+  assert.strictEqual(L.musicAward(loaded, "music-piano", day), 5);
   const piano = L.toggleMusic(loaded, "music-piano", { day: day });
-  assert.strictEqual(piano.capped, true);
-  assert.strictEqual(L.musicPointsOn(loaded, day), 70);
+  assert.strictEqual(piano.trimmed, true);
+  assert.strictEqual(piano.entry.points, 25);
+  assert.strictEqual(L.musicAward(loaded, "music-piano", day), 5);
+  assert.strictEqual(L.musicPointsOn(loaded, day), 75);
+  assert.strictEqual(loaded.meters["music-creativity"], 75);
+  assert.strictEqual(L.musicCapped(loaded, day), true);
   assert.strictEqual(loaded.entries[0].taskId, "music-done");
   assert.strictEqual(loaded.entries[0].points, 35);
   assert.strictEqual(loaded.entries[0].label, "Music done");
   assert.ok(!loaded.entries[0].undone);
-  L.toggleMusic(loaded, "music-voice", { day: day });
-  L.toggleMusic(loaded, "music-tired-voice", { day: day });
-  L.toggleMusic(loaded, "music-piano", { day: day });
-  assert.strictEqual(L.musicPointsOn(loaded, day), 75);
-  assert.strictEqual(L.musicCapped(loaded, day), true);
   const guitar = L.toggleMusic(loaded, "music-guitar", { day: day });
   assert.strictEqual(guitar.capped, true);
+  assert.strictEqual(L.musicTapFits(loaded, "music-guitar", day), false);
+  assert.strictEqual(L.loggedToday(loaded, "music-guitar", day).length, 0);
   assert.strictEqual(L.musicPointsOn(loaded, day), 75);
+  // Voice comes off. Piano is retotaled to its full 25. Music done still counts first.
+  L.toggleMusic(loaded, "music-voice", { day: day });
+  assert.strictEqual(L.musicAward(loaded, "music-piano", day), 25);
+  assert.strictEqual(L.musicPointsOn(loaded, day), 60);
+  assert.strictEqual(loaded.meters["music-creativity"], 60);
+  assert.strictEqual(loaded.entries[0].taskId, "music-done");
+  assert.strictEqual(loaded.entries[0].points, 35);
+  assert.strictEqual(loaded.entries[0].label, "Music done");
+  assert.ok(!loaded.entries[0].undone);
+  L.toggleMusic(loaded, "music-tired-voice", { day: day });
+  assert.strictEqual(L.musicAward(loaded, "music-piano", day), 25);
+  assert.strictEqual(L.musicAward(loaded, "music-tired-voice", day), 15);
+  assert.strictEqual(L.musicPointsOn(loaded, day), 75);
+  assert.strictEqual(L.musicCapped(loaded, day), true);
+  assert.strictEqual(L.musicTapFits(loaded, "music-guitar", day), false);
   assert.strictEqual(loaded.meters["music-creativity"], 75);
   assert.strictEqual(loaded.meters.home, 10);
+  assert.strictEqual(loaded.entries[0].label, "Music done");
   const back = L.importBundle(L.exportBundle(loaded));
   assert.strictEqual(back.ok, true);
   assert.strictEqual(back.state.entries[0].taskId, "music-done");
@@ -530,6 +614,8 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(bankApp.indexOf("data-music-tap") >= 0);
   assert.ok(bankApp.indexOf("L.MUSIC_TAPS") >= 0);
   assert.ok(bankApp.indexOf("Music full for today") >= 0);
+  assert.ok(bankApp.indexOf("(cap)") >= 0);
+  assert.ok(bankApp.indexOf("musicAward") >= 0);
   assert.strictEqual(bankApp.indexOf("data-music-done"), -1);
   assert.strictEqual(bankApp.indexOf("MUSIC_DONE_POINTS"), -1);
   const browserJs = fs.readFileSync(path.join(__dirname, "browser.js"), "utf8");
