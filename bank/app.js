@@ -259,7 +259,7 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     var mustDay = week.date || (week.days && week.days[0] && week.days[0].date) || L.dayKey(now());
     var musts = [];
     (week.musts || []).forEach(function (m, i) {
-      if (m && m.label) musts.push({ id: "must-" + i, time: "", label: m.label, domainId: m.domainId || "" });
+      if (m && m.label) musts.push({ id: L.weekItemId("must-" + i), time: "", label: m.label, domainId: m.domainId || "" });
     });
     if (musts.length) {
       html += '<section class="panel"><p class="kicker">Musts</p>';
@@ -271,15 +271,17 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
       html += '<section class="panel"><p class="kicker">' + esc(d.title || d.dayName || "Day") + "</p>";
       if (d.date) html += '<p class="daydate">' + esc(prettyDate(d.date)) + "</p>";
       var dayMusts = [];
-      (d.musts || []).forEach(function (m, i) {
-        if (m && m.label) dayMusts.push({ id: "day-must-" + i, time: "", label: m.label, domainId: m.domainId || "" });
+      (d.musts || []).forEach(function (m) {
+        if (!m || !m.label || L.weekMustAward(m).length) return;
+        dayMusts.push(m.label);
       });
       if (dayMusts.length) {
-        html += '<p class="kicker">Musts</p>';
-        dayMusts.forEach(function (item) { html += planButton(item, dayKey); });
+        html += '<p class="kicker">Musts</p><ul class="weekmusts">';
+        dayMusts.forEach(function (label) { html += "<li>" + esc(label) + "</li>"; });
+        html += "</ul>";
       }
       (d.items || []).forEach(function (it) {
-        html += planButton({ id: it[0], time: it[1] || "", label: it[2] || "", domainId: "" }, dayKey);
+        html += planButton({ id: L.weekItemId(it[0]), time: it[1] || "", label: it[2] || "", domainId: "" }, dayKey);
       });
       html += "</section>";
     });

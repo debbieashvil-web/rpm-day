@@ -164,6 +164,16 @@ main { flex: 1; padding: 6px 18px 22px; }
   line-height: 1.15;
 }
 .daydate { margin: -2px 0 8px; color: var(--muted-2); font-size: 14px; }
+.weekmusts { margin: 0; padding: 0; list-style: none; }
+.weekmusts li {
+  margin: 0;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font-weight: 600;
+  font-size: 16.5px;
+  line-height: 1.35;
+}
+.weekmusts li:first-child { border-top: 0; padding-top: 0; }
 .task, .stamp, .ghost, .bonus {
   width: 100%;
   text-align: left;

@@ -225,6 +225,42 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:2026-11-21:s7:") === 0; }).length, 2);
 }
 
+// Today's s5 and This Week's s5 share a date, and their done-state stays apart.
+{
+  const s = fresh();
+  const day = "2026-11-22";
+  const domains = [{ domainId: "music-creativity", points: 25, label: "Music & Creativity · The Songbird" }];
+  assert.strictEqual(L.weekItemId("s5"), "wk-s5");
+  assert.notStrictEqual(L.weekItemId("s5"), "s5");
+  L.togglePlanItem(s, { id: "s5", day: day, label: "Vocals", domains: domains });
+  assert.strictEqual(L.planItemOn(s, day, "s5"), true);
+  assert.strictEqual(L.planItemOn(s, day, L.weekItemId("s5")), false);
+  assert.strictEqual(s.meters["music-creativity"], 25);
+  const weekDomains = [{ domainId: "career", points: 20, label: "Career · The Teacher's Bell" }];
+  L.togglePlanItem(s, { id: L.weekItemId("s5"), day: day, label: "Lesson", domains: weekDomains });
+  assert.strictEqual(L.planItemOn(s, day, "s5"), true);
+  assert.strictEqual(L.planItemOn(s, day, "wk-s5"), true);
+  assert.strictEqual(s.meters["music-creativity"], 25);
+  assert.strictEqual(s.meters.career, 20);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:" + day + ":s5:") === 0; }).length, 1);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:" + day + ":wk-s5:") === 0; }).length, 1);
+}
+
+// A must on This Week awards nothing, even when it names a coin.
+{
+  const s = fresh();
+  const day = "2026-11-22";
+  const must = { label: "Vocals", domainId: "music-creativity", coin: "Songbird" };
+  const award = L.weekMustAward(must);
+  assert.deepStrictEqual(award, []);
+  const res = L.togglePlanItem(s, { id: L.weekItemId("day-must-0"), day: day, label: must.label, domains: award });
+  assert.strictEqual(res.skipped, true);
+  assert.strictEqual(res.dropped.length, 0);
+  assert.strictEqual(L.planItemOn(s, day, L.weekItemId("day-must-0")), false);
+  assert.strictEqual(s.meters["music-creativity"] || 0, 0);
+  assert.strictEqual(s.banked.length, 0);
+}
+
 // Each music tap is once per day, including Saturday, and a second tap un-taps.
 // A quiet next day leaves the points where they are.
 {
@@ -539,7 +575,16 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(bankApp.indexOf("d.title || d.dayName") >= 0);
   assert.ok(bankApp.indexOf("week.musts") >= 0);
   assert.ok(bankApp.indexOf("d.musts") >= 0);
-  assert.ok(bankApp.indexOf("day-must-") >= 0);
+  assert.ok(bankApp.indexOf("L.weekItemId") >= 0);
+  assert.ok(bankApp.indexOf("L.weekMustAward") >= 0);
+  assert.ok(bankApp.indexOf("weekmusts") >= 0);
+  const renderWeekSrc = bankApp.slice(bankApp.indexOf("function renderWeek"), bankApp.indexOf("function taskButton"));
+  const dayMustSrc = renderWeekSrc.slice(renderWeekSrc.indexOf("d.musts"), renderWeekSrc.indexOf("d.items"));
+  assert.ok(dayMustSrc.indexOf("L.weekMustAward") >= 0);
+  assert.ok(dayMustSrc.indexOf("weekmusts") >= 0);
+  assert.strictEqual(dayMustSrc.indexOf("planButton"), -1);
+  assert.strictEqual(dayMustSrc.indexOf("data-plan-item"), -1);
+  assert.ok(renderWeekSrc.indexOf("L.weekItemId(it[0])") >= 0);
   assert.strictEqual(weekFile.weekOf, "2026-11-22");
   assert.strictEqual(weekFile.title, "Week of Nov 22");
   assert.ok(weekFile.result && weekFile.why);

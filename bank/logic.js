@@ -504,6 +504,14 @@
     return 0;
   }
 
+  function weekItemId(id) {
+    return "wk-" + String(id == null ? "" : id);
+  }
+
+  function weekMustAward() {
+    return [];
+  }
+
   function planItemOn(state, day, itemId) {
     var prefix = "plan:" + day + ":" + itemId + ":";
     return active(state).some(function (e) {
@@ -791,6 +799,8 @@
     coinLabel: coinLabel,
     domainsInLabel: domainsInLabel,
     catalogPoints: catalogPoints,
+    weekItemId: weekItemId,
+    weekMustAward: weekMustAward,
     planItemOn: planItemOn,
     togglePlanItem: togglePlanItem,
     dayKey: dayKey,
