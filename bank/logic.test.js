@@ -536,14 +536,35 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(browserJs.indexOf('var KEY = "slb.v1"') >= 0);
   assert.ok(bankApp.indexOf("toLocaleDateString") >= 0);
   assert.ok(bankApp.indexOf("Nothing written for this week yet") >= 0);
-  assert.ok(Array.isArray(weekFile.days) && weekFile.days.length >= 7);
-  assert.ok(/example/i.test(JSON.stringify(weekFile)));
+  assert.ok(bankApp.indexOf("d.title || d.dayName") >= 0);
+  assert.ok(bankApp.indexOf("week.musts") >= 0);
+  assert.ok(bankApp.indexOf("d.musts") >= 0);
+  assert.ok(bankApp.indexOf("day-must-") >= 0);
+  assert.strictEqual(weekFile.weekOf, "2026-11-22");
+  assert.strictEqual(weekFile.title, "Week of Nov 22");
+  assert.ok(weekFile.result && weekFile.why);
+  assert.ok(Array.isArray(weekFile.days) && weekFile.days.length === 7);
+  ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].forEach(function (name, i) {
+    var day = weekFile.days[i];
+    var expected = "2026-11-" + String(22 + i);
+    assert.strictEqual(day.date, expected, name);
+    assert.strictEqual(day.dayName, name);
+    assert.ok(Array.isArray(day.musts) && day.musts.length > 0, name + " musts");
+    assert.ok(Array.isArray(day.items) && day.items.length > 0, name + " items");
+    day.musts.forEach(function (m) {
+      assert.ok(m && m.label && m.domainId, name + " must");
+    });
+    day.items.forEach(function (it) {
+      assert.ok(Array.isArray(it) && it.length >= 3 && it[0] && it[2], name + " item");
+    });
+  });
+  assert.strictEqual(/example/i.test(JSON.stringify(weekFile)), false);
   ["Debbie", "Melody", "Forgie"].forEach(function (name) {
     assert.strictEqual(JSON.stringify(weekFile).indexOf(name), -1, name);
   });
   const sw = fs.readFileSync(path.join(__dirname, "sw.js"), "utf8");
-  assert.ok(sw.indexOf("slb-static-v8") >= 0);
-  assert.strictEqual(sw.indexOf("slb-static-v7"), -1);
+  assert.ok(sw.indexOf("slb-static-v9") >= 0);
+  assert.strictEqual(sw.indexOf("slb-static-v8"), -1);
   const manifest = fs.readFileSync(path.join(__dirname, "manifest.webmanifest"), "utf8");
   assert.ok(manifest.indexOf("The Self Love Bank Game") >= 0);
   assert.ok(manifest.indexOf("#FFF8EF") >= 0);

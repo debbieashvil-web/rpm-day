@@ -1,67 +1,484 @@
 {
-  "date": "2026-11-16",
-  "title": "Example week",
-  "tag": "Example only. Not a real week.",
-  "result": "Example: one small win written down for each day.",
-  "why": "Example: this file shows the shape of a week. Replace it when a real week is ready.",
-  "musts": [
+ "weekOf": "2026-11-22",
+ "title": "Week of Nov 22",
+ "result": "A simpler week: move strong, teach with joy, make something every weekday, and sell one small thing.",
+ "why": "Work I look forward to builds the life I want. Less to carry, more to give. 💛",
+ "days": [
+  {
+   "date": "2026-11-22",
+   "dayName": "Sunday",
+   "musts": [
     {
-      "label": "Example: a short walk",
-      "domainId": "body"
+     "label": "Vocals",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    },
+    {
+     "label": "Human Garage",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Gym session",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Income hour, fun part first",
+     "domainId": "career",
+     "coin": "Teacher's Bell"
+    },
+    {
+     "label": "Creative block: one-take video or music",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
     }
-  ],
-  "sections": [],
-  "days": [
+   ],
+   "items": [
+    [
+     "s1",
+     "7:00 AM",
+     "Hour of Power walk 🌅 (Ember)"
+    ],
+    [
+     "s2",
+     "8:00 AM",
+     "Gym 🏋️‍♀️ (Ember)"
+    ],
+    [
+     "s3",
+     "10:15 AM",
+     "Human Garage + vocals 💪🎤"
+    ],
+    [
+     "s4",
+     "11:00 AM",
+     "Weekly planning: question, delete, simplify 🗺️ (Teacher's Bell)"
+    ],
+    [
+     "s5",
+     "12:30 PM",
+     "Lesson 🎹 (Teacher's Bell)"
+    ],
+    [
+     "s6",
+     "2:30 PM",
+     "⭐ Income hour: start with the 10-min sync account 🪙 (Teacher's Bell)"
+    ],
+    [
+     "s7",
+     "3:45 PM",
+     "⭐ Creative block, 45 min 🎬 (Songbird)"
+    ],
+    [
+     "s8",
+     "5:00 PM",
+     "Meal prep hour 🍗 (Ember, Hearth)"
+    ],
+    [
+     "s9",
+     "After dinner",
+     "Piano or guitar, 10 min 🎸 (Songbird)"
+    ],
+    [
+     "s10",
+     "11:30 PM",
+     "Lights out 😴 (Still Water)"
+    ]
+   ]
+  },
+  {
+   "date": "2026-11-23",
+   "dayName": "Monday",
+   "musts": [
     {
-      "date": "2026-11-16",
-      "title": "Example Monday",
-      "items": [
-        ["ex-mon-1", "Morning", "Example: a short walk (Ember)"],
-        ["ex-mon-2", "Evening", "Example: lights out"]
-      ]
+     "label": "Vocals",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
     },
     {
-      "date": "2026-11-17",
-      "title": "Example Tuesday",
-      "items": [
-        ["ex-tue-1", "Afternoon", "Example: ten minutes of tidying (Hearth)"]
-      ]
+     "label": "Human Garage",
+     "domainId": "body",
+     "coin": "Ember"
     },
     {
-      "date": "2026-11-18",
-      "title": "Example Wednesday",
-      "items": [
-        ["ex-wed-1", "Morning", "Example: vocal play (Songbird)"],
-        ["ex-wed-2", "Afternoon", "Example: one lesson block (Teacher's Bell)"]
-      ]
+     "label": "Lower-body gym",
+     "domainId": "body",
+     "coin": "Ember"
     },
     {
-      "date": "2026-11-19",
-      "title": "Example Thursday",
-      "items": [
-        ["ex-thu-1", "Anytime", "Example: a kind note (Warm Bread)"]
-      ]
+     "label": "Income hour, fun part first",
+     "domainId": "career",
+     "coin": "Teacher's Bell"
     },
     {
-      "date": "2026-11-20",
-      "title": "Example Friday",
-      "items": [
-        ["ex-fri-1", "Evening", "Example: a quiet pause (Still Water)"]
-      ]
-    },
-    {
-      "date": "2026-11-21",
-      "title": "Example Saturday",
-      "items": [
-        ["ex-sat-1", "Afternoon", "Example: step outside (Oak)"]
-      ]
-    },
-    {
-      "date": "2026-11-22",
-      "title": "Example Sunday",
-      "items": [
-        ["ex-sun-1", "Morning", "Example: a gratitude list (Candlelight)"]
-      ]
+     "label": "Creative block: one-take video or music",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
     }
-  ]
+   ],
+   "items": [
+    [
+     "m1",
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
+    ],
+    [
+     "m2",
+     "8:00 AM",
+     "Lower-body gym 🏋️‍♀️ (Ember)"
+    ],
+    [
+     "m3",
+     "Late morning",
+     "Human Garage + vocals 💪🎤"
+    ],
+    [
+     "m4",
+     "After lunch",
+     "⭐ Income hour, fun part first ☕ (Teacher's Bell)"
+    ],
+    [
+     "m5",
+     "3:30 PM",
+     "⭐ Creative block, 45 min 🎬 (Songbird)"
+    ],
+    [
+     "m6",
+     "After dinner",
+     "Piano or guitar, 10 min 🎸 (Songbird)"
+    ],
+    [
+     "m7",
+     "11:30 PM",
+     "Lights out 😴 (Still Water)"
+    ]
+   ]
+  },
+  {
+   "date": "2026-11-24",
+   "dayName": "Tuesday",
+   "musts": [
+    {
+     "label": "Vocals",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    },
+    {
+     "label": "Human Garage",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Creative block: one-take video or music",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    },
+    {
+     "label": "Income hour, fun part first",
+     "domainId": "career",
+     "coin": "Teacher's Bell"
+    }
+   ],
+   "items": [
+    [
+     "t1",
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
+    ],
+    [
+     "t2",
+     "9:00 AM",
+     "⭐ Creative block, 1 hour: one-take video or music 🎬 (Songbird)"
+    ],
+    [
+     "t3",
+     "10:15 AM",
+     "Human Garage + vocals 💪🎤"
+    ],
+    [
+     "t4",
+     "After lunch",
+     "⭐ Income hour: pick the first offer and test price 🪙 (Teacher's Bell)"
+    ],
+    [
+     "t5",
+     "After dinner",
+     "Piano or guitar, 10 min 🎸 (Songbird)"
+    ],
+    [
+     "t6",
+     "11:30 PM",
+     "Lights out 😴 (Still Water)"
+    ]
+   ]
+  },
+  {
+   "date": "2026-11-25",
+   "dayName": "Wednesday",
+   "musts": [
+    {
+     "label": "Vocals",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    },
+    {
+     "label": "Human Garage",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Upper/pull gym",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Income hour, fun part first",
+     "domainId": "career",
+     "coin": "Teacher's Bell"
+    },
+    {
+     "label": "Creative block: one-take video or music",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    }
+   ],
+   "items": [
+    [
+     "w1",
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
+    ],
+    [
+     "w2",
+     "8:00 AM",
+     "Upper/pull gym 🏋️‍♀️ (Ember)"
+    ],
+    [
+     "w3",
+     "Late morning",
+     "Human Garage + vocals 💪🎤"
+    ],
+    [
+     "w4",
+     "After lunch",
+     "⭐ Income hour, fun part first ☕ (Teacher's Bell)"
+    ],
+    [
+     "w5",
+     "4:00 PM",
+     "⭐ Creative block, 45 min 🎬 (Songbird)"
+    ],
+    [
+     "w6",
+     "5:45 PM",
+     "Lessons 🎸🎹 (Teacher's Bell)"
+    ],
+    [
+     "w7",
+     "11:30 PM",
+     "Lights out 😴 (Still Water)"
+    ]
+   ]
+  },
+  {
+   "date": "2026-11-26",
+   "dayName": "Thursday",
+   "musts": [
+    {
+     "label": "Vocals",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    },
+    {
+     "label": "Human Garage",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Lower-body gym",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Income hour, fun part first",
+     "domainId": "career",
+     "coin": "Teacher's Bell"
+    },
+    {
+     "label": "Creative block: one-take video or music",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    }
+   ],
+   "items": [
+    [
+     "h1",
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
+    ],
+    [
+     "h2",
+     "8:00 AM",
+     "Lower-body gym 🏋️‍♀️ (Ember)"
+    ],
+    [
+     "h3",
+     "Late morning",
+     "Human Garage + vocals 💪🎤"
+    ],
+    [
+     "h4",
+     "After lunch",
+     "⭐ Income hour, fun part first ☕ (Teacher's Bell)"
+    ],
+    [
+     "h5",
+     "3:30 PM",
+     "⭐ Creative block, 45 min 🎬 (Songbird)"
+    ],
+    [
+     "h6",
+     "5:30 PM",
+     "Lessons, if still on for the holiday 🎹 (Teacher's Bell)"
+    ],
+    [
+     "h7",
+     "Evening",
+     "Thanksgiving with family 🦃 (Warm Bread)"
+    ],
+    [
+     "h8",
+     "11:30 PM",
+     "Lights out 😴 (Still Water)"
+    ]
+   ]
+  },
+  {
+   "date": "2026-11-27",
+   "dayName": "Friday",
+   "musts": [
+    {
+     "label": "Vocals",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    },
+    {
+     "label": "Human Garage",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Low-impact cardio, 30-40 min",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Income hour, fun part first",
+     "domainId": "career",
+     "coin": "Teacher's Bell"
+    },
+    {
+     "label": "Shabbos prep",
+     "domainId": "faith",
+     "coin": "Candlelight"
+    }
+   ],
+   "items": [
+    [
+     "f1",
+     "Morning",
+     "Human Garage 💪 (Ember)"
+    ],
+    [
+     "f2",
+     "Morning",
+     "Low-impact cardio, 30-40 min 🚲 (Ember)"
+    ],
+    [
+     "f3",
+     "Late morning",
+     "Vocals 🎤 (Songbird)"
+    ],
+    [
+     "f4",
+     "12:30 PM",
+     "⭐ Income hour, short and sweet ☕ (Teacher's Bell)"
+    ],
+    [
+     "f5",
+     "Afternoon",
+     "Help with Shabbos prep 🕯️ (Candlelight, Hearth)"
+    ],
+    [
+     "f6",
+     "Candle lighting",
+     "Light candles and rest 🕯️ (Candlelight)"
+    ],
+    [
+     "f7",
+     "11:30 PM",
+     "Lights out 😴 (Still Water)"
+    ]
+   ]
+  },
+  {
+   "date": "2026-11-28",
+   "dayName": "Saturday",
+   "musts": [
+    {
+     "label": "Hour of Power",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Human Garage",
+     "domainId": "body",
+     "coin": "Ember"
+    },
+    {
+     "label": "Vocals, gentle",
+     "domainId": "music-creativity",
+     "coin": "Songbird"
+    },
+    {
+     "label": "Keep Shabbos 🕯️",
+     "domainId": "faith",
+     "coin": "Candlelight"
+    }
+   ],
+   "items": [
+    [
+     "a1",
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
+    ],
+    [
+     "a2",
+     "Morning",
+     "Human Garage 💪 (Ember)"
+    ],
+    [
+     "a3",
+     "Anytime",
+     "Vocals, gentle 🎤 (Songbird)"
+    ],
+    [
+     "a4",
+     "Afternoon",
+     "Rest, a friend, or 10 min of Torah or gratitude 📖 (Candlelight, Warm Bread)"
+    ],
+    [
+     "a5",
+     "After Havdalah",
+     "One small cozy win ☕ (Teacher's Bell)"
+    ],
+    [
+     "a6",
+     "11:30 PM",
+     "Lights out 😴 (Still Water)"
+    ]
+   ]
+  }
+ ]
 }

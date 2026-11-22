@@ -267,10 +267,19 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
       html += "</section>";
     }
     (week.days || []).forEach(function (d) {
-      html += '<section class="panel"><p class="kicker">' + esc(d.title || "Day") + "</p>";
+      var dayKey = d.date || mustDay;
+      html += '<section class="panel"><p class="kicker">' + esc(d.title || d.dayName || "Day") + "</p>";
       if (d.date) html += '<p class="daydate">' + esc(prettyDate(d.date)) + "</p>";
+      var dayMusts = [];
+      (d.musts || []).forEach(function (m, i) {
+        if (m && m.label) dayMusts.push({ id: "day-must-" + i, time: "", label: m.label, domainId: m.domainId || "" });
+      });
+      if (dayMusts.length) {
+        html += '<p class="kicker">Musts</p>';
+        dayMusts.forEach(function (item) { html += planButton(item, dayKey); });
+      }
       (d.items || []).forEach(function (it) {
-        html += planButton({ id: it[0], time: it[1] || "", label: it[2] || "", domainId: "" }, d.date || mustDay);
+        html += planButton({ id: it[0], time: it[1] || "", label: it[2] || "", domainId: "" }, dayKey);
       });
       html += "</section>";
     });
