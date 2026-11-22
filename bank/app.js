@@ -86,13 +86,17 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
       return L.domainsInLabel(inner).length ? "" : full;
     }).replace(/\s{2,}/g, " ").trim();
   }
+  function itemDomains(item) {
+    if (String(item && item.id || "").indexOf("wk-") === 0) return L.weekItemAward(item);
+    return awardsFor(item.label, item.domainId);
+  }
   function itemDone(day, item) {
-    if (awardsFor(item.label, item.domainId).length) return L.planItemOn(state, day, item.id);
+    if (itemDomains(item).length) return L.planItemOn(state, day, item.id);
     var bag = readChecks()[day] || {};
     return !!bag[item.id];
   }
   function toggleItem(day, item) {
-    var domains = awardsFor(item.label, item.domainId);
+    var domains = itemDomains(item);
     if (domains.length) {
       commit(L.togglePlanItem(state, { id: item.id, day: day, label: showLabel(item.label), domains: domains }));
       return;
@@ -162,7 +166,7 @@ var MUSIC_APP_URL = "https://debbieashvil-web.github.io/rpm-day/music/";
     return rows;
   }
   function planButton(item, day) {
-    var domains = awardsFor(item.label, item.domainId);
+    var domains = itemDomains(item);
     var on = itemDone(day, item);
     var pts = 0;
     domains.forEach(function (d) { pts += d.points; });

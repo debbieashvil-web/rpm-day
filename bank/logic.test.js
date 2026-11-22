@@ -236,14 +236,40 @@ const ctx = { byId: byId, scoring: scoring };
   assert.strictEqual(L.planItemOn(s, day, "s5"), true);
   assert.strictEqual(L.planItemOn(s, day, L.weekItemId("s5")), false);
   assert.strictEqual(s.meters["music-creativity"], 25);
-  const weekDomains = [{ domainId: "career", points: 20, label: "Career · The Teacher's Bell" }];
-  L.togglePlanItem(s, { id: L.weekItemId("s5"), day: day, label: "Lesson", domains: weekDomains });
+  const res = L.togglePlanItem(s, {
+    id: L.weekItemId("s5"),
+    day: day,
+    label: "Lesson",
+    domains: [{ domainId: "career", points: 20, label: "Career · The Teacher's Bell" }]
+  });
+  assert.deepStrictEqual(res.dropped, []);
   assert.strictEqual(L.planItemOn(s, day, "s5"), true);
-  assert.strictEqual(L.planItemOn(s, day, "wk-s5"), true);
+  assert.strictEqual(L.planItemOn(s, day, "wk-s5"), false);
   assert.strictEqual(s.meters["music-creativity"], 25);
-  assert.strictEqual(s.meters.career, 20);
+  assert.strictEqual(s.meters.career || 0, 0);
+  assert.strictEqual(s.banked.length, 0);
   assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:" + day + ":s5:") === 0; }).length, 1);
-  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:" + day + ":wk-s5:") === 0; }).length, 1);
+  assert.strictEqual(L.active(s).filter(function (e) { return e.taskId.indexOf("plan:" + day + ":wk-s5:") === 0; }).length, 0);
+}
+
+// A This Week row keeps its own id and awards nothing, even if a coin is offered.
+{
+  const s = fresh();
+  const day = "2026-11-22";
+  const award = L.weekItemAward({ id: "s5", label: "Lesson 🎹 (Teacher's Bell)", domainId: "career" });
+  assert.deepStrictEqual(award, []);
+  const res = L.togglePlanItem(s, {
+    id: L.weekItemId("s5"),
+    day: day,
+    label: "Lesson 12:30 PM",
+    domains: [{ domainId: "career", points: 20, label: "Career · The Teacher's Bell" }]
+  });
+  assert.deepStrictEqual(res.dropped, []);
+  assert.deepStrictEqual(award, []);
+  assert.strictEqual(s.meters.career || 0, 0);
+  assert.strictEqual(s.banked.length, 0);
+  assert.strictEqual(L.planItemOn(s, day, "wk-s5"), false);
+  assert.strictEqual(JSON.stringify(s.meters), JSON.stringify(L.blank().meters));
 }
 
 // A must on This Week awards nothing, even when it names a coin.
@@ -576,6 +602,7 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(bankApp.indexOf("week.musts") >= 0);
   assert.ok(bankApp.indexOf("d.musts") >= 0);
   assert.ok(bankApp.indexOf("L.weekItemId") >= 0);
+  assert.ok(bankApp.indexOf("L.weekItemAward") >= 0);
   assert.ok(bankApp.indexOf("L.weekMustAward") >= 0);
   assert.ok(bankApp.indexOf("weekmusts") >= 0);
   const renderWeekSrc = bankApp.slice(bankApp.indexOf("function renderWeek"), bankApp.indexOf("function taskButton"));
