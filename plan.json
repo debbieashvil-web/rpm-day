@@ -1,21 +1,21 @@
 {
- "date": "2026-11-23",
- "title": "Mon Nov 23",
- "tag": "Day 1 of the new program, then create 🎶",
- "result": "Start the new program strong, make something before noon, and do one income hour.",
+ "date": "2026-11-24",
+ "title": "Tue Nov 24",
+ "tag": "Lower body, then make something 🎶",
+ "result": "Strong lower-body session, one income hour right after lunch, and a 45-minute creative block before the lesson.",
  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
  "musts": [
   {
-   "label": "Body: walk + Day 1 gym + Human Garage",
+   "label": "Body: walk + lower-body gym + Human Garage",
    "domainId": "body"
   },
   {
-   "label": "Creative block, 45 min (first move: open Logic, hit record, hum 30 sec)",
-   "domainId": "music-creativity"
+   "label": "Income hour right after lunch (first move: open the doc and write one line)",
+   "domainId": "career"
   },
   {
-   "label": "Income hour (first move: open the doc and write one line)",
-   "domainId": "career"
+   "label": "Creative block, 45 min (first move: open my song in Logic, sing one verse take)",
+   "domainId": "music-creativity"
   }
  ],
  "sections": [
@@ -26,18 +26,18 @@
    "items": [
     [
      "m0",
-     "6:00 AM",
-     "Body: walk, Day 1 gym, Human Garage 💪 (Ember)"
+     "6:20 AM",
+     "Body: lower-body gym, walk, Human Garage 💪 (Ember)"
     ],
     [
      "m1",
-     "11:00 AM",
-     "Creative block, 45 min: open Logic, hit record, hum 30 sec 🎬 (Songbird)"
+     "1:30 PM",
+     "Income hour: 2-minute first move, then keep going ☕ (Teacher's Bell)"
     ],
     [
      "m2",
-     "1:30 PM",
-     "Income hour: 2-minute first move, then keep going ☕ (Teacher's Bell)"
+     "3:30 PM",
+     "Creative block, 45 min: open my song in Logic, one verse take 🎬 (Songbird)"
     ]
    ]
   },
@@ -48,13 +48,13 @@
    "items": [
     [
      "s0",
-     "6:00 AM",
-     "Hour of Power walk 🌅 (Ember)"
+     "6:20 AM",
+     "Leave for the gym 🚗 (Ember)"
     ],
     [
      "s1",
      "6:30 AM",
-     "Day 1 of the new gym program: brace core, knees out 🏋️‍♀️ (Ember)"
+     "Lower body: brace core, knees out, easy on knee and back 🏋️‍♀️ (Ember)"
     ],
     [
      "s2",
@@ -63,36 +63,46 @@
     ],
     [
      "s3",
-     "8:45 AM",
+     "8:30 AM",
      "Big protein breakfast 🥚 (Ember)"
     ],
     [
      "s4",
-     "11:00 AM",
-     "⭐ Creative block, 45 min: one-take music or video 🎬 (Songbird)"
+     "10:00 AM",
+     "Hour of Power walk 🌅 (Ember)"
     ],
     [
      "s5",
+     "12:30 PM",
+     "Appointment 📞 (Still Water)"
+    ],
+    [
+     "s6",
      "1:00 PM",
      "Lunch 🥗 (Ember)"
     ],
     [
-     "s6",
+     "s7",
      "1:30 PM",
      "⭐ Income hour, fun part first ☕ (Teacher's Bell)"
     ],
     [
-     "s7",
-     "5:00 PM",
-     "Finish meal prep: bake fish, cook beef, pack containers 🐟 (Ember, Hearth)"
+     "s8",
+     "3:30 PM",
+     "⭐ Creative block, 45 min 🎬 (Songbird)"
     ],
     [
-     "s8",
+     "s9",
+     "5:00 PM",
+     "Teach lesson 🎹 (Teacher's Bell)"
+    ],
+    [
+     "s10",
      "After dinner",
      "Piano or guitar, 10 min 🎸 (Songbird)"
     ],
     [
-     "s9",
+     "s11",
      "11:30 PM",
      "Lights out 😴 (Still Water)"
     ]
@@ -105,18 +115,18 @@
    "items": [
     [
      "l1",
-     "Tue",
-     "Film one long-form video in the morning 🎬 (Songbird, Teacher's Bell)"
-    ],
-    [
-     "l2",
      "Wed",
      "Gym, post shorts, lessons 🏋️‍♀️🎹 (Ember, Teacher's Bell)"
     ],
     [
-     "l3",
+     "l2",
      "Thu",
      "Thanksgiving 🦃 (Warm Bread)"
+    ],
+    [
+     "l3",
+     "Fri",
+     "Low-impact cardio + Shabbos prep 🕯️ (Ember, Candlelight)"
     ]
    ]
   }
