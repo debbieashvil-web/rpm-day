@@ -1,11 +1,12 @@
 /* Offline cache for the bank app only. Scope is this folder. */
-var CACHE = "slb-static-v9";
+var CACHE = "slb-static-v10";
 var ASSETS = [
   "./",
   "./index.html",
   "./app.css",
   "./app.js",
   "./logic.js",
+  "./sync.js",
   "./browser.js",
   "./songbird.js",
   "./coins.js",
