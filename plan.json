@@ -26,8 +26,8 @@
    "items": [
     [
      "m0",
-     "6:20 AM",
-     "Body: lower-body gym, walk, Human Garage 💪 (Ember)"
+     "7:30 AM",
+     "Body: walk, lower-body gym, Human Garage 💪 (Ember)"
     ],
     [
      "m1",
@@ -48,28 +48,28 @@
    "items": [
     [
      "s0",
-     "6:20 AM",
-     "Leave for the gym 🚗 (Ember)"
+     "7:00 AM",
+     "Wake up + 5-min vocals 🎤 (Songbird)"
     ],
     [
      "s1",
-     "6:30 AM",
-     "Lower body: brace core, knees out, easy on knee and back 🏋️‍♀️ (Ember)"
+     "7:30 AM",
+     "Hour of Power walk 🌅 (Ember)"
     ],
     [
      "s2",
-     "After gym",
-     "5-min vocals + Human Garage 🎤💪 (Songbird, Ember)"
+     "8:45 AM",
+     "Leave for the gym 🚗 (Ember)"
     ],
     [
      "s3",
-     "8:30 AM",
-     "Big protein breakfast 🥚 (Ember)"
+     "9:00 AM",
+     "Lower body: brace core, knees out, easy on knee and back 🏋️‍♀️ (Ember)"
     ],
     [
      "s4",
-     "10:00 AM",
-     "Hour of Power walk 🌅 (Ember)"
+     "After gym",
+     "Human Garage + big protein breakfast 💪🥚 (Ember)"
     ],
     [
      "s5",
@@ -85,6 +85,11 @@
      "s7",
      "1:30 PM",
      "⭐ Income hour, fun part first ☕ (Teacher's Bell)"
+    ],
+    [
+     "s7b",
+     "After income hour",
+     "5-min: Bank Game sync on both devices (Anvil walks you through) 🪙 (Teacher's Bell)"
     ],
     [
      "s8",
