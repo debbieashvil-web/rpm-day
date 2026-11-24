@@ -5,7 +5,7 @@
    Use the anon key, never the service_role key.
    The anon key is public. Row-level security limits each row to the signed-in account.
    Stay on the free plan. */
-var SLB_SUPABASE = { url: "", anonKey: "" };
+var SLB_SUPABASE = { url: "https://tzofvxpkbznqiqewiwyw.supabase.co", anonKey: "sb_publishable_twSoiRmo0LP8zp3PxAUSjg_0io0nl1O" };
 
 (function (root, factory) {
   var api = factory(SLB_SUPABASE);

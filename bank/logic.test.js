@@ -636,7 +636,8 @@ const ctx = { byId: byId, scoring: scoring };
     assert.strictEqual(JSON.stringify(weekFile).indexOf(name), -1, name);
   });
   const sw = fs.readFileSync(path.join(__dirname, "sw.js"), "utf8");
-  assert.ok(sw.indexOf("slb-static-v9") >= 0);
+  assert.ok(sw.indexOf("slb-static-v10") >= 0);
+  assert.strictEqual(sw.indexOf("slb-static-v9"), -1);
   assert.strictEqual(sw.indexOf("slb-static-v8"), -1);
   assert.strictEqual(sw.indexOf("slb-static-v7"), -1);
   assert.strictEqual(sw.indexOf("slb-static-v6"), -1);
@@ -646,7 +647,7 @@ const ctx = { byId: byId, scoring: scoring };
   assert.ok(manifest.indexOf("#FFF8EF") >= 0);
 }
 
-// Sync stays off while the Supabase constant is blank, and a merge does not double count.
+// The project address is filled in. Nothing calls Supabase until Sync across devices is used.
 {
   const syncSrc = fs.readFileSync(path.join(__dirname, "sync.js"), "utf8");
   const appSrc = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
@@ -654,10 +655,18 @@ const ctx = { byId: byId, scoring: scoring };
   const rootHtml = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
   const sql = fs.readFileSync(path.join(__dirname, "../docs/sync-setup.sql"), "utf8");
   const guide = fs.readFileSync(path.join(__dirname, "../docs/sync-setup.md"), "utf8");
-  assert.ok(/var SLB_SUPABASE = \{ url: "", anonKey: "" \}/.test(syncSrc));
-  assert.strictEqual(Sync.CONFIG.url, "");
-  assert.strictEqual(Sync.CONFIG.anonKey, "");
-  assert.strictEqual(Sync.configured(), false);
+  assert.ok(/var SLB_SUPABASE = \{ url: "https:\/\/[a-z0-9]+\.supabase\.co", anonKey: "[^"]+" \}/.test(syncSrc));
+  assert.ok(/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(Sync.CONFIG.url));
+  assert.ok(Sync.CONFIG.anonKey.length > 0);
+  assert.ok(Sync.CONFIG.anonKey.indexOf("service_role") < 0);
+  assert.strictEqual(/\s/.test(Sync.CONFIG.anonKey), false);
+  assert.strictEqual(Sync.configured(), true);
+  const openHandler = appSrc.slice(appSrc.indexOf('if (el.hasAttribute("data-sync-open"))'), appSrc.indexOf('if (el.hasAttribute("data-sync-send"))'));
+  assert.ok(openHandler.indexOf("syncUi.open = !syncUi.open") >= 0);
+  assert.strictEqual(openHandler.indexOf("SLBSync"), -1);
+  assert.strictEqual(openHandler.indexOf("fetch("), -1);
+  assert.ok(appSrc.indexOf("SLBSync.boot()") >= 0);
+  assert.ok(syncSrc.indexOf("if (!shouldSync(runtime.config, runtime.storage)) return Promise.resolve({ ran: false });") >= 0);
   assert.strictEqual(Sync.LEDGER_KEY, "slb.v1");
   assert.ok(html.indexOf('src="sync.js"') >= 0);
   assert.ok(rootHtml.indexOf('src="bank/sync.js"') >= 0);
@@ -825,16 +834,20 @@ const syncChecks = [];
 
 syncChecks.push(Sync.afterLocalChange().then(function (res) {
   assert.strictEqual(res.ran, false);
+  assert.strictEqual(res.reason, undefined);
 }));
 
 syncChecks.push(Sync.boot().then(function (res) {
   assert.strictEqual(res.ran, false);
+  assert.strictEqual(res.reason, undefined);
 }));
 
+Sync.attach({ config: { url: "", anonKey: "" } });
 syncChecks.push(Sync.sendLink("person@example.com").then(function (res) {
   assert.strictEqual(res.ok, false);
   assert.strictEqual(res.reason, "unconfigured");
 }));
+Sync.attach({ config: Sync.CONFIG });
 
 function expectUntouched(config, optIn) {
   const raw = JSON.stringify(liveLedger());
@@ -1152,8 +1165,34 @@ syncChecks.push(expectUntouched({ url: "https://example.supabase.co", anonKey: "
 }
 
 Promise.all(syncChecks).then(function () {
-  assert.strictEqual(Sync.CONFIG.url, "");
-  assert.strictEqual(Sync.CONFIG.anonKey, "");
+  const raw = JSON.stringify(liveLedger());
+  const storage = memoryStorage({ "slb.v1": raw });
+  let loads = 0;
+  Sync.attach({
+    config: Sync.CONFIG,
+    storage: storage,
+    logic: L,
+    loadState: function () { loads += 1; return JSON.parse(raw); },
+    saveState: function () { throw new Error("save"); }
+  });
+  return Sync.boot().then(function (res) {
+    assert.strictEqual(res.ran, false);
+    assert.strictEqual(res.reason, undefined);
+    assert.strictEqual(loads, 0);
+    assert.deepStrictEqual(storage.gets, [Sync.OPT_KEY]);
+    assert.strictEqual(storage.data["slb.v1"], raw);
+    return Sync.afterLocalChange();
+  }).then(function (res) {
+    assert.strictEqual(res.ran, false);
+    assert.strictEqual(res.reason, undefined);
+    assert.strictEqual(loads, 0);
+    assert.strictEqual(storage.data["slb.v1"], raw);
+  });
+}).then(function () {
+  assert.ok(/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(Sync.CONFIG.url));
+  assert.ok(Sync.CONFIG.anonKey.length > 0);
+  assert.ok(Sync.CONFIG.anonKey.indexOf("service_role") < 0);
+  assert.strictEqual(Sync.configured(), true);
   console.log("logic.test.js ok (" + count + " tasks)");
 }).catch(function (err) {
   console.error(err);
