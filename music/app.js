@@ -211,18 +211,28 @@
   function setSrc(video, src, startAt) {
     if (!video) return;
     var want = startAt || 0;
+    var key = src + "@" + want;
+    // Only act when the source or start point really changes, so a repaint
+    // never pulls the video back after the user has scrubbed.
+    if (video._appliedKey === key) return;
+    video._appliedKey = key;
     var currentBase = (video.getAttribute("src") || "").split("#")[0];
+    if (currentBase !== src) video.src = src;
+    var token = {};
+    video._seekToken = token;
+    var done = false;
+    function stop() { done = true; }
     function seek() {
+      if (done || video._seekToken !== token) return;
+      done = true;
       try {
         if (Math.abs((video.currentTime || 0) - want) > 0.5) video.currentTime = want;
-      } catch (e) { /* wait for data */ }
+      } catch (e) { /* ignore */ }
     }
-    if (currentBase !== src) {
-      video.src = src;
-    }
+    // Once the user scrubs, any pending start-point jump is cancelled.
+    video.addEventListener("seeking", function () { if (!done && video.readyState >= 1) stop(); }, { once: true });
     if (video.readyState >= 1) seek();
-    video.addEventListener("loadedmetadata", seek, { once: true });
-    video.addEventListener("canplay", seek, { once: true });
+    else video.addEventListener("loadedmetadata", seek, { once: true });
   }
 
   function applyVideos(rec, parts) {
@@ -421,7 +431,6 @@
     getTodaySummary: function () { return summary(partsOf()); },
     onBankMusicDone: null,
     /* Preview helpers (not for production use) */
-    _setPreview: function (mode) { previewOverride = mode; paint(partsOf()); },
     _scoreDay: scoreDay,
     _isShabbatWindow: isShabbatWindow
   };
