@@ -1,20 +1,20 @@
 {
- "date": "2026-11-24",
- "title": "Tue Nov 24",
- "tag": "Lower body, then make something 🎶",
- "result": "Strong lower-body session, one income hour right after lunch, and a 45-minute creative block before the lesson.",
+ "date": "2026-11-25",
+ "title": "Wed Nov 25",
+ "tag": "Recovery day, income first after the walk ☕",
+ "result": "An easy recovery body day, income hour first thing after the walk, a creative block, and two happy lessons.",
  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
  "musts": [
   {
-   "label": "Body: walk + lower-body gym + Human Garage",
+   "label": "Body: walk + active recovery (spine and shoulder reset, steps) + Human Garage",
    "domainId": "body"
   },
   {
-   "label": "Income hour right after lunch (first move: open the doc and write one line)",
+   "label": "Income hour after the walk (first move: open the doc and write one line)",
    "domainId": "career"
   },
   {
-   "label": "Creative block, 45 min (first move: open my song in Logic, sing one verse take)",
+   "label": "Creative block, 10:30-11:30 AM (first move: open my song in Logic, sing one verse take)",
    "domainId": "music-creativity"
   }
  ],
@@ -27,17 +27,17 @@
     [
      "m0",
      "7:30 AM",
-     "Body: walk, lower-body gym, Human Garage 💪 (Ember)"
+     "Body: walk, recovery reset, Human Garage 💪 (Ember)"
     ],
     [
      "m1",
-     "1:30 PM",
+     "8:30 AM",
      "Income hour: 2-minute first move, then keep going ☕ (Teacher's Bell)"
     ],
     [
      "m2",
-     "3:30 PM",
-     "Creative block, 45 min: open my song in Logic, one verse take 🎬 (Songbird)"
+     "10:30 AM",
+     "Creative block: open my song in Logic, one verse take 🎬 (Songbird)"
     ]
    ]
   },
@@ -58,48 +58,43 @@
     ],
     [
      "s2",
-     "8:45 AM",
-     "Leave for the gym 🚗 (Ember)"
+     "8:30 AM",
+     "⭐ Income hour, first thing after the walk ☕ (Teacher's Bell)"
     ],
     [
      "s3",
-     "9:00 AM",
-     "Lower body: brace core, knees out, easy on knee and back 🏋️‍♀️ (Ember)"
+     "9:30 AM",
+     "Human Garage + protein breakfast 💪🥚 (Ember)"
     ],
     [
      "s4",
-     "After gym",
-     "Human Garage + big protein breakfast 💪🥚 (Ember)"
+     "10:00 AM",
+     "Post today's content from my phone 📱 (Teacher's Bell)"
     ],
     [
      "s5",
-     "12:30 PM",
-     "Appointment 📞 (Still Water)"
+     "10:30 AM",
+     "⭐ Creative block, 1 hour 🎬 (Songbird)"
     ],
     [
      "s6",
+     "11:30 AM",
+     "Recovery: spine + shoulder reset, easy steps 🧘‍♀️ (Ember)"
+    ],
+    [
+     "s7",
      "1:00 PM",
      "Lunch 🥗 (Ember)"
     ],
     [
-     "s7",
-     "1:30 PM",
-     "⭐ Income hour, fun part first ☕ (Teacher's Bell)"
-    ],
-    [
-     "s7b",
-     "After income hour",
-     "5-min: Bank Game sync on both devices (Anvil walks you through) 🪙 (Teacher's Bell)"
-    ],
-    [
      "s8",
-     "3:30 PM",
-     "⭐ Creative block, 45 min 🎬 (Songbird)"
+     "5:45 PM",
+     "Teach guitar lesson 🎸 (Teacher's Bell)"
     ],
     [
      "s9",
-     "5:00 PM",
-     "Teach lesson 🎹 (Teacher's Bell)"
+     "6:30 PM",
+     "Teach piano lesson 🎹 (Teacher's Bell)"
     ],
     [
      "s10",
@@ -108,30 +103,35 @@
     ],
     [
      "s11",
+     "11:00 PM",
+     "Phone on the charger, away from bed 📵 (Still Water)"
+    ],
+    [
+     "s12",
      "11:30 PM",
      "Lights out 😴 (Still Water)"
     ]
    ]
   },
   {
-   "name": "🗂️ Later this week",
+   "name": "📅 Later this week",
    "color": "#6B7280",
    "tint": "#F3F4F6",
    "items": [
     [
      "l1",
-     "Wed",
-     "Gym, post shorts, lessons 🏋️‍♀️🎹 (Ember, Teacher's Bell)"
-    ],
-    [
-     "l2",
      "Thu",
      "Thanksgiving 🦃 (Warm Bread)"
     ],
     [
-     "l3",
+     "l2",
      "Fri",
      "Low-impact cardio + Shabbos prep 🕯️ (Ember, Candlelight)"
+    ],
+    [
+     "l3",
+     "Sat",
+     "Shabbos, light and cozy 🕯️ (Candlelight)"
     ]
    ]
   }
