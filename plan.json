@@ -1,20 +1,20 @@
 {
- "date": "2026-11-25",
- "title": "Wed Nov 25",
- "tag": "Recovery day, income first after the walk ☕",
- "result": "An easy recovery body day, income hour first thing after the walk, a creative block, and two happy lessons.",
+ "date": "2026-11-26",
+ "title": "Thu Nov 26",
+ "tag": "Thanksgiving: gym, gratitude, and a few happy lessons 🦃",
+ "result": "A strong gym morning, my income hour and creative block protected, lessons taught, and a warm Thanksgiving evening.",
  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
  "musts": [
   {
-   "label": "Body: walk + active recovery (spine and shoulder reset, steps) + Human Garage",
+   "label": "Body: walk + gym (upper + press) + Human Garage",
    "domainId": "body"
   },
   {
-   "label": "Income hour after the walk (first move: open the doc and write one line)",
+   "label": "Income hour right after lunch (first move: open the doc and write one line)",
    "domainId": "career"
   },
   {
-   "label": "Creative block, 10:30-11:30 AM (first move: open my song in Logic, sing one verse take)",
+   "label": "Creative block, 3:00-3:45 PM (first move: open my song in Logic, sing one verse take)",
    "domainId": "music-creativity"
   }
  ],
@@ -26,17 +26,17 @@
    "items": [
     [
      "m0",
-     "7:30 AM",
-     "Body: walk, recovery reset, Human Garage 💪 (Ember)"
+     "9:00 AM",
+     "Body: gym upper + press, Human Garage 💪 (Ember)"
     ],
     [
      "m1",
-     "8:30 AM",
+     "1:00 PM",
      "Income hour: 2-minute first move, then keep going ☕ (Teacher's Bell)"
     ],
     [
      "m2",
-     "10:30 AM",
+     "3:00 PM",
      "Creative block: open my song in Logic, one verse take 🎬 (Songbird)"
     ]
    ]
@@ -59,65 +59,70 @@
     [
      "s2",
      "8:30 AM",
-     "⭐ Income hour, first thing after the walk ☕ (Teacher's Bell)"
+     "Gratitude list: 3 things I'm thankful for 🦃 (Still Water)"
     ],
     [
      "s3",
-     "9:30 AM",
-     "Human Garage + protein breakfast 💪🥚 (Ember)"
+     "9:00 AM",
+     "Gym: upper + press (leave about 8:50) 🏋️‍♀️ (Ember)"
     ],
     [
      "s4",
-     "10:00 AM",
-     "Post today's content from my phone 📱 (Teacher's Bell)"
+     "10:30 AM",
+     "Human Garage + protein breakfast 💪🥚 (Ember)"
     ],
     [
      "s5",
-     "10:30 AM",
-     "⭐ Creative block, 1 hour 🎬 (Songbird)"
-    ],
-    [
-     "s6",
-     "11:30 AM",
-     "Recovery: spine + shoulder reset, easy steps 🧘‍♀️ (Ember)"
-    ],
-    [
-     "s7",
-     "1:00 PM",
+     "12:30 PM",
      "Lunch 🥗 (Ember)"
     ],
     [
-     "s13",
-     "1:45 PM",
-     "Prep: peak state, pen and paper, quiet spot ✍️ (Still Water)"
+     "s6",
+     "1:00 PM",
+     "⭐ Income hour ☕ (Teacher's Bell)"
     ],
     [
-     "s14",
-     "2:00 PM",
-     "Coaching call, 45 min 📞 (Still Water)"
+     "s7",
+     "3:00 PM",
+     "⭐ Creative block, 45 min 🎬 (Songbird)"
     ],
     [
      "s8",
-     "5:45 PM",
-     "Teach guitar lesson 🎸 (Teacher's Bell)"
+     "4:30 PM",
+     "Teach lesson (if confirmed) 🎹 (Teacher's Bell)"
     ],
     [
      "s9",
-     "6:30 PM",
-     "Teach piano lesson 🎹 (Teacher's Bell)"
+     "5:30 PM",
+     "Teach lesson 🎹 (Teacher's Bell)"
     ],
     [
      "s10",
+     "6:00 PM",
+     "Teach lesson 🎹 (Teacher's Bell)"
+    ],
+    [
+     "s11",
+     "6:35 PM",
+     "Teach lesson 🎹 (Teacher's Bell)"
+    ],
+    [
+     "s12",
+     "Evening",
+     "Thanksgiving dinner, phone away, be present 🍂 (Warm Bread)"
+    ],
+    [
+     "s13",
      "After dinner",
      "Piano or guitar, 10 min 🎸 (Songbird)"
     ],
     [
-     "s11",
+     "s14",
      "11:00 PM",
      "Phone on the charger, away from bed 📵 (Still Water)"
     ],
     [
-     "s12",
+     "s15",
      "11:30 PM",
      "Lights out 😴 (Still Water)"
     ]
@@ -130,18 +135,18 @@
    "items": [
     [
      "l1",
-     "Thu",
-     "Thanksgiving 🦃 (Warm Bread)"
-    ],
-    [
-     "l2",
      "Fri",
      "Low-impact cardio + Shabbos prep 🕯️ (Ember, Candlelight)"
     ],
     [
-     "l3",
+     "l2",
      "Sat",
      "Shabbos, light and cozy 🕯️ (Candlelight)"
+    ],
+    [
+     "l3",
+     "Sun",
+     "Weekly RPM planning 🗺️ (Teacher's Bell)"
     ]
    ]
   }
