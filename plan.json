@@ -1,154 +1,56 @@
 {
- "date": "2026-11-26",
- "title": "Thu Nov 26",
- "tag": "Thanksgiving: gym, gratitude, and a few happy lessons 🦃",
- "result": "A strong gym morning, my income hour and creative block protected, lessons taught, and a warm Thanksgiving evening.",
- "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
- "musts": [
-  {
-   "label": "Body: walk + gym (upper + press) + Human Garage",
-   "domainId": "body"
-  },
-  {
-   "label": "Income hour right after lunch (first move: open the doc and write one line)",
-   "domainId": "career"
-  },
-  {
-   "label": "Creative block, 3:00-3:45 PM (first move: open my song in Logic, sing one verse take)",
-   "domainId": "music-creativity"
-  }
- ],
- "sections": [
-  {
-   "name": "⭐ Musts",
-   "color": "#7C3AED",
-   "tint": "#F1E9FF",
-   "items": [
-    [
-     "m0",
-     "9:00 AM",
-     "Body: gym upper + press, Human Garage 💪 (Ember)"
-    ],
-    [
-     "m1",
-     "1:00 PM",
-     "Income hour: 2-minute first move, then keep going ☕ (Teacher's Bell)"
-    ],
-    [
-     "m2",
-     "3:00 PM",
-     "Creative block: open my song in Logic, one verse take 🎬 (Songbird)"
-    ]
-   ]
-  },
-  {
-   "name": "📅 Today's schedule",
-   "color": "#FF8A00",
-   "tint": "#FFF1DE",
-   "items": [
-    [
-     "s0",
-     "7:00 AM",
-     "Wake up + 5-min vocals 🎤 (Songbird)"
-    ],
-    [
-     "s1",
-     "7:30 AM",
-     "Hour of Power walk 🌅 (Ember)"
-    ],
-    [
-     "s2",
-     "8:30 AM",
-     "Gratitude list: 3 things I'm thankful for 🦃 (Still Water)"
-    ],
-    [
-     "s3",
-     "9:00 AM",
-     "Gym: upper + press (leave about 8:50) 🏋️‍♀️ (Ember)"
-    ],
-    [
-     "s4",
-     "10:30 AM",
-     "Human Garage + protein breakfast 💪🥚 (Ember)"
-    ],
-    [
-     "s5",
-     "12:30 PM",
-     "Lunch 🥗 (Ember)"
-    ],
-    [
-     "s6",
-     "1:00 PM",
-     "⭐ Income hour ☕ (Teacher's Bell)"
-    ],
-    [
-     "s7",
-     "3:00 PM",
-     "⭐ Creative block, 45 min 🎬 (Songbird)"
-    ],
-    [
-     "s8",
-     "4:30 PM",
-     "Teach lesson (if confirmed) 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s9",
-     "5:30 PM",
-     "Teach lesson 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s10",
-     "6:00 PM",
-     "Teach lesson 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s11",
-     "6:35 PM",
-     "Teach lesson 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s12",
-     "Evening",
-     "Thanksgiving dinner, phone away, be present 🍂 (Warm Bread)"
-    ],
-    [
-     "s13",
-     "After dinner",
-     "Piano or guitar, 10 min 🎸 (Songbird)"
-    ],
-    [
-     "s14",
-     "11:00 PM",
-     "Phone on the charger, away from bed 📵 (Still Water)"
-    ],
-    [
-     "s15",
-     "11:30 PM",
-     "Lights out 😴 (Still Water)"
-    ]
-   ]
-  },
-  {
-   "name": "📅 Later this week",
-   "color": "#6B7280",
-   "tint": "#F3F4F6",
-   "items": [
-    [
-     "l1",
-     "Fri",
-     "Low-impact cardio + Shabbos prep 🕯️ (Ember, Candlelight)"
-    ],
-    [
-     "l2",
-     "Sat",
-     "Shabbos, light and cozy 🕯️ (Candlelight)"
-    ],
-    [
-     "l3",
-     "Sun",
-     "Weekly RPM planning 🗺️ (Teacher's Bell)"
-    ]
-   ]
-  }
- ]
+  "date": "2026-11-27",
+  "title": "Fri Nov 27",
+  "tag": "Move, pack, leave for Shabbos before 1 🕯️",
+  "result": "A strong body morning, packed and the room reset, on the road for Shabbos before 1 PM.",
+  "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
+  "musts": [
+    {
+      "label": "Body: walk (or Hour of Power at the gym if it's raining) + gym by 8:30 AM",
+      "domainId": "body"
+    },
+    {
+      "label": "Pack, help Mom, clean room and new sheets (include a small gift for a friend's little one)",
+      "domainId": "faith"
+    },
+    {
+      "label": "Leave for Shabbos before 1 PM",
+      "domainId": "faith"
+    }
+  ],
+  "sections": [
+    {
+      "name": "⭐ Musts",
+      "color": "#7C3AED",
+      "tint": "#F1E9FF",
+      "items": [
+        ["m0", "8:30 AM", "Body: walk + gym by 8:30 💪 (Ember)"],
+        ["m1", "10:30 AM", "Pack, help Mom, clean room + new sheets 🛏️ (Candlelight, Hearth)"],
+        ["m2", "12:30 PM", "Leave for Shabbos before 1 PM 🚗 (Candlelight)"]
+      ]
+    },
+    {
+      "name": "📅 Today's schedule",
+      "color": "#FF8A00",
+      "tint": "#FFF1DE",
+      "items": [
+        ["s0", "7:30 AM", "Walk, or Hour of Power at the gym if it's raining too much 🌅 (Ember, Songbird, Still Water)"],
+        ["s1", "8:30 AM", "Gym 💪 (Ember)"],
+        ["s2", "10:00 AM", "One phone call 📞 (Still Water)"],
+        ["s3", "10:30 AM", "Pack up and help Mom, including a small gift for a friend's little one 🎁 (Candlelight, Hearth)"],
+        ["s4", "11:45 AM", "Clean room + new sheets 🛏️ (Hearth)"],
+        ["s5", "12:30 PM", "Leave for Shabbos, on the road before 1 PM 🚗 (Candlelight)"],
+        ["s6", "Before sunset", "Light candles and rest 🕯️ (Candlelight)"]
+      ]
+    },
+    {
+      "name": "📅 Later this week",
+      "color": "#6B7280",
+      "tint": "#F3F4F6",
+      "items": [
+        ["l1", "Sat", "Shabbos, light and cozy, Hour of Power 🕯️ (Candlelight)"],
+        ["l2", "Sun", "Walk, then a priorities sit-down; quality time before a friend leaves that night 🗺️ (Teacher's Bell, Hearth)"]
+      ]
+    }
+  ]
 }
