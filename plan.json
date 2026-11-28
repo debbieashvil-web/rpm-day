@@ -1,21 +1,25 @@
 {
- "date": "2026-11-26",
- "title": "Thu Nov 26",
- "tag": "Thanksgiving: gym, gratitude, and a few happy lessons 🦃",
- "result": "A strong gym morning, my income hour and creative block protected, lessons taught, and a warm Thanksgiving evening.",
- "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Work I look forward to builds the life I want. 💛",
+ "date": "2026-11-28",
+ "title": "Sat Nov 28",
+ "tag": "Shabbos light day with a friend 🕯️",
+ "result": "Rest, connect, and collect a few cozy wins.",
+ "why": "A healthy, energized body, a romantic relationship, reaching millions with my music, and a deep connection with my Creator. Rest is part of how I win. 💛",
  "musts": [
   {
-   "label": "Body: walk + gym (upper + press) + Human Garage",
+   "label": "Hour of Power",
    "domainId": "body"
   },
   {
-   "label": "Income hour right after lunch (first move: open the doc and write one line)",
-   "domainId": "career"
+   "label": "Human Garage",
+   "domainId": "body"
   },
   {
-   "label": "Creative block, 3:00-3:45 PM (first move: open my song in Logic, sing one verse take)",
+   "label": "Vocals, gentle",
    "domainId": "music-creativity"
+  },
+  {
+   "label": "Keep Shabbos 🕯️",
+   "domainId": "faith"
   }
  ],
  "sections": [
@@ -26,18 +30,23 @@
    "items": [
     [
      "m0",
-     "9:00 AM",
-     "Body: gym upper + press, Human Garage 💪 (Ember)"
+     "Morning",
+     "Hour of Power walk 🌅 (Ember)"
     ],
     [
      "m1",
-     "1:00 PM",
-     "Income hour: 2-minute first move, then keep going ☕ (Teacher's Bell)"
+     "Morning",
+     "Human Garage 💪 (Ember)"
     ],
     [
      "m2",
-     "3:00 PM",
-     "Creative block: open my song in Logic, one verse take 🎬 (Songbird)"
+     "Anytime",
+     "Vocals, gentle 🎤 (Songbird)"
+    ],
+    [
+     "m3",
+     "All day",
+     "Keep Shabbos: rest and recharge 🕯️ (Candlelight)"
     ]
    ]
   },
@@ -48,105 +57,70 @@
    "items": [
     [
      "s0",
-     "7:00 AM",
-     "Wake up + 5-min vocals 🎤 (Songbird)"
-    ],
-    [
-     "s1",
-     "7:30 AM",
+     "Morning",
      "Hour of Power walk 🌅 (Ember)"
     ],
     [
+     "s1",
+     "Morning",
+     "Human Garage 💪 (Ember)"
+    ],
+    [
      "s2",
-     "8:30 AM",
-     "Gratitude list: 3 things I'm thankful for 🦃 (Still Water)"
+     "Midday",
+     "Shabbos meal with friends 🍞 (Warm Bread, Candlelight)"
     ],
     [
      "s3",
-     "9:00 AM",
-     "Gym: upper + press (leave about 8:50) 🏋️‍♀️ (Ember)"
+     "Afternoon",
+     "Rest or a nap when my body asks 😌 (Still Water)"
     ],
     [
      "s4",
-     "10:30 AM",
-     "Human Garage + protein breakfast 💪🥚 (Ember)"
+     "Afternoon",
+     "10 minutes of Torah learning or a gratitude list 📖 (Candlelight)"
     ],
     [
      "s5",
-     "12:30 PM",
-     "Lunch 🥗 (Ember)"
+     "Afternoon",
+     "Quality time with a friend and her little one 💛 (Warm Bread)"
     ],
     [
      "s6",
-     "1:00 PM",
-     "⭐ Income hour ☕ (Teacher's Bell)"
+     "5:14 PM",
+     "Havdalah 🕯️ (Candlelight)"
     ],
     [
      "s7",
-     "3:00 PM",
-     "⭐ Creative block, 45 min 🎬 (Songbird)"
+     "Evening",
+     "Drive home, then one small win and relax ☕ (Teacher's Bell)"
     ],
     [
      "s8",
-     "4:30 PM",
-     "Teach lesson (if confirmed) 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s9",
-     "5:30 PM",
-     "Teach lesson 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s10",
-     "6:00 PM",
-     "Teach lesson 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s11",
-     "6:35 PM",
-     "Teach lesson 🎹 (Teacher's Bell)"
-    ],
-    [
-     "s12",
-     "Evening",
-     "Thanksgiving dinner, phone away, be present 🍂 (Warm Bread)"
-    ],
-    [
-     "s13",
-     "After dinner",
-     "Piano or guitar, 10 min 🎸 (Songbird)"
-    ],
-    [
-     "s14",
-     "11:00 PM",
-     "Phone on the charger, away from bed 📵 (Still Water)"
-    ],
-    [
-     "s15",
      "11:30 PM",
      "Lights out 😴 (Still Water)"
     ]
    ]
   },
   {
-   "name": "📅 Later this week",
+   "name": "🗂️ Later this week",
    "color": "#6B7280",
    "tint": "#F3F4F6",
    "items": [
     [
      "l1",
-     "Fri",
-     "Low-impact cardio + Shabbos prep 🕯️ (Ember, Candlelight)"
+     "Sun",
+     "Walk, then a priorities sit-down 🗺️ (Teacher's Bell)"
     ],
     [
      "l2",
-     "Sat",
-     "Shabbos, light and cozy 🕯️ (Candlelight)"
+     "Sun",
+     "Quality time before a friend leaves that night 💛 (Warm Bread)"
     ],
     [
      "l3",
-     "Sun",
-     "Weekly RPM planning 🗺️ (Teacher's Bell)"
+     "Mon",
+     "One phone call 📞 (Still Water)"
     ]
    ]
   }
